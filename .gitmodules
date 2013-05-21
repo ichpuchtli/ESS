@@ -1,0 +1,3 @@
+[submodule "include/simavr"]
+	path = include/simavr
+	url = git@github.com:ichpuchtli/simavr.git
