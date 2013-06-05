@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QThread>
+#include <QPixmap>
 
 #define LM_NUM_ROWS 7
 #define LM_NUM_COLS 15
@@ -17,17 +18,29 @@ class RectMatrix : public QWidget {
 
   public:
     RectMatrix(int rectSize = 20);
+    ~RectMatrix();
 
-    void set(int row, int col);
-    void clear(int row, int col);
+  public slots:
+    void setHigh(int column);
+    void setLow(int column);
 
-    void clearAll(void);
+    void setCol(int bitfield);
+
+    void setRow(int row);
 
   private:
-    QRect  LEDRects[LM_AREA];
-    QColor LEDColours[LM_AREA];
 
-    int rectSize;
+    int rectSize; // pixel size of each "LED"
+    int columnStatus;
+    int row;
+    int padding;
+
+    QColor* ledColour;
+
+    QPixmap* background;
+    QPixmap* buffer;
+
+    void updateBuffer(void);
 
   protected:
     void paintEvent(QPaintEvent *event);
