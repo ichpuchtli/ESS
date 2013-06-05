@@ -9,10 +9,6 @@
 #include <sys/time.h>
 #include <math.h>
 
-#include "sim_avr.h"
-#include "avr_ioport.h"
-#include "sim_elf.h"
-#include "sim_gdb.h"
 
 #include "RectMatrix.h"
 #include "AVRThread.h"
@@ -26,11 +22,9 @@
 #define COL_PORT_HIGH 'C'
 #define COL_MASK_HIGH  0x7F
 
+/*
 int rowBitVector = 0x0;
 int colBitVector = 0x0;
-
-RectMatrix* g_Matrix;
-avr_t* g_AVR;
 
 void timer0_hook(struct avr_irq_t* irq, uint32_t value, void* param){
 
@@ -143,28 +137,30 @@ void chain_irq_hooks(avr_t* avr){
 
 }
 
+*/
+
 int main(int argc, char** argv){
 
   QApplication app(argc, argv);
   
   AVRThread avr_worker;
 
-  g_AVR = avr_worker.getAVR();
+  //g_AVR = avr_worker.getAVR();
 
   RectMatrix MatrixWidget(20);
 
-  g_Matrix = &MatrixWidget;
+  //g_Matrix = &MatrixWidget;
   
   MatrixWidget.show();
 
-  g_Matrix->set(0,0);
+  //g_Matrix->set(0,0);
 
-  chain_irq_hooks(avr_worker.getAVR());
+  //chain_irq_hooks(avr_worker.getAVR());
 
   //avr_irq_register_notify(avr_io_getirq(g_AVR, AVR_IOCTL_IOPORT_GETIRQ('F'), 1), timer0_hook, NULL);
   //avr_irq_register_notify(avr_io_getirq(g_AVR, AVR_IOCTL_IOPORT_GETIRQ('F'), 2), timer1_hook, NULL);
 
-  avr_worker.start();
+  avr_worker.run();
 
   return app.exec();
   
