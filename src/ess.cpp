@@ -160,7 +160,9 @@ int main(int argc, char** argv){
   //avr_irq_register_notify(avr_io_getirq(g_AVR, AVR_IOCTL_IOPORT_GETIRQ('F'), 1), timer0_hook, NULL);
   //avr_irq_register_notify(avr_io_getirq(g_AVR, AVR_IOCTL_IOPORT_GETIRQ('F'), 2), timer1_hook, NULL);
 
-  avr_worker.run();
+  avr_worker.load("src/avr/main.axf", "atmega64", 8000000);
+
+  avr_worker.start();
 
   return app.exec();
   

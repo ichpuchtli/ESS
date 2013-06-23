@@ -1,3 +1,25 @@
+/**
+ * @file AVRThread.cpp
+ * @brief avr execution thread handler
+ * @author Sam Macpherson
+ *
+ * Copyright 2013 - Sam Macpherson <sam.mack91@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 #include <QApplication>
 
 #include <QDebug>
@@ -13,180 +35,125 @@
 #include "sim_elf.h"
 #include "sim_gdb.h"
 
-typedef struct {
-  port_t port;
-  pin_t  pin;
-  char   type;
-} PinState_t;
+#define AVR_RUNNABLE(status) (status != cpu_Crashed && status != cpu_Done)
 
-typedef char port_t;
-typedef char pin_t;
-
-static AVRThread* class_instance;
-
-void non_mem_irq_handler(struct avr_irq_t* irq, uint32_t value, void* param){
-
-  class_instance->irq_handler(irq,value,param);
-
-}
-
-
+/**
+ * @brief main contructor
+ */
 AVRThread::AVRThread(){
 
-  char* filename = "src/avr/main.axf";
+    this->frequency = 0;
+    this->avr = NULL;
 
-  elf_firmware_t firmware_bin;
-
-  elf_read_firmware(filename, &firmware_bin);
-
-  qDebug() << "AVRThread: firmware " << filename << " freq "
-    << firmware_bin.frequency << " mmcu " << firmware_bin.mmcu; 
-
-  this->avr = avr_make_mcu_by_name(firmware_bin.mmcu);
-
-  avr_init(this->avr);
-
-  avr_load_firmware(this->avr, &firmware_bin);
-
-  this->verbose = true;
-
-  this->status = cpu_Running;
-
-  this->connect_irqs();
+    this->unlimited = false;
 
 }
+/**
+ * @brief load an avr firmware binary by filname, desired mmcu and frequency
+ *
+ * @param filename the filename of the firmware binary to load
+ * @param mmcu the target avr core (atmega64,atmega128,...)
+ * @param frequency the desired frequency of the simulation generally 8MHz
+ */
+void AVRThread::load(QString filename, QString mmcu, unsigned int frequency){
 
-AVRThread::AVRThread(avr_t* avr){
+  this->filename = QString(filename);
 
-  this->avr = avr;
-  
-  qDebug() << "AVRThread: freq " << this->avr->frequency << " mmcu " << this->avr->mmcu;
+  this->mmcu = QString(mmcu);
 
-  this->verbose = false;
+  this->frequency = frequency;
 
-  this->status = cpu_Running;
-}
+  elf_read_firmware(filename.toLatin1(), &this->firmware);
 
-AVRThread::AVRThread(QString filename){
+  this->firmware.frequency = frequency;
 
-  elf_firmware_t firmware_bin;
-
-  elf_read_firmware(filename.toLatin1().data(), &firmware_bin);
+  memcpy(this->firmware.mmcu, mmcu.toLatin1(), mmcu.size() );
 
   qDebug() << "AVRThread: firmware " << filename.toLatin1() << " freq "
-    << firmware_bin.frequency << " mmcu " << firmware_bin.mmcu;
+    << frequency << " mmcu " << mmcu.toLatin1();
 
-  this->avr = avr_make_mcu_by_name(firmware_bin.mmcu);
+  this->avr = avr_make_mcu_by_name(mmcu.toLatin1());
 
-  avr_init(this->avr);
-
-  avr_load_firmware(this->avr, &firmware_bin);
-
-  this->verbose = false;
-
-  this->status = cpu_Running;
-
-  //this->frequency = 8000000; // 8 MHz
-}
-
-AVRThread::AVRThread(QString filename, QString mmcu, unsigned int frequency){
-
-  elf_firmware_t firmware_bin;
-
-  elf_read_firmware(filename.toLatin1(), &firmware_bin);
-
-  firmware_bin.frequency = frequency;
-
-  memcpy(firmware_bin.mmcu, filename.toLatin1(), filename.size() );
-
-  qDebug() << "AVRThread: firmware " << filename.toLatin1() << " freq "
-    << firmware_bin.frequency << " mmcu " << firmware_bin.mmcu;
-
-  this->avr = avr_make_mcu_by_name(firmware_bin.mmcu);
-
-  avr_init(this->avr);
-
-  avr_load_firmware(this->avr, &firmware_bin);
-
-  this->verbose = false;
-
-  this->status = cpu_Running;
-
-  //this->frequency = 8000000; // 8 MHz
-}
-
-AVRThread::AVRThread(const AVRThread& rhs){}
-
-void AVRThread::loop_delay(long count){
-
-  if( count < 0 ) return;
-
-  //TODO "nop" may not be portable
-  while(count--) asm("nop");
-
-}
-
-
-void AVRThread::irq_handler(struct avr_irq_t* irq, uint32_t value, void* param){
-
-  // Suppress unused variable warnings
-  (void) irq;
-  (void) value;
-
-  PinState_t* pinState = (PinState_t*) &param;
-
-  //qDebug() << pinState->port << (int)(pinState->pin);
-
-  //emit this->pinChange(pinState->port, pinState->pin);
-
-  // if PortNPin->type == DDR_PORT_TYPE)
-    //emit this->ddChange(PortNPin->port, PortNPin->pin);
-}
-
-void AVRThread::connect_irqs(void){
-
-  PinState_t pinState;
-  void* param;
-  struct avr_irq_t* irq;
-
-  class_instance = this;
-
-  for(uint8_t i = 0; i < NUM_AVR_PORTS; i++){
-
-    for(uint8_t pin = 0; pin < 8; pin++){
-
-      // PortF:Pin0 = ('F' << 8 | 0)
-      //PortNPin = (PortPin_t) ( (ports[i] << 8) | j );
-
-      // Pray this is packed tight
-      pinState.port = AVR_PORT[i];
-      pinState.pin = pin;
-
-      memcpy((void*) &param, (void*) &pinState, sizeof(void*));
-
-      irq = avr_io_getirq(this->avr, AVR_IOCTL_IOPORT_GETIRQ(AVR_PORT[i]), pin);
-
-      avr_irq_register_notify(irq, non_mem_irq_handler, param );
-    }
+  if(!this->avr){
+      qDebug() << "AVRThread: possible memory allocation error\n";
+      return;
   }
+
+  avr_init(this->avr);
+
+  avr_load_firmware(this->avr, &this->firmware);
+
+  emit this->loaded(this->avr);
 }
 
+/**
+ * @brief reset the avr state and restart the thread
+ */
+void AVRThread::restart(){
 
-// Slots
-////////////////////////////////////////////////////////////////////////////////
+  if (!this->avr) {
+      return;
+  }
 
-void AVRThread::RESET(void){}
+  emit this->RESET();
 
-void setFrequency(int frequency){}
+  //TODO stop thread
+  //TODO free any data that can be safely free'd
 
-void andPort(port_t port, pin_t pin){}
-void orPort(port_t port, pin_t pin){}
-void xorPort(port_t port, pin_t pin){}
+  // lock
+  avr_reset(this->avr);
+  // unlock
 
-void mutePort(port_t port, pin_t pin){}
-void unMutePort(port_t port, pin_t pin){}
+  //TODO start thread
+}
 
-void AVRThread::run(void){
+/**
+ * @brief the function to be run upon starting this thread
+ */
+void AVRThread::run(){
+
+
+  if ( !this->avr ){
+    qDebug() << "AVRThread: no firmware loaded exiting run thread\n";
+    return;
+  }
+
+  if (this->unlimited){
+
+    this->runUnlimited();
+
+  }else{
+
+    this->runRegulated();
+
+  }
+
+}
+
+/**
+ * @brief execuate avr instructions as fast as possible, ie. instructions per second
+ */
+void AVRThread::runUnlimited(void){
+
+  int status = cpu_Running;
+
+  emit this->avrStateChange(status);
+
+  while ( AVR_RUNNABLE( status ) ) {
+
+    status = avr_run(this->avr);
+
+  }
+
+  emit this->avrStateChange(status);
+
+}
+
+/**
+ * @brief execuate avr instructions at desired frequency specified upon loading firmware
+ */
+void AVRThread::runRegulated(void){
+
   //TODO variable loop speed recalculation instead 1 sec
   //TODO variable loop speep
   //TODO usleep() instead of loop_delay()
@@ -201,47 +168,58 @@ void AVRThread::run(void){
 
   int loop_count = 20;
 
+  int status = cpu_Running;
+
+  emit this->avrStateChange(status);
+
   gettimeofday(&t1, NULL);
 
-  while ((this->status != cpu_Done) && (this->status != cpu_Crashed)) {
+  while (AVR_RUNNABLE(status)) {
 
     gettimeofday(&t2, NULL);
 
     last_cycle_count = avr->cycle;
 
-    this->status = avr_run(this->avr);
+    status = avr_run(this->avr);
 
     cycles += (unsigned int) (this->avr->cycle - last_cycle_count);
 
-    dt = (t2.tv_sec - t1.tv_sec)*10000 + (t2.tv_usec - t1.tv_usec);
+    dt = (t2.tv_sec - t1.tv_sec)*1000000 + (t2.tv_usec - t1.tv_usec);
 
     /* One Second has passed, adjust loop speed */
-    if( dt >= 10000 ){
+    if( dt >= 1000000 ){
 
       //cfactor = cycles - this->frequency;
-      cfactor = cycles - 80000;
+      cfactor = cycles - 8000000;
 
       /* TODO consider log(cfactor) or sqrt(cfactor)*/
-      loop_count += cfactor / 655;
+      loop_count += cfactor >> 18;
 
       if(loop_count < 0) loop_count = 0;
 
-      if(this->verbose){
-
-        qDebug() << "AVRThread: Loop Count:" << loop_count << "cFactor:"
-          << cfactor << "Freq:" << cycles;
-      }
+      qDebug() << "AVRThread: Loop Count:" << loop_count << "cFactor:" << (cfactor >> 18) << "Freq:" << cycles;
 
       cycles = 0;
 
       gettimeofday(&t1, NULL);
 
-      QCoreApplication::processEvents();
-
     }
 
-    AVRThread::loop_delay(loop_count);
+    AVRThread::loop_delay((unsigned int) loop_count);
 
   }
+
+  emit this->avrStateChange(status);
+
+}
+
+/**
+ * @brief simple loop delay (spin delay, spin couter, etc)
+ *
+ * @param count the number of "nop" to execute, to create a significat delay
+ */
+void AVRThread::loop_delay(unsigned int count){
+
+  while(count--) asm("nop");
 
 }
