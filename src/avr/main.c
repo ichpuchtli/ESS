@@ -11,7 +11,7 @@
  * The macro adds a section to the ELF file with useful
  * information for the simulator
  */
-#include "avr_mcu_section.h"
+#include "../../include/simavr/simavr/sim/avr/avr_mcu_section.h"
 AVR_MCU(F_CPU, "atmega64");
 AVR_MCU_VOLTAGES(3300,3300,3300); // 3.3V Vcc, AVcc, Vref
 
