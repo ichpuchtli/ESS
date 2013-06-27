@@ -1,20 +1,11 @@
 #ifndef __RECTMATRIXWIDGET__
 #define __RECTMATRIXWIDGET__
 
-#include <QWidget>
-#include <QPainter>
-#include <QThread>
-#include <QPixmap>
-
-#define LM_NUM_ROWS 7
-#define LM_NUM_COLS 15
-
-#define LM_AREA (LM_NUM_ROWS * LM_NUM_COLS)
+#include <QtWidgets/QWidget>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
 
 class RectMatrix : public QWidget {
-
-
-  QThread thread;
 
   public:
     RectMatrix(int rectSize = 20);

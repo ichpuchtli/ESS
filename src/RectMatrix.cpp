@@ -2,12 +2,18 @@
  * @file RectMatrix.cpp
  * @brief Houses the RectMatrix class
 */
-#include <QDebug>
-#include <QPixmap>
+#include <QtWidgets/QApplication>
+#include <QtCore/QDebug>
+#include <QtGui/QPixmap>
 
 #include <cassert>
 
 #include "RectMatrix.h"
+
+#define LM_NUM_ROWS 7
+#define LM_NUM_COLS 15
+
+#define LM_AREA (LM_NUM_ROWS * LM_NUM_COLS)
 
 /**
  * @name           RectMatrix: A basic widget to simulate a 15x7 LED matrix
@@ -97,6 +103,8 @@ void RectMatrix::updateBuffer(void){
   }
 
   painter.end();
+
+  this->update();
 }
 
 /**
@@ -110,6 +118,7 @@ void RectMatrix::setHigh(int column){
   this->columnStatus &= ~(1 << column);
 
   this->updateBuffer();
+
 }
 
 
@@ -138,6 +147,7 @@ void RectMatrix::setRow(int row){
   this->row = row;
 
   this->updateBuffer();
+
 }
 
 /**
@@ -147,6 +157,9 @@ void RectMatrix::setRow(int row){
 void RectMatrix::setCol(int bitfield){
 
   this->columnStatus = bitfield & 0x00007FFF;
+
+  this->updateBuffer();
+
 }
 
 void RectMatrix::paintEvent(QPaintEvent *event){
