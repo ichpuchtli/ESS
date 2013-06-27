@@ -1,9 +1,9 @@
 /**
- * @file AVRThread.cpp
+ * @file AVRProcessor.cpp
  * @brief avr execution thread handler
  * @author Sam Macpherson
  *
- * Copyright 2013 - Sam Macpherson <sam.mack91@gmail.com>
+ * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,17 +16,17 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QApplication>
+#include <QtWidgets/QApplication>
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
-#include "AVRThread.h"
+#include "AVRProcessor.h"
 
 #include <sys/time.h>
+#include "math.h"
 
 #include <stdint.h>
 
@@ -38,24 +38,39 @@
 #define AVR_RUNNABLE(status) (status != cpu_Crashed && status != cpu_Done)
 
 /**
- * @brief main contructor
+ * @brief main constructor
  */
-AVRThread::AVRThread(){
+AVRProcessor::AVRProcessor(){
 
-    this->frequency = 0;
-    this->avr = NULL;
+   /*
+   * do no allocate any heap objects here since thread affinity will be
+   * determined after object is initiated
+   */
 
-    this->unlimited = false;
+  this->frequency = 0;
+  this->avr = NULL;
+
+  this->unlimited = false;
 
 }
+
+AVRProcessor::~AVRProcessor(){
+
+  if(this->avr){
+
+    free(this->avr);
+  }
+
+}
+
 /**
- * @brief load an avr firmware binary by filname, desired mmcu and frequency
+ * @brief load an avr firmware binary by filename, desired mmcu and frequency
  *
  * @param filename the filename of the firmware binary to load
  * @param mmcu the target avr core (atmega64,atmega128,...)
  * @param frequency the desired frequency of the simulation generally 8MHz
  */
-void AVRThread::load(QString filename, QString mmcu, unsigned int frequency){
+void AVRProcessor::load(QString filename, QString mmcu, unsigned int frequency){
 
   this->filename = QString(filename);
 
@@ -69,13 +84,13 @@ void AVRThread::load(QString filename, QString mmcu, unsigned int frequency){
 
   memcpy(this->firmware.mmcu, mmcu.toLatin1(), mmcu.size() );
 
-  qDebug() << "AVRThread: firmware " << filename.toLatin1() << " freq "
+  qDebug() << "AVRProcessor: firmware " << filename.toLatin1() << " freq "
     << frequency << " mmcu " << mmcu.toLatin1();
 
   this->avr = avr_make_mcu_by_name(mmcu.toLatin1());
 
   if(!this->avr){
-      qDebug() << "AVRThread: possible memory allocation error\n";
+      qDebug() << "AVRProcessor: possible memory allocation error\n";
       return;
   }
 
@@ -83,40 +98,24 @@ void AVRThread::load(QString filename, QString mmcu, unsigned int frequency){
 
   avr_load_firmware(this->avr, &this->firmware);
 
+  fflush(stdout);
+
   emit this->loaded(this->avr);
-}
-
-/**
- * @brief reset the avr state and restart the thread
- */
-void AVRThread::restart(){
-
-  if (!this->avr) {
-      return;
-  }
-
-  emit this->RESET();
-
-  //TODO stop thread
-  //TODO free any data that can be safely free'd
-
-  // lock
-  avr_reset(this->avr);
-  // unlock
-
-  //TODO start thread
 }
 
 /**
  * @brief the function to be run upon starting this thread
  */
-void AVRThread::run(){
-
+void AVRProcessor::run(){
 
   if ( !this->avr ){
-    qDebug() << "AVRThread: no firmware loaded exiting run thread\n";
+    qDebug() << "AVRProcessor: no firmware loaded exiting run thread\n";
     return;
   }
+
+  avr_reset(this->avr);
+
+  emit this->RESET();
 
   if (this->unlimited){
 
@@ -128,12 +127,14 @@ void AVRThread::run(){
 
   }
 
+  emit this->finished();
+
 }
 
 /**
- * @brief execuate avr instructions as fast as possible, ie. instructions per second
+ * @brief execute avr instructions as fast as possible, ie. instructions per second
  */
-void AVRThread::runUnlimited(void){
+void AVRProcessor::runUnlimited(void){
 
   int status = cpu_Running;
 
@@ -150,13 +151,9 @@ void AVRThread::runUnlimited(void){
 }
 
 /**
- * @brief execuate avr instructions at desired frequency specified upon loading firmware
+ * @brief execute avr instructions at desired frequency specified upon loading firmware
  */
-void AVRThread::runRegulated(void){
-
-  //TODO variable loop speed recalculation instead 1 sec
-  //TODO variable loop speep
-  //TODO usleep() instead of loop_delay()
+void AVRProcessor::runRegulated(void){
 
   struct timeval t1, t2;
 
@@ -166,9 +163,11 @@ void AVRThread::runRegulated(void){
 
   int cfactor = 0;
 
-  int loop_count = 20;
+  int loop_count = 100;
 
   int status = cpu_Running;
+
+  int updateSpeed = 1; // 4 Hz
 
   emit this->avrStateChange(status);
 
@@ -187,17 +186,23 @@ void AVRThread::runRegulated(void){
     dt = (t2.tv_sec - t1.tv_sec)*1000000 + (t2.tv_usec - t1.tv_usec);
 
     /* One Second has passed, adjust loop speed */
-    if( dt >= 1000000 ){
+    if( dt >= 1000000/updateSpeed ){
 
-      //cfactor = cycles - this->frequency;
-      cfactor = cycles - 8000000;
+      // correction factor to apply to loop delay
+      cfactor = cycles - this->frequency/updateSpeed;
 
-      /* TODO consider log(cfactor) or sqrt(cfactor)*/
-      loop_count += cfactor >> 18;
+      // divide here to depreciate smaller errors
+      cfactor /= ((float)this->frequency/1024);
+
+      if(cfactor < 0 ){
+        loop_count -= log(abs(cfactor));
+      } else if (cfactor > 0 ) {
+        loop_count += log(cfactor);
+      }
 
       if(loop_count < 0) loop_count = 0;
 
-      qDebug() << "AVRThread: Loop Count:" << loop_count << "cFactor:" << (cfactor >> 18) << "Freq:" << cycles;
+      qDebug() << "AVRProcessor: Loop Count:" << loop_count << "Freq:" << updateSpeed*cycles << "MHz";
 
       cycles = 0;
 
@@ -205,7 +210,7 @@ void AVRThread::runRegulated(void){
 
     }
 
-    AVRThread::loop_delay((unsigned int) loop_count);
+    AVRProcessor::loop_delay((unsigned int) loop_count);
 
   }
 
@@ -214,11 +219,11 @@ void AVRThread::runRegulated(void){
 }
 
 /**
- * @brief simple loop delay (spin delay, spin couter, etc)
+ * @brief simple loop delay (spin delay, spin counter, etc)
  *
- * @param count the number of "nop" to execute, to create a significat delay
+ * @param count the number of "nop" to execute, to create a significant delay
  */
-void AVRThread::loop_delay(unsigned int count){
+inline void AVRProcessor::loop_delay(unsigned int count){
 
   while(count--) asm("nop");
 
