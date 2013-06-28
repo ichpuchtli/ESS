@@ -1,52 +1,49 @@
-#ifndef __AVRTHREAD__
-#define __AVRTHREAD__
+#ifndef AVRPROCESSOR_H
+#define AVRPROCESSOR_H
 
-#include <QtCore/QThread>
+#include <QtCore/QObject>
 #include <QtCore/QString>
 
 #include "sim_avr.h"
 #include "sim_elf.h"
 
-
 class AVRProcessor : public QObject {
 
   Q_OBJECT
 
-  public:
-    AVRProcessor();
-    ~AVRProcessor();
+public:
 
-  public slots:
+  AVRProcessor();
+  virtual ~AVRProcessor();
 
-    void load(QString filename, QString mmcu, unsigned int frequency);
-
-    void run(void);
-
+  // Signals
   signals:
 
-    void RESET();
+  void RESET();
 
-    void loaded(avr_t* avr);
+  void finished();
 
-    void avrStateChange(int); // AVR Core state change // sleeping, running, stopped, finished
+  void loaded(avr_t* avr);
 
-    void finished();
+  void avrStateChange(int status);
 
-  private:
-    avr_t* avr;
-    elf_firmware_t firmware;
+  // Slots
+  public slots:
 
-    QString filename;
-    QString mmcu;
+  virtual void run() = 0; // Pure Virtual, Base class must implement run
 
-    unsigned int frequency;
+  void load(const QString& filename, const QString& mmcu, unsigned frequency);
 
-    bool unlimited;
+protected:
+  avr_t* avr;
+  elf_firmware_t firmware;
 
-    void runUnlimited(void);
-    void runRegulated(void);
+  QString filename;
+  QString mmcu;
+  unsigned frequency;
 
-    inline void loop_delay(unsigned int count);
 };
 
-#endif
+Q_DECLARE_INTERFACE(AVRProcessor, "ESS.AVRProcessor")
+
+#endif // AVRPROCESSOR_H

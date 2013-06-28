@@ -11,13 +11,16 @@
 
 #include "RectMatrix.h"
 #include "RectMatrixLogic.h"
+
 #include "AVRProcessor.h"
+#include "RegulatedAVRProcessor.h"
+#include "RRAVRProcessor.h"
 
 int main(int argc, char** argv){
 
   QApplication app(argc, argv);
   
-  AVRProcessor* cpu = new AVRProcessor;
+  AVRProcessor* cpu = new RegulatedAVRProcessor;
   QThread* cpu_thread = new QThread;
   cpu->moveToThread(cpu_thread);
 
@@ -27,7 +30,7 @@ int main(int argc, char** argv){
   QObject::connect(cpu, &AVRProcessor::finished, cpu, &AVRProcessor::deleteLater);
   QObject::connect(cpu, &AVRProcessor::finished, cpu_thread, &QThread::deleteLater);
 
-  RectMatrix* matrix_widget = new RectMatrix(20);
+  RectMatrix* matrix_widget = new RectMatrix(25);
   RectMatrixLogic* matrix_logic = new RectMatrixLogic();
 
   matrix_logic->init();
