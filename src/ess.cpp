@@ -15,6 +15,7 @@
 #include "AVRProcessor.h"
 #include "RegulatedAVRProcessor.h"
 #include "RRAVRProcessor.h"
+#include "HybridAVRProcessor.h"
 
 int main(int argc, char** argv){
 
