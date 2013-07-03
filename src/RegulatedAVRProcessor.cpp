@@ -1,6 +1,6 @@
 /**
  * @file RegulatedAVRProcessor.cpp
- * @brief avr execution thread handler
+ * @brief a processor stategies using loop delays to achieve time accurate simulations
  * @author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "RegulatedAVRProcessor.h"
@@ -27,8 +27,6 @@
 #include "math.h"
 
 #include <stdint.h>
-
-#define AVR_RUNNABLE(status) (status != cpu_Crashed && status != cpu_Done)
 
 /**
  * @brief the function to be run upon starting this thread
@@ -52,9 +50,9 @@ void RegulatedAVRProcessor::run(){
     return;
   }
 
-  avr_reset(this->avr);
-
   emit this->RESET();
+
+  avr_reset(this->avr);
 
   int status = cpu_Running;
 
@@ -62,7 +60,7 @@ void RegulatedAVRProcessor::run(){
 
   gettimeofday(&t1, NULL);
 
-  while (AVR_RUNNABLE(status)) {
+  while (AVRProcessor::avrRunnable(status)) {
 
     gettimeofday(&t2, NULL);
 
@@ -106,16 +104,5 @@ void RegulatedAVRProcessor::run(){
   emit this->avrStateChange(status);
 
   emit this->finished();
-
-}
-
-/**
- * @brief simple loop delay (spin delay, spin counter, etc)
- *
- * @param count the number of "nop" to execute, to create a significant delay
- */
-inline void RegulatedAVRProcessor::loop_delay(unsigned int count){
-
-  while(count--) asm("nop");
 
 }

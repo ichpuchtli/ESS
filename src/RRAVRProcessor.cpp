@@ -1,6 +1,6 @@
 /**
  * @file RRAVRProcessor.cpp
- * @brief avr execution thread handler
+ * @brief a Round Robin processor strategy i.e. fatest possible strategy
  * @author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
@@ -22,8 +22,6 @@
 
 #include <QtCore/QDebug>
 
-#define AVR_RUNNABLE(status) (status != cpu_Crashed && status != cpu_Done)
-
 /**
  * @brief the function to be run upon starting this thread
  */
@@ -34,15 +32,15 @@ void RRAVRProcessor::run(){
     return;
   }
 
-  avr_reset(this->avr);
-
   emit this->RESET();
+
+  avr_reset(this->avr);
 
   int status = cpu_Running;
 
   emit this->avrStateChange(status);
 
-  while ( AVR_RUNNABLE( status ) ) {
+  while ( AVRProcessor::avrRunnable( status ) ) {
 
     status = avr_run(this->avr);
 

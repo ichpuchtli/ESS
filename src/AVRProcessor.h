@@ -34,6 +34,19 @@ public:
 
   void load(const QString& filename, const QString& mmcu, unsigned frequency);
 
+  /**
+   * @brief returns true if the simavr core is still running and has not crashed nor
+   * reached the end of program code
+   *
+   * @param status the enum returned by avr_run( avr_t* avr ) from simavr which executes a single
+   * operation
+   */
+  inline bool avrRunnable( int status ){
+
+    return ( status != cpu_Crashed ) && ( status != cpu_Done );
+
+  }
+
 protected:
   avr_t* avr;
   elf_firmware_t firmware;

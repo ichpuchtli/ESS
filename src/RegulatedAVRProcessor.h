@@ -11,9 +11,17 @@ class RegulatedAVRProcessor : public AVRProcessor {
 
     void run(void);
 
-  private:
+  /**
+   * @brief simple loop delay (spin delay, spin counter, etc)
+   *
+   * @param count the number of "nop" to execute, to create a significant delay
+   */
+  static inline void loop_delay(unsigned int count){
 
-    inline void loop_delay(unsigned int count);
+    while(count--) asm("nop");
+
+  }
+
 };
 
 #endif
