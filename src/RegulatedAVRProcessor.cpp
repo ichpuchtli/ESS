@@ -50,7 +50,7 @@ void RegulatedAVRProcessor::run(){
     return;
   }
 
-  emit this->RESET();
+  emit this->RESET(this->avr);
 
   avr_reset(this->avr);
 

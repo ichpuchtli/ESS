@@ -42,7 +42,7 @@ void HybridAVRProcessor::run(){
 
   QObject::connect( this->timer, &QTimer::timeout, this, &HybridAVRProcessor::update );
 
-  emit this->RESET();
+  emit this->RESET(this->avr);
 
   avr_reset(this->avr);
 

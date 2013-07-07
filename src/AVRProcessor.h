@@ -19,7 +19,7 @@ public:
   // Signals
   signals:
 
-  void RESET();
+  void RESET(avr_t* avr);
 
   void finished();
 
