@@ -1,7 +1,7 @@
 /**
- * @file HyrbidAVRProcessor.cpp
- * @brief A processor stategy using clumped execuation at frequent intervals
- * @author Sam Macpherson
+ * \file HybridAVRProcessor.cpp
+ * \brief A simulation stategy using bundled execuation at frequent intervals
+ * \author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
  *
@@ -9,28 +9,25 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "HybridAVRProcessor.h"
 
 #include <QtCore/QDebug>
 
 /**
- * @brief the frequency to process a batch of avr operations in milliseconds
+ * \def UPDATE_FREQUENCY
+ * the frequency to process a batch of avr operations in milliseconds
  */
 #define UPDATE_FREQUENCY 20
 
-/**
- * @brief the function to be run upon starting this thread
- */
 void HybridAVRProcessor::run(){
 
   if ( !this->avr ){
@@ -53,8 +50,7 @@ void HybridAVRProcessor::run(){
 }
 
 /**
- * @brief this function is called at frequent times to process a large quantity of avr operations in
- * one go. This function is usually tied to a timer event or a sleeping pattern.
+ * \brief method tied to timer to process bulk avr cycles
  */
 void HybridAVRProcessor::update(void){
 
