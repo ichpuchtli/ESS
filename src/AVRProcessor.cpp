@@ -22,21 +22,6 @@
 
 #include <QtCore/QDebug>
 
-AVRProcessor::AVRProcessor(){
-
-  this->avr = NULL;
-
-}
-
-AVRProcessor::~AVRProcessor(){
-
-  if(this->avr){
-
-    free(this->avr);
-  }
-
-}
-
 void AVRProcessor::load(const QString& filename, const QString& mmcu, unsigned frequency) {
 
   this->filename = QString(filename);

@@ -28,92 +28,20 @@
 #include "sim_avr.h"
 #include "sim_elf.h"
 
+#include "AbstractAVRProcessor.h"
+
 /**
  * \brief An abstract base class for running simavr based avr simulations
  */
-class AVRProcessor : public QObject {
+class AVRProcessor : public AbstractAVRProcessor {
 
   Q_OBJECT
+  Q_INTERFACES(AbstractAVRProcessor)
 
 public:
 
-  AVRProcessor();
-  virtual ~AVRProcessor();
-
-  signals:
-
-  /**
-   * \brief this signal is emitted prior to entering a simulation loop,
-   * this would be the ideal time to intialize/reset components etc.
-   */
-  void RESET();
-
-  /**
-   * \brief this signal is emitted when a simulation loop has finished either
-   * following an error in simulation or reaching the end of the simulated
-   * program
-   * \see avrStateChange(int)
-   */
-  void finished();
-
-  /**
-   * \brief this signal is emitted when new firmware file is loaded and ready
-   * to simulate
-   *
-   * \param avr an initialized avr_t pointer for this simavr instance
-   */
-  void loaded(avr_t* avr);
-
-  /**
-   * \brief this signal is emitted when the simulation core state changes,
-   * this is emitted before and after a simulation loop
-   *
-   * \param status the new status of the simavr core
-   */
-  void avrStateChange(int status);
-
-  public slots:
-
-  /**
-   * \brief the only pure virtual method in the class, this method 
-   * houses the simulation procedure and is often connected to a
-   * QThread or QTimer event.
-   */
-  virtual void run() = 0;
-
-  /**
-   * \brief load a new 8-bit avr executable compiled with avr-gcc or WinAVR
-   * given a \em filename to the compiled executable the desired
-   * \em frequency and \em mmcu
-   *
-   * \note the list of supported avr devices is determined by the version
-   * of simavr linked with the ESS at compile time.
-   *
-   * \see <a href="http://github.com/buserror-uk/simavr">buserror-uk/simavr</a>
-   *
-   * \note the list of supported devices for simavr at cc901dc include:
-   *
-   *   \li AT90USB162 (with USB!)
-   *   \li ATMega1280
-   *   \li ATMega128
-   *   \li ATMega64
-   *   \li ATMega16M1
-   *   \li ATMega164/324/644
-   *   \li ATMega48/88/168/328
-   *   \li ATMega8
-   *   \li ATTiny25/45/85
-   *   \li ATTIny44/84
-   *   \li ATTiny2313
-   *   \li ATTiny13
-   *
-   * \param filename the path to the compiled avr executable
-   * \param mmcu the avr device to target
-   * \param frequency the diesred frequency of execuation typically in the
-   * range of MHz for instance 8MHz would be 8000000. The actual rate is up to
-   * the simulation stragtegy and can be limited by the power of the computer
-   * running the simulation
-   */
-  void load(const QString& filename, const QString& mmcu, unsigned frequency);
+  AVRProcessor() : avr(NULL) {}
+  virtual ~AVRProcessor() {}
 
   /**
    * \brief returns true if the simavr core is still runnable typically used
@@ -140,6 +68,19 @@ public:
     return ( status != cpu_Crashed ) && ( status != cpu_Done );
 
   }
+
+  void load(const QString& filename, const QString& mmcu, unsigned frequency);
+
+signals:
+
+  /**
+   * \brief this signal is emitted when new firmware file is loaded and ready
+   * to simulate
+   *
+   * \param avr an initialized avr_t pointer for this simavr instance
+   */
+  void loaded(avr_t* avr);
+
 
 protected:
 
