@@ -29,7 +29,7 @@ void RRAVRProcessor::run(){
     return;
   }
 
-  emit this->RESET(this->avr);
+  emit this->RESET();
 
   avr_reset(this->avr);
 
