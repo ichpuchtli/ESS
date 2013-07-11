@@ -1,7 +1,7 @@
 /**
- * @file RRAVRProcessor.cpp
- * @brief a Round Robin processor strategy i.e. fatest possible strategy
- * @author Sam Macpherson
+ * \file RRAVRProcessor.cpp
+ * \brief a simple Round Robin simulation strategy
+ * \author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
  *
@@ -16,15 +16,12 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "RRAVRProcessor.h"
 
 #include <QtCore/QDebug>
 
-/**
- * @brief the function to be run upon starting this thread
- */
 void RRAVRProcessor::run(){
 
   if ( !this->avr ){
