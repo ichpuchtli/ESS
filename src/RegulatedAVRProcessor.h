@@ -31,6 +31,11 @@ class RegulatedAVRProcessor : public AVRProcessor {
 
   Q_INTERFACES(AVRProcessor)
 
+  public:
+
+    RegulatedAVRProcessor(const QString& mmcu, unsigned frequency) :
+      AVRProcessor(mmcu, frequency), loop_count(100) {}
+
   public slots:
 
     void run(void);
@@ -47,6 +52,9 @@ class RegulatedAVRProcessor : public AVRProcessor {
 
   }
 
+
+  private:
+   int loop_count;
 };
 
 #endif

@@ -31,6 +31,10 @@ class RRAVRProcessor : public AVRProcessor {
 
   Q_INTERFACES(AVRProcessor)
 
+  public:
+    RRAVRProcessor(const QString& mmcu, unsigned frequency) :
+      AVRProcessor(mmcu, frequency) {}
+
   public slots:
 
     void run(void);

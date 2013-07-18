@@ -22,35 +22,30 @@
 
 #include <QtCore/QDebug>
 
-void AVRProcessor::load(const QString& filename, const QString& mmcu, unsigned frequency) {
+void AVRProcessor::loadFirmware(const QString& filename){
 
-  this->filename = QString(filename);
+  this->stop();
 
-  this->mmcu = QString(mmcu);
+  // TODO must wait here for thread to exit before we 
+  // can modify avr structure
 
-  this->frequency = frequency;
+  this->filename = filename;
 
   elf_read_firmware(filename.toLatin1(), &this->firmware);
 
-  this->firmware.frequency = frequency;
+  this->firmware.frequency = this->frequency;
 
-  memcpy(this->firmware.mmcu, mmcu.toLatin1(), mmcu.size() );
+  memcpy(this->firmware.mmcu, this->mmcu.toLatin1(), this->mmcu.size() );
 
   qDebug() << "AVRProcessor:" << this->filename.toLatin1() << " freq "
-    << frequency << " mmcu " << mmcu.toLatin1();
+    << this->frequency << " mmcu " << this->mmcu.toLatin1();
 
-  this->avr = avr_make_mcu_by_name(mmcu.toLatin1());
-
-  if(!this->avr){
-      qDebug() << "AVRProcessor: possible memory allocation error\n";
-      return;
-  }
-
-  avr_init(this->avr);
+  avr_reset(this->avr);
 
   avr_load_firmware(this->avr, &this->firmware);
 
   fflush(stdout);
 
   emit this->loaded(this->avr);
+
 }

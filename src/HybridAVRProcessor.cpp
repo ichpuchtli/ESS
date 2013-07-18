@@ -30,14 +30,11 @@
 
 void HybridAVRProcessor::run(){
 
-  if ( !this->avr ){
-    qDebug() << "AVRProcessor: no firmware loaded exiting run thread\n";
-    return;
-  }
-
   this->timer = new QTimer(this);
 
   QObject::connect( this->timer, &QTimer::timeout, this, &HybridAVRProcessor::update );
+
+  this->isRunning = true;
 
   emit this->RESET();
 
@@ -47,6 +44,7 @@ void HybridAVRProcessor::run(){
 
   timer->start( UPDATE_FREQUENCY );
 
+  qDebug() << "HybridAVRProcessor: running";
 }
 
 /**
@@ -72,7 +70,9 @@ void HybridAVRProcessor::update(void){
 
     free(this->timer);
 
-    emit this->finished();
+    emit this->stopped();
+
+    qDebug() << "HybridAVRProcessor: stopped";
   }
 
 }

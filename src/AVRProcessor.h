@@ -40,8 +40,55 @@ class AVRProcessor : public AbstractAVRProcessor {
 
 public:
 
-  AVRProcessor() : avr(NULL) {}
-  virtual ~AVRProcessor() {}
+  /**
+   * \brief Creates a generic 8-bit avr processor containing all the
+   * necessary functionality except the main strategy of execution which is
+   * fulfilled by subclasses
+   *
+   * \note the list of supported avr devices is determined by the version
+   * of simavr linked with the ESS at compile time.
+   *
+   * \see <a href="http://github.com/buserror-uk/simavr">buserror-uk/simavr</a>
+   *
+   * \note the list of supported devices for simavr at cc901dc include:
+   *
+   *   \li at90usb162 (with usb!)
+   *   \li atmega1280
+   *   \li atmega128
+   *   \li atmega64
+   *   \li atmega16m1
+   *   \li atmega164/324/644
+   *   \li atmega48/88/168/328
+   *   \li atmega8
+   *   \li attiny25/45/85
+   *   \li attiny44/84
+   *   \li attiny2313
+   *   \li attiny13
+   *
+   * \param mmcu the avr device to target
+   * \param frequency the desired frequency of execution typically in the
+   * range of MHz for instance 8MHz would be 8000000. The actual rate is up to
+   * the simulation strategy and can be limited by the power of the computer
+   * running the simulation
+   */
+    AVRProcessor(const QString& mmcu, unsigned frequency) :
+    isRunning(false),
+    mmcu(mmcu),
+    frequency(frequency)
+    {
+      this->avr = avr_make_mcu_by_name(mmcu.toLatin1());
+      avr_init(this->avr);
+    }
+
+  ~AVRProcessor() {
+      free(this->avr);
+   }
+
+public slots:
+
+  void stop() { this->isRunning = false; }
+
+  void loadFirmware(const QString &filename);
 
   /**
    * \brief returns true if the simavr core is still runnable typically used
@@ -65,11 +112,17 @@ public:
    */
   inline bool avrRunnable( int status ){
 
-    return ( status != cpu_Crashed ) && ( status != cpu_Done );
+    return ( status != cpu_Crashed ) && ( status != cpu_Done ) &&
+        this->isRunning;
 
   }
 
-  void load(const QString& filename, const QString& mmcu, unsigned frequency);
+  /**
+   * \brief get the internal avr_t structure
+   *
+   * \return a pointer to the internal simavr based avr_t structure
+   */
+  avr_t* getAVR(void) { return this->avr; }
 
 signals:
 
@@ -85,7 +138,7 @@ signals:
 protected:
 
   /**
-   * \brief simavr owned c structure contatining simavr instance data
+   * \brief simavr owned c structure containing simavr instance data
    */
   avr_t* avr;
 
@@ -100,14 +153,19 @@ protected:
   QString filename;
 
   /**
-   * \brief the name of the targetet avr device 
+   * \brief the name of the targeted avr device 
    */
   QString mmcu;
 
   /**
-   * \brief the desired frequency of executation
+   * \brief the desired frequency of execution
    */
   unsigned frequency;
+
+  /**
+   * \brief indicates the user has requested stop to execution
+   */
+  bool isRunning;
 
 };
 

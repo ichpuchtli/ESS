@@ -19,15 +19,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "RRAVRProcessor.h"
+#include <QtCore/QThread>
 
 #include <QtCore/QDebug>
 
 void RRAVRProcessor::run(){
-
-  if ( !this->avr ){
-    qDebug() << "RRAVRProcessor: no firmware loaded exiting run thread\n";
-    return;
-  }
 
   emit this->RESET();
 
@@ -37,14 +33,19 @@ void RRAVRProcessor::run(){
 
   emit this->avrStateChange(status);
 
+  this->isRunning = true;
+
+  qDebug() << "RRAVRProcessor: running";
+
   while ( AVRProcessor::avrRunnable( status ) ) {
 
     status = avr_run(this->avr);
-
   }
+
+  qDebug() << "RRAVRProcessor: stopped";
 
   emit this->avrStateChange(status);
 
-  emit this->finished();
+  emit this->stopped();
 
 }

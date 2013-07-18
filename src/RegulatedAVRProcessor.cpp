@@ -20,13 +20,17 @@
  */
 
 #include "RegulatedAVRProcessor.h"
+#include <QtWidgets/QApplication>
 
+#include <QtCore/QThread>
 #include <QtCore/QDebug>
 
 #include <sys/time.h>
 #include "math.h"
 
 #include <stdint.h>
+
+#define UPDATE_SPEED 4 // 4 Hz
 
 void RegulatedAVRProcessor::run(){
 
@@ -38,14 +42,9 @@ void RegulatedAVRProcessor::run(){
 
   int cfactor = 0;
 
-  int loop_count = 100;
+  this->isRunning = true;
 
-  unsigned int updateSpeed = 4; // 4 Hz
-
-  if ( !this->avr ){
-    qDebug() << "RegulatedAVRProcessor: no firmware loaded exiting run thread\n";
-    return;
-  }
+ qDebug() << "RegulatedAVRProcessor: running";
 
   emit this->RESET();
 
@@ -70,10 +69,10 @@ void RegulatedAVRProcessor::run(){
     dt = (t2.tv_sec - t1.tv_sec)*1000000U + (t2.tv_usec - t1.tv_usec);
 
     /* One Second has passed, adjust loop speed */
-    if( dt >= 1000000U/updateSpeed ){
+    if( dt >= 1000000U/UPDATE_SPEED ){
 
       // correction factor to apply to loop delay
-      cfactor = cycles - this->frequency/updateSpeed;
+      cfactor = cycles - this->frequency/UPDATE_SPEED;
 
       // divide here to depreciate smaller errors
       cfactor /= ((float)this->frequency/1024);
@@ -86,7 +85,7 @@ void RegulatedAVRProcessor::run(){
 
       if(loop_count < 0) loop_count = 0;
 
-      qDebug() << "RegulatedAVRProcessor: Loop Count:" << loop_count << "Freq:" << updateSpeed*cycles << "MHz";
+      qDebug() << "RegulatedAVRProcessor: Loop Count:" << loop_count << "Freq:" << UPDATE_SPEED*cycles << "MHz";
 
       cycles = 0;
 
@@ -100,6 +99,7 @@ void RegulatedAVRProcessor::run(){
 
   emit this->avrStateChange(status);
 
-  emit this->finished();
+  emit this->stopped();
 
+  qDebug() << "RegulatedAVRProcessor: stopped";
 }
