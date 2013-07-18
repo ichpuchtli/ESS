@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QMdiArea" name="mdiArea"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>640</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Session"/>
+    <addaction name="actionSave_Session"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menuLugins">
+    <property name="title">
+     <string>Peripherals</string>
+    </property>
+    <addaction name="actionCerebotII"/>
+    <addaction name="actionPmod_PushButtons"/>
+   </widget>
+   <widget class="QMenu" name="menuHlep">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionESS_Help"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_ESS"/>
+    <addaction name="actionAbout_Qt"/>
+   </widget>
+   <widget class="QMenu" name="menuAVR">
+    <property name="title">
+     <string>AVR</string>
+    </property>
+    <addaction name="actionLoad_Firmware"/>
+    <addaction name="actionReload_Firmware"/>
+    <addaction name="separator"/>
+    <addaction name="actionStart"/>
+    <addaction name="actionPause"/>
+    <addaction name="actionStop"/>
+    <addaction name="separator"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAVR"/>
+   <addaction name="menuLugins"/>
+   <addaction name="menuHlep"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionLoad_Firmware"/>
+   <addaction name="actionReload_Firmware"/>
+   <addaction name="separator"/>
+   <addaction name="actionStart"/>
+   <addaction name="actionPause"/>
+   <addaction name="actionStop"/>
+   <addaction name="separator"/>
+  </widget>
+  <action name="actionOpen_Session">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/document-open-folder.png</normaloff>../icons/document-open-folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Session</string>
+   </property>
+  </action>
+  <action name="actionSave_Session">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/document-save.png</normaloff>../icons/document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Session</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/application-exit.png</normaloff>../icons/application-exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionCerebotII">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>CerebotII</string>
+   </property>
+  </action>
+  <action name="actionPmod_PushButtons">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Pmod PushButtons</string>
+   </property>
+  </action>
+  <action name="actionESS_Help">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/help-contents.png</normaloff>../icons/help-contents.png</iconset>
+   </property>
+   <property name="text">
+    <string>ESS Help</string>
+   </property>
+  </action>
+  <action name="actionAbout_ESS">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/help-about.png</normaloff>../icons/help-about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About ESS</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/help-about.png</normaloff>../icons/help-about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+   <property name="statusTip">
+    <string comment="Sarp" extracomment="Stuff About Qt"/>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
+   </property>
+  </action>
+  <action name="actionLoad_Firmware">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/document-open-folder.png</normaloff>../icons/document-open-folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Firmware</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/media-playback-pause.png</normaloff>../icons/media-playback-pause.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/media-playback-stop.png</normaloff>../icons/media-playback-stop.png</iconset>
+   </property>
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionReload_Firmware">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/view-refresh.png</normaloff>../icons/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reload Firmware</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/media-playback-start.png</normaloff>../icons/media-playback-start.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

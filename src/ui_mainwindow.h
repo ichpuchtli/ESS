@@ -1,0 +1,218 @@
+/********************************************************************************
+** Form generated from reading UI file 'mainwindoww14979.ui'
+**
+** Created by: Qt User Interface Compiler version 5.1.0
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef MAINWINDOWW14979_H
+#define MAINWINDOWW14979_H
+
+#include <QtCore/QVariant>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QWidget>
+
+QT_BEGIN_NAMESPACE
+
+class Ui_MainWindow
+{
+public:
+    QAction *actionOpen_Session;
+    QAction *actionSave_Session;
+    QAction *actionClose;
+    QAction *actionCerebotII;
+    QAction *actionPmod_PushButtons;
+    QAction *actionESS_Help;
+    QAction *actionAbout_ESS;
+    QAction *actionAbout_Qt;
+    QAction *actionLoad_Firmware;
+    QAction *actionPause;
+    QAction *actionStop;
+    QAction *actionReload_Firmware;
+    QAction *actionStart;
+    QWidget *centralwidget;
+    QVBoxLayout *verticalLayout;
+    QMdiArea *mdiArea;
+    QMenuBar *menubar;
+    QMenu *menuFile;
+    QMenu *menuLugins;
+    QMenu *menuHlep;
+    QMenu *menuAVR;
+    QStatusBar *statusbar;
+    QToolBar *toolBar;
+
+    void setupUi(QMainWindow *MainWindow)
+    {
+        if (MainWindow->objectName().isEmpty())
+            MainWindow->setObjectName(QStringLiteral("MainWindow"));
+        MainWindow->resize(640, 480);
+        actionOpen_Session = new QAction(MainWindow);
+        actionOpen_Session->setObjectName(QStringLiteral("actionOpen_Session"));
+        QIcon icon;
+        icon.addFile(QStringLiteral("icons/document-open-folder.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionOpen_Session->setIcon(icon);
+        actionSave_Session = new QAction(MainWindow);
+        actionSave_Session->setObjectName(QStringLiteral("actionSave_Session"));
+        QIcon icon1;
+        icon1.addFile(QStringLiteral("icons/document-save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionSave_Session->setIcon(icon1);
+        actionClose = new QAction(MainWindow);
+        actionClose->setObjectName(QStringLiteral("actionClose"));
+        QIcon icon2;
+        icon2.addFile(QStringLiteral("icons/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionClose->setIcon(icon2);
+        actionCerebotII = new QAction(MainWindow);
+        actionCerebotII->setObjectName(QStringLiteral("actionCerebotII"));
+        actionCerebotII->setCheckable(true);
+        actionPmod_PushButtons = new QAction(MainWindow);
+        actionPmod_PushButtons->setObjectName(QStringLiteral("actionPmod_PushButtons"));
+        actionPmod_PushButtons->setCheckable(true);
+        actionESS_Help = new QAction(MainWindow);
+        actionESS_Help->setObjectName(QStringLiteral("actionESS_Help"));
+        QIcon icon3;
+        icon3.addFile(QStringLiteral("icons/help-contents.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionESS_Help->setIcon(icon3);
+        actionAbout_ESS = new QAction(MainWindow);
+        actionAbout_ESS->setObjectName(QStringLiteral("actionAbout_ESS"));
+        QIcon icon4;
+        icon4.addFile(QStringLiteral("icons/help-about.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionAbout_ESS->setIcon(icon4);
+        actionAbout_Qt = new QAction(MainWindow);
+        actionAbout_Qt->setObjectName(QStringLiteral("actionAbout_Qt"));
+        actionAbout_Qt->setIcon(icon4);
+        actionAbout_Qt->setMenuRole(QAction::AboutQtRole);
+        actionLoad_Firmware = new QAction(MainWindow);
+        actionLoad_Firmware->setObjectName(QStringLiteral("actionLoad_Firmware"));
+        actionLoad_Firmware->setIcon(icon);
+        actionPause = new QAction(MainWindow);
+        actionPause->setObjectName(QStringLiteral("actionPause"));
+        actionPause->setCheckable(false);
+        actionPause->setChecked(false);
+        QIcon icon5;
+        icon5.addFile(QStringLiteral("icons/media-playback-pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionPause->setIcon(icon5);
+        actionStop = new QAction(MainWindow);
+        actionStop->setObjectName(QStringLiteral("actionStop"));
+        QIcon icon6;
+        icon6.addFile(QStringLiteral("icons/media-playback-stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionStop->setIcon(icon6);
+        actionReload_Firmware = new QAction(MainWindow);
+        actionReload_Firmware->setObjectName(QStringLiteral("actionReload_Firmware"));
+        QIcon icon7;
+        icon7.addFile(QStringLiteral("icons/view-refresh.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionReload_Firmware->setIcon(icon7);
+        actionStart = new QAction(MainWindow);
+        actionStart->setObjectName(QStringLiteral("actionStart"));
+        QIcon icon8;
+        icon8.addFile(QStringLiteral("icons/media-playback-start.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionStart->setIcon(icon8);
+        centralwidget = new QWidget(MainWindow);
+        centralwidget->setObjectName(QStringLiteral("centralwidget"));
+        verticalLayout = new QVBoxLayout(centralwidget);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        mdiArea = new QMdiArea(centralwidget);
+        mdiArea->setObjectName(QStringLiteral("mdiArea"));
+
+        verticalLayout->addWidget(mdiArea);
+
+        MainWindow->setCentralWidget(centralwidget);
+        menubar = new QMenuBar(MainWindow);
+        menubar->setObjectName(QStringLiteral("menubar"));
+        menubar->setGeometry(QRect(0, 0, 640, 25));
+        menuFile = new QMenu(menubar);
+        menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuLugins = new QMenu(menubar);
+        menuLugins->setObjectName(QStringLiteral("menuLugins"));
+        menuHlep = new QMenu(menubar);
+        menuHlep->setObjectName(QStringLiteral("menuHlep"));
+        menuAVR = new QMenu(menubar);
+        menuAVR->setObjectName(QStringLiteral("menuAVR"));
+        MainWindow->setMenuBar(menubar);
+        statusbar = new QStatusBar(MainWindow);
+        statusbar->setObjectName(QStringLiteral("statusbar"));
+        MainWindow->setStatusBar(statusbar);
+        toolBar = new QToolBar(MainWindow);
+        toolBar->setObjectName(QStringLiteral("toolBar"));
+        MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
+
+        menubar->addAction(menuFile->menuAction());
+        menubar->addAction(menuAVR->menuAction());
+        menubar->addAction(menuLugins->menuAction());
+        menubar->addAction(menuHlep->menuAction());
+        menuFile->addAction(actionOpen_Session);
+        menuFile->addAction(actionSave_Session);
+        menuFile->addSeparator();
+        menuFile->addAction(actionClose);
+        menuLugins->addAction(actionCerebotII);
+        menuLugins->addAction(actionPmod_PushButtons);
+        menuHlep->addAction(actionESS_Help);
+        menuHlep->addSeparator();
+        menuHlep->addAction(actionAbout_ESS);
+        menuHlep->addAction(actionAbout_Qt);
+        menuAVR->addAction(actionLoad_Firmware);
+        menuAVR->addAction(actionReload_Firmware);
+        menuAVR->addSeparator();
+        menuAVR->addAction(actionStart);
+        menuAVR->addAction(actionPause);
+        menuAVR->addAction(actionStop);
+        menuAVR->addSeparator();
+        toolBar->addAction(actionLoad_Firmware);
+        toolBar->addAction(actionReload_Firmware);
+        toolBar->addSeparator();
+        toolBar->addAction(actionStart);
+        toolBar->addAction(actionPause);
+        toolBar->addAction(actionStop);
+        toolBar->addSeparator();
+
+        retranslateUi(MainWindow);
+
+        QMetaObject::connectSlotsByName(MainWindow);
+    } // setupUi
+
+    void retranslateUi(QMainWindow *MainWindow)
+    {
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        actionOpen_Session->setText(QApplication::translate("MainWindow", "Open Session", 0));
+        actionSave_Session->setText(QApplication::translate("MainWindow", "Save Session", 0));
+        actionClose->setText(QApplication::translate("MainWindow", "Close", 0));
+        actionCerebotII->setText(QApplication::translate("MainWindow", "CerebotII", 0));
+        actionPmod_PushButtons->setText(QApplication::translate("MainWindow", "Pmod PushButtons", 0));
+        actionESS_Help->setText(QApplication::translate("MainWindow", "ESS Help", 0));
+        actionAbout_ESS->setText(QApplication::translate("MainWindow", "About ESS", 0));
+        actionAbout_Qt->setText(QApplication::translate("MainWindow", "About Qt", 0));
+#ifndef QT_NO_STATUSTIP
+        actionAbout_Qt->setStatusTip(QString());
+#endif // QT_NO_STATUSTIP
+        actionLoad_Firmware->setText(QApplication::translate("MainWindow", "Load Firmware", 0));
+        actionPause->setText(QApplication::translate("MainWindow", "Pause", 0));
+        actionStop->setText(QApplication::translate("MainWindow", "Stop", 0));
+        actionReload_Firmware->setText(QApplication::translate("MainWindow", "Reload Firmware", 0));
+        actionReload_Firmware->setShortcut(QApplication::translate("MainWindow", "Ctrl+F", 0));
+        actionStart->setText(QApplication::translate("MainWindow", "Start", 0));
+        menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
+        menuLugins->setTitle(QApplication::translate("MainWindow", "Peripherals", 0));
+        menuHlep->setTitle(QApplication::translate("MainWindow", "Help", 0));
+        menuAVR->setTitle(QApplication::translate("MainWindow", "AVR", 0));
+        toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class MainWindow: public Ui_MainWindow {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // MAINWINDOWW14979_H
