@@ -75,9 +75,6 @@ public:
 
 signals:
 
-  void levelChange(int level);
-  void voltageChange(int voltage);
-
   /**
    * \brief the signal to be emitted if the direction changes
    *
