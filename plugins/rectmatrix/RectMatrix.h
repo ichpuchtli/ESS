@@ -5,10 +5,12 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 
-class RectMatrix : public QWidget {
+#include "../../src/AbstractPeripheralWidget.h"
+
+class RectMatrix : public AbstractPeripheralWidget {
 
   public:
-    RectMatrix(int rectSize = 20);
+    RectMatrix(int rectSize = 20, QWidget* parent = 0);
     ~RectMatrix();
 
   public slots:
@@ -18,6 +20,8 @@ class RectMatrix : public QWidget {
     void setCol(int bitfield);
 
     void setRow(int row);
+
+    void RESET() {}
 
   private:
 
