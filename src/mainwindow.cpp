@@ -1,16 +1,44 @@
+/**
+ * \file mainwindow.cpp
+ * \brief the main class controlling simulations and the main window
+ * \author Sam Macpherson
+ *
+ * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "mainwindow.h"
 
-#include <QtWidgets/QApplication>
 #include <QtCore/QThread>
 #include <QtCore/QDebug>
+#include <QtCore/QJsonObject>
+#include <QtCore/QPluginLoader>
 
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QFileDialog>
 
-#include <stdio.h>
-#include <stdlib.h>
+// Plugin Classes
+#include "PluginManager.h"
+#include "AbstractPeripheralFactory.h"
+#include "AbstractPeripheralLogic.h"
+#include "AbstractPeripheralWidget.h"
+#include "PinFactory.h"
 
+// Processeors
 #include "AVRProcessor.h"
 #include "RegulatedAVRProcessor.h"
 #include "RRAVRProcessor.h"
@@ -28,7 +56,7 @@ MainWindow::MainWindow( QWidget* parent ) :
 
   this->initComponents();
 
-  this->connectActions(ui);
+  this->connectActions();
 }
 
 MainWindow::~MainWindow(){}
@@ -58,12 +86,22 @@ void MainWindow::initComponents(void){
 
   QObject::connect(cpu, &AVRProcessor::stopped, cpuThread, &QThread::quit);
 
+  PinFactory* pinFactory = new PinFactory(cpu->getAVR(), cpuThread);
+
   this->filename = QString("src/avr/main.axf");
 
   this->cpu->loadFirmware(this->filename);
+
+  PluginManager* pluginManager = new PluginManager(QDir("plugins"), cpuThread, ui->mdiArea, cpu->getAVR(),pinFactory);
+
+  foreach(const QString plugin, pluginManager->listPlugins()){
+    pluginManager->show(plugin);
+    pluginManager->connect(plugin);
+  }
+
 }
 
-void MainWindow::connectActions(Ui::MainWindow* ui){
+void MainWindow::connectActions(void){
 
   connect(ui->actionAbout_Qt,SIGNAL(triggered()), qApp, SLOT(aboutQt()));
   connect(ui->actionClose,SIGNAL(triggered()), qApp, SLOT(quit()));
