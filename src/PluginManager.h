@@ -22,6 +22,7 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QThread>
 #include <QtCore/QJsonObject>
@@ -49,13 +50,13 @@ class PluginManager {
   struct Plugin {
 
       Peripheral peripheral;
-      QPluginLoader* loader; // need to keep this for unloading
 
       bool connected;
       bool hidden;
-      bool loaded;
 
-      QDir path;
+      QPluginLoader* loader; // need to keep this for unloading
+
+      QFileInfo file;
 
       QString id;
       QString description;
@@ -73,13 +74,12 @@ class PluginManager {
    * \note the use of \em peripheral and \em plugin are used interchangeably here
    * since plugins can only house peripherals at this point.
    *
-   * \param pluginDir the directory containing the shared libraries
    * \param affinity the thread "affinity" for the logic component of a peripheral
    * \param mdiArea the mdiArea to house peripheral widgets
    * \param avr the simavr core data structure of logic interactions
    * \param pinFactory the pin factory for logic interactions
    */
-    PluginManager(QDir pluginDir, QThread* affinity, QMdiArea* mdiArea, avr_t* avr, PinFactory* pinFactory);
+    PluginManager(QThread* affinity, QMdiArea* mdiArea, avr_t* avr, PinFactory* pinFactory);
     ~PluginManager(){}
 
   public slots:
@@ -131,9 +131,10 @@ class PluginManager {
     /**
      * \brief attempts to load a plugin
      *
+     * \param pluginDirectory the directory containing the plugin
      * \param filename the filename of the plugin relative to the plugin directory
      */
-    void load(const QString& filename);
+    void load(const QDir& pluginDirectory, const QString& filename);
 
     /**
      * \brief lists the names of the plugins available, the name of the plugin
@@ -163,7 +164,6 @@ class PluginManager {
     avr_t* avr;
     QThread* affinity;
     QMdiArea* mdiArea;
-    QDir pluginDir;
 
 };
 

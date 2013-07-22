@@ -22,10 +22,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtWidgets/QMainWindow>
 #include <QtCore/QThread>
+#include <QtWidgets/QMainWindow>
+
 #include "ui_mainwindow.h"
 
+#include "PluginManager.h"
 #include "AVRProcessor.h"
 
 /**
@@ -62,12 +64,17 @@ class MainWindow : public QMainWindow {
      */
     void stopSimulation(void);
 
+    /**
+     * \brief presents a dialog about the \em {Embedded System Simulator}
+     */
+    void aboutESS(void);
+
   private:
 
     void initSettings(void);
     void initComponents(void);
 
-    void connectActions(void);
+    void connectActions();
 
     Ui::MainWindow *ui;
 
@@ -75,6 +82,7 @@ class MainWindow : public QMainWindow {
 
     AVRProcessor* cpu;
     QThread* cpuThread;
+    PluginManager* pluginManager;
 };
 
 #endif // MAINWINDOW_H

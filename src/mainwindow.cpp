@@ -30,9 +30,9 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 // Plugin Classes
-#include "PluginManager.h"
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
 #include "AbstractPeripheralWidget.h"
@@ -83,7 +83,6 @@ void MainWindow::initComponents(void){
   this->cpu->moveToThread(cpuThread);
 
   QObject::connect(cpuThread, &QThread::started, cpu, &AVRProcessor::run);
-
   QObject::connect(cpu, &AVRProcessor::stopped, cpuThread, &QThread::quit);
 
   PinFactory* pinFactory = new PinFactory(cpu->getAVR(), cpuThread);
@@ -92,11 +91,17 @@ void MainWindow::initComponents(void){
 
   this->cpu->loadFirmware(this->filename);
 
-  PluginManager* pluginManager = new PluginManager(QDir("plugins"), cpuThread, ui->mdiArea, cpu->getAVR(),pinFactory);
+  this->pluginManager = new PluginManager(cpuThread, ui->mdiArea, cpu->getAVR(),pinFactory);
 
-  foreach(const QString plugin, pluginManager->listPlugins()){
-    pluginManager->show(plugin);
-    pluginManager->connect(plugin);
+  QDir pluginDirectory(QCoreApplication::applicationDirPath() + "/" + "plugins");
+
+  foreach(const QString& filename, pluginDirectory.entryList(QDir::NoDotAndDotDot | QDir::Files)){
+    this->pluginManager->load(pluginDirectory, filename);
+  }
+
+  foreach(const QString plugin, this->pluginManager->listPlugins()){
+    this->pluginManager->show(plugin);
+    this->pluginManager->connect(plugin);
   }
 
 }
@@ -106,6 +111,7 @@ void MainWindow::connectActions(void){
   connect(ui->actionAbout_Qt,SIGNAL(triggered()), qApp, SLOT(aboutQt()));
   connect(ui->actionClose,SIGNAL(triggered()), qApp, SLOT(quit()));
 
+  connect(ui->actionAbout_ESS, SIGNAL(triggered()), this, SLOT(aboutESS()));
   connect(ui->actionStart,SIGNAL(triggered()), this, SLOT(startSimulation()));
   connect(ui->actionPause,SIGNAL(triggered()), this, SLOT(stopSimulation()));
   connect(ui->actionStop,SIGNAL(triggered()), this, SLOT(stopSimulation()));
@@ -122,13 +128,14 @@ void MainWindow::connectActions(void){
 
   QSpinBox* spinBox = new QSpinBox(this);
 
-  spinBox->setMaximum(100000000);
+  spinBox->setMaximum(10000000);
   spinBox->setMinimum(0);
 
   spinBox->setValue(8000000);
   spinBox->setSuffix(QString(" Hz"));
 
   ui->toolBar->addWidget(spinBox);
+
 }
 
 void MainWindow::startSimulation(void){
@@ -177,5 +184,14 @@ void MainWindow::reloadFirmware(void){
   this->cpu->loadFirmware(this->filename);
 
   this->cpuThread->start();
+
+}
+
+void MainWindow::aboutESS(void){
+
+  QMessageBox::about(this, QString("About ESS"),
+                     QString("The Embedded System Simulator,  "
+                             "<a href=\"http://www.github.com/ichpuchtli/ess\">"
+                             "github.com/ichpuchtli/ess</a>"));
 
 }

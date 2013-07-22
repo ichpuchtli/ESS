@@ -23,38 +23,47 @@
 
 #include <QtCore/QDebug>
 
-PluginManager::PluginManager(QDir pluginDir, QThread* affinity, QMdiArea* mdiArea, avr_t* avr, PinFactory* pinFactory):
+PluginManager::PluginManager(QThread* affinity, QMdiArea* mdiArea, avr_t* avr, PinFactory* pinFactory):
   plugins(new QMap<QString, Plugin*>()),
-  pluginDir(pluginDir),
   affinity(affinity),
   mdiArea(mdiArea),
   pinFactory(pinFactory),
   avr(avr)
 {
+}
 
-  QStringList libs;
+void PluginManager::unload( const QString& id ){
 
-  libs = pluginDir.entryList(QDir::Files | QDir::NoDotAndDotDot);
+  Plugin* plugin = this->plugins->value(id);
 
-  qDebug() << "PluginManager: Found (" << libs.count() << ") Plugins" << libs;
+  this->plugins->remove(id);
 
-  foreach(const QString& filename, libs) {
-    this->load(filename);
-  }
+  this->hide(id);
+  this->disconnect(id);
+
+  //TODO dangerous if signals are still connected etc.
+  delete plugin->peripheral.widget;
+  delete plugin->peripheral.logic;
+
+  plugin->loader->unload();
+  delete plugin->loader;
+
+  delete plugin;
 
 }
 
-void PluginManager::unload( const QString& id ){}
+void PluginManager::load(const QDir& pluginDirectory, const QString& filename ){
 
-void PluginManager::load(const QString& filename){
+  QFileInfo file = QFileInfo(pluginDirectory, filename);
 
-  QDir path(this->pluginDir.dirName() + "/" + filename);
-
-  QPluginLoader* loader = new QPluginLoader(path.absolutePath());
+  QPluginLoader* loader = new QPluginLoader(file.absoluteFilePath());
 
   if(loader->metaData().isEmpty()){
+
     qDebug() << "PluginManager: could not find meta data on plugin:" << filename;
+
     delete loader;
+
     return;
   }
 
@@ -62,17 +71,14 @@ void PluginManager::load(const QString& filename){
 
   if(!library){
 
-    qDebug() << "PluginManager: error loading " << filename << "["
-             << loader->errorString() << "]";
+    qDebug() << "PluginManager:" << loader->errorString();
+
+    qDebug() << "PluginManager: could not load" << filename;
+
+    delete loader;
+
+    return;
   }
-
-  Plugin* plugin = new Plugin;
-
-  plugin->hidden = true;
-  plugin->loaded = true;
-  plugin->connected = false;
-  plugin->peripheral.logic = NULL;
-  plugin->peripheral.widget = NULL;
 
   AbstractPeripheralFactory* factory;
   factory = qobject_cast<AbstractPeripheralFactory*>(library);
@@ -82,28 +88,34 @@ void PluginManager::load(const QString& filename){
     qDebug() << "PluginManager: error casting plugin to "
                 "AbstractPeripheralFactory check implementation";
 
-    plugin->loaded = false;
-
     qDebug() << "PluginManager: could not load" << filename;
 
-  }else{
+    delete library;
+    delete loader;
 
-    plugin->peripheral = factory->getPeripheral();
-    plugin->description = factory->getDescription();
-    plugin->version = factory->getVersion();
-
-    delete factory; // Done with factory
-
-    qDebug() << "PluginManager: sucessfully loaded" << filename;
+    return;
   }
+
+  Plugin* plugin = new Plugin;
+
+  plugin->peripheral = factory->getPeripheral();
+  plugin->description = factory->getDescription();
+  plugin->version = factory->getVersion();
+
+  delete factory; // Done with factory
+
+  plugin->hidden = true;
+  plugin->connected = false;
 
   QString id = loader->metaData().value("IID").toString();
 
   plugin->id = id;
-  plugin->path = path;
+  plugin->file = file;
   plugin->loader = loader;
 
   this->plugins->insert(id, plugin);
+
+  qDebug() << "PluginManager: sucessfully loaded" << filename;
 
 }
 
@@ -111,12 +123,9 @@ void PluginManager::show(const QString& id){
 
   Plugin* plugin = this->plugins->value(id);
 
-  if(plugin->loaded && plugin->hidden){
-
+  if(plugin->hidden){
     this->mdiArea->addSubWindow(plugin->peripheral.widget);
-
     plugin->hidden = false;
-
   }
 
 }
@@ -125,7 +134,8 @@ void PluginManager::hide(const QString& id){
 
   Plugin* plugin = this->plugins->value(id);
 
-  if(plugin->loaded && !plugin->hidden){
+  if(!plugin->hidden){
+    //TODO create MdiSubWindow object so windows can be hidden/shown
     this->mdiArea->removeSubWindow(plugin->peripheral.widget);
     plugin->hidden = true;
   }
@@ -138,7 +148,7 @@ void PluginManager::connect(const QString& id){
 
   //TODO connect RESET and error signals
   //connect(logic,RESET,pinRESET,fallingEdge);
-  if(plugin->loaded && !plugin->connected) {
+  if(!plugin->connected) {
 
     plugin->peripheral.logic->moveToThread(this->affinity);
 
@@ -155,7 +165,7 @@ void PluginManager::disconnect(const QString &id){
 
   Plugin* plugin = this->plugins->value(id);
 
-  if(plugin->loaded && plugin->connected) {
+  if(plugin->connected) {
     plugin->peripheral.logic->disconnect();
     plugin->connected = false;
   }
