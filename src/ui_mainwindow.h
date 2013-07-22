@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'mainwindoww14979.ui'
+** Form generated from reading UI file 'mainwindowT27607.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.1.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWW14979_H
-#define MAINWINDOWW14979_H
+#ifndef MAINWINDOWT27607_H
+#define MAINWINDOWT27607_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -31,8 +31,6 @@ public:
     QAction *actionOpen_Session;
     QAction *actionSave_Session;
     QAction *actionClose;
-    QAction *actionCerebotII;
-    QAction *actionPmod_PushButtons;
     QAction *actionESS_Help;
     QAction *actionAbout_ESS;
     QAction *actionAbout_Qt;
@@ -46,8 +44,8 @@ public:
     QMdiArea *mdiArea;
     QMenuBar *menubar;
     QMenu *menuFile;
-    QMenu *menuLugins;
-    QMenu *menuHlep;
+    QMenu *menuPlugins;
+    QMenu *menuHelp;
     QMenu *menuAVR;
     QStatusBar *statusbar;
     QToolBar *toolBar;
@@ -72,12 +70,6 @@ public:
         QIcon icon2;
         icon2.addFile(QStringLiteral("icons/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionClose->setIcon(icon2);
-        actionCerebotII = new QAction(MainWindow);
-        actionCerebotII->setObjectName(QStringLiteral("actionCerebotII"));
-        actionCerebotII->setCheckable(true);
-        actionPmod_PushButtons = new QAction(MainWindow);
-        actionPmod_PushButtons->setObjectName(QStringLiteral("actionPmod_PushButtons"));
-        actionPmod_PushButtons->setCheckable(true);
         actionESS_Help = new QAction(MainWindow);
         actionESS_Help->setObjectName(QStringLiteral("actionESS_Help"));
         QIcon icon3;
@@ -132,10 +124,10 @@ public:
         menubar->setGeometry(QRect(0, 0, 640, 25));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
-        menuLugins = new QMenu(menubar);
-        menuLugins->setObjectName(QStringLiteral("menuLugins"));
-        menuHlep = new QMenu(menubar);
-        menuHlep->setObjectName(QStringLiteral("menuHlep"));
+        menuPlugins = new QMenu(menubar);
+        menuPlugins->setObjectName(QStringLiteral("menuPlugins"));
+        menuHelp = new QMenu(menubar);
+        menuHelp->setObjectName(QStringLiteral("menuHelp"));
         menuAVR = new QMenu(menubar);
         menuAVR->setObjectName(QStringLiteral("menuAVR"));
         MainWindow->setMenuBar(menubar);
@@ -148,18 +140,16 @@ public:
 
         menubar->addAction(menuFile->menuAction());
         menubar->addAction(menuAVR->menuAction());
-        menubar->addAction(menuLugins->menuAction());
-        menubar->addAction(menuHlep->menuAction());
+        menubar->addAction(menuPlugins->menuAction());
+        menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(actionOpen_Session);
         menuFile->addAction(actionSave_Session);
         menuFile->addSeparator();
         menuFile->addAction(actionClose);
-        menuLugins->addAction(actionCerebotII);
-        menuLugins->addAction(actionPmod_PushButtons);
-        menuHlep->addAction(actionESS_Help);
-        menuHlep->addSeparator();
-        menuHlep->addAction(actionAbout_ESS);
-        menuHlep->addAction(actionAbout_Qt);
+        menuHelp->addAction(actionESS_Help);
+        menuHelp->addSeparator();
+        menuHelp->addAction(actionAbout_ESS);
+        menuHelp->addAction(actionAbout_Qt);
         menuAVR->addAction(actionLoad_Firmware);
         menuAVR->addAction(actionReload_Firmware);
         menuAVR->addSeparator();
@@ -186,8 +176,6 @@ public:
         actionOpen_Session->setText(QApplication::translate("MainWindow", "Open Session", 0));
         actionSave_Session->setText(QApplication::translate("MainWindow", "Save Session", 0));
         actionClose->setText(QApplication::translate("MainWindow", "Close", 0));
-        actionCerebotII->setText(QApplication::translate("MainWindow", "CerebotII", 0));
-        actionPmod_PushButtons->setText(QApplication::translate("MainWindow", "Pmod PushButtons", 0));
         actionESS_Help->setText(QApplication::translate("MainWindow", "ESS Help", 0));
         actionAbout_ESS->setText(QApplication::translate("MainWindow", "About ESS", 0));
         actionAbout_Qt->setText(QApplication::translate("MainWindow", "About Qt", 0));
@@ -201,8 +189,8 @@ public:
         actionReload_Firmware->setShortcut(QApplication::translate("MainWindow", "Ctrl+F", 0));
         actionStart->setText(QApplication::translate("MainWindow", "Start", 0));
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0));
-        menuLugins->setTitle(QApplication::translate("MainWindow", "Peripherals", 0));
-        menuHlep->setTitle(QApplication::translate("MainWindow", "Help", 0));
+        menuPlugins->setTitle(QApplication::translate("MainWindow", "Peripherals", 0));
+        menuHelp->setTitle(QApplication::translate("MainWindow", "Help", 0));
         menuAVR->setTitle(QApplication::translate("MainWindow", "AVR", 0));
         toolBar->setWindowTitle(QApplication::translate("MainWindow", "toolBar", 0));
     } // retranslateUi
@@ -215,4 +203,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWW14979_H
+#endif // MAINWINDOWT27607_H

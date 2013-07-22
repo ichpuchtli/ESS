@@ -38,14 +38,12 @@
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
-   <widget class="QMenu" name="menuLugins">
+   <widget class="QMenu" name="menuPlugins">
     <property name="title">
      <string>Peripherals</string>
     </property>
-    <addaction name="actionCerebotII"/>
-    <addaction name="actionPmod_PushButtons"/>
    </widget>
-   <widget class="QMenu" name="menuHlep">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
@@ -68,8 +66,8 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAVR"/>
-   <addaction name="menuLugins"/>
-   <addaction name="menuHlep"/>
+   <addaction name="menuPlugins"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -115,22 +113,6 @@
    </property>
    <property name="text">
     <string>Close</string>
-   </property>
-  </action>
-  <action name="actionCerebotII">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>CerebotII</string>
-   </property>
-  </action>
-  <action name="actionPmod_PushButtons">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Pmod PushButtons</string>
    </property>
   </action>
   <action name="actionESS_Help">
