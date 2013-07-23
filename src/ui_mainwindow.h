@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'mainwindowT27607.ui'
+** Form generated from reading UI file 'mainwindowTi9508.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.1.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWT27607_H
-#define MAINWINDOWT27607_H
+#ifndef MAINWINDOWTI9508_H
+#define MAINWINDOWTI9508_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -58,27 +58,27 @@ public:
         actionOpen_Session = new QAction(MainWindow);
         actionOpen_Session->setObjectName(QStringLiteral("actionOpen_Session"));
         QIcon icon;
-        icon.addFile(QStringLiteral("icons/document-open-folder.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/media/icons/document-open-folder.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionOpen_Session->setIcon(icon);
         actionSave_Session = new QAction(MainWindow);
         actionSave_Session->setObjectName(QStringLiteral("actionSave_Session"));
         QIcon icon1;
-        icon1.addFile(QStringLiteral("icons/document-save.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QStringLiteral(":/media/icons/document-save.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionSave_Session->setIcon(icon1);
         actionClose = new QAction(MainWindow);
         actionClose->setObjectName(QStringLiteral("actionClose"));
         QIcon icon2;
-        icon2.addFile(QStringLiteral("icons/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QStringLiteral(":/media/icons/application-exit.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionClose->setIcon(icon2);
         actionESS_Help = new QAction(MainWindow);
         actionESS_Help->setObjectName(QStringLiteral("actionESS_Help"));
         QIcon icon3;
-        icon3.addFile(QStringLiteral("icons/help-contents.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QStringLiteral(":/media/icons/help-contents.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionESS_Help->setIcon(icon3);
         actionAbout_ESS = new QAction(MainWindow);
         actionAbout_ESS->setObjectName(QStringLiteral("actionAbout_ESS"));
         QIcon icon4;
-        icon4.addFile(QStringLiteral("icons/help-about.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon4.addFile(QStringLiteral(":/media/icons/help-about.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionAbout_ESS->setIcon(icon4);
         actionAbout_Qt = new QAction(MainWindow);
         actionAbout_Qt->setObjectName(QStringLiteral("actionAbout_Qt"));
@@ -92,22 +92,22 @@ public:
         actionPause->setCheckable(false);
         actionPause->setChecked(false);
         QIcon icon5;
-        icon5.addFile(QStringLiteral("icons/media-playback-pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon5.addFile(QStringLiteral(":/media/icons/media-playback-pause.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionPause->setIcon(icon5);
         actionStop = new QAction(MainWindow);
         actionStop->setObjectName(QStringLiteral("actionStop"));
         QIcon icon6;
-        icon6.addFile(QStringLiteral("icons/media-playback-stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon6.addFile(QStringLiteral(":/media/icons/media-playback-stop.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionStop->setIcon(icon6);
         actionReload_Firmware = new QAction(MainWindow);
         actionReload_Firmware->setObjectName(QStringLiteral("actionReload_Firmware"));
         QIcon icon7;
-        icon7.addFile(QStringLiteral("icons/view-refresh.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon7.addFile(QStringLiteral(":/media/icons/view-refresh.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionReload_Firmware->setIcon(icon7);
         actionStart = new QAction(MainWindow);
         actionStart->setObjectName(QStringLiteral("actionStart"));
         QIcon icon8;
-        icon8.addFile(QStringLiteral("icons/media-playback-start.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon8.addFile(QStringLiteral(":/media/icons/media-playback-start.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionStart->setIcon(icon8);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
@@ -203,4 +203,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWT27607_H
+#endif // MAINWINDOWTI9508_H

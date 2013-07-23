@@ -90,8 +90,8 @@
   </widget>
   <action name="actionOpen_Session">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/document-open-folder.png</normaloff>../icons/document-open-folder.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/document-open-folder.png</normaloff>:/media/icons/document-open-folder.png</iconset>
    </property>
    <property name="text">
     <string>Open Session</string>
@@ -99,8 +99,8 @@
   </action>
   <action name="actionSave_Session">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/document-save.png</normaloff>../icons/document-save.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/document-save.png</normaloff>:/media/icons/document-save.png</iconset>
    </property>
    <property name="text">
     <string>Save Session</string>
@@ -108,8 +108,8 @@
   </action>
   <action name="actionClose">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/application-exit.png</normaloff>../icons/application-exit.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/application-exit.png</normaloff>:/media/icons/application-exit.png</iconset>
    </property>
    <property name="text">
     <string>Close</string>
@@ -117,8 +117,8 @@
   </action>
   <action name="actionESS_Help">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/help-contents.png</normaloff>../icons/help-contents.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/help-contents.png</normaloff>:/media/icons/help-contents.png</iconset>
    </property>
    <property name="text">
     <string>ESS Help</string>
@@ -126,8 +126,8 @@
   </action>
   <action name="actionAbout_ESS">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/help-about.png</normaloff>../icons/help-about.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/help-about.png</normaloff>:/media/icons/help-about.png</iconset>
    </property>
    <property name="text">
     <string>About ESS</string>
@@ -135,8 +135,8 @@
   </action>
   <action name="actionAbout_Qt">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/help-about.png</normaloff>../icons/help-about.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/help-about.png</normaloff>:/media/icons/help-about.png</iconset>
    </property>
    <property name="text">
     <string>About Qt</string>
@@ -150,8 +150,8 @@
   </action>
   <action name="actionLoad_Firmware">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/document-open-folder.png</normaloff>../icons/document-open-folder.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/document-open-folder.png</normaloff>:/media/icons/document-open-folder.png</iconset>
    </property>
    <property name="text">
     <string>Load Firmware</string>
@@ -165,8 +165,8 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/media-playback-pause.png</normaloff>../icons/media-playback-pause.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/media-playback-pause.png</normaloff>:/media/icons/media-playback-pause.png</iconset>
    </property>
    <property name="text">
     <string>Pause</string>
@@ -174,8 +174,8 @@
   </action>
   <action name="actionStop">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/media-playback-stop.png</normaloff>../icons/media-playback-stop.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/media-playback-stop.png</normaloff>:/media/icons/media-playback-stop.png</iconset>
    </property>
    <property name="text">
     <string>Stop</string>
@@ -183,8 +183,8 @@
   </action>
   <action name="actionReload_Firmware">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/view-refresh.png</normaloff>../icons/view-refresh.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/view-refresh.png</normaloff>:/media/icons/view-refresh.png</iconset>
    </property>
    <property name="text">
     <string>Reload Firmware</string>
@@ -195,14 +195,16 @@
   </action>
   <action name="actionStart">
    <property name="icon">
-    <iconset>
-     <normaloff>../icons/media-playback-start.png</normaloff>../icons/media-playback-start.png</iconset>
+    <iconset resource="../resources.qrc">
+     <normaloff>:/media/icons/media-playback-start.png</normaloff>:/media/icons/media-playback-start.png</iconset>
    </property>
    <property name="text">
     <string>Start</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -17,8 +17,17 @@ LIBS += -lelf
 # Input
 HEADERS += src/*.h
 SOURCES += src/*.cpp
-CONFIG += qt5 warn_on debug
+
+#HEADERS += src/mainwindow.h
+#HEADERS += src/ui_mainwindow.h
+
+#SOURCES += src/mainwindow.cpp
+#SOURCES += src/ess.cpp
+
+CONFIG += qt5
 QT += widgets
 
 # comment this out to use regular g++
 #QMAKE_CXX=colorgcc
+
+RESOURCES += resources.qrc
