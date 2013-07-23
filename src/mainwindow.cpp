@@ -32,13 +32,11 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
-// Plugin Classes
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
 #include "AbstractPeripheralWidget.h"
 #include "PinFactory.h"
 
-// Processeors
 #include "AVRProcessor.h"
 #include "RegulatedAVRProcessor.h"
 #include "RRAVRProcessor.h"
@@ -99,10 +97,16 @@ void MainWindow::initComponents(void){
     this->pluginManager->load(pluginDirectory, filename);
   }
 
+  //TODO Dockable widget for showing/hiding peripheral widgets
   foreach(const QString plugin, this->pluginManager->listPlugins()){
-    this->pluginManager->show(plugin);
-    this->pluginManager->connect(plugin);
+    QAction* action = new QAction(this);
+    action->setText(plugin);
+    action->setCheckable(true);
+    action->setChecked(false);
+    ui->menuPlugins->addAction(action);
+    connect(action,SIGNAL(triggered(bool)), this, SLOT(togglePlugin(bool)));
   }
+
 
 }
 
@@ -185,6 +189,19 @@ void MainWindow::reloadFirmware(void){
 
   this->cpuThread->start();
 
+}
+
+void MainWindow::togglePlugin( bool show ){
+
+  QAction* sender = (QAction*) this->sender();
+
+  if(show){
+    this->pluginManager->show(sender->text());
+    this->pluginManager->connect(sender->text());
+  }else{
+    this->pluginManager->hide(sender->text());
+    this->pluginManager->disconnect(sender->text());
+  }
 }
 
 void MainWindow::aboutESS(void){

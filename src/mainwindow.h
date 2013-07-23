@@ -69,6 +69,13 @@ class MainWindow : public QMainWindow {
      */
     void aboutESS(void);
 
+    /**
+     * \brief toggle a plugin from an QAction event
+     *
+     * \param show a boolean indicating whether the plugin should be shown
+     */
+    void togglePlugin( bool show );
+
   private:
 
     void initSettings(void);
