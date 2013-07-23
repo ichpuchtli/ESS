@@ -41,9 +41,13 @@ void PluginManager::unload( const QString& id ){
   this->hide(id);
   this->disconnect(id);
 
+  this->mdiArea->removeSubWindow(plugin->window);
+
   //TODO dangerous if signals are still connected etc.
   delete plugin->peripheral.widget;
   delete plugin->peripheral.logic;
+
+  delete plugin->window;
 
   plugin->loader->unload();
   delete plugin->loader;
@@ -104,6 +108,11 @@ void PluginManager::load(const QDir& pluginDirectory, const QString& filename ){
 
   delete factory; // Done with factory
 
+  plugin->window = new QMdiSubWindow(this->mdiArea);
+  plugin->window->setWidget(plugin->peripheral.widget);
+  plugin->window->hide();
+  this->mdiArea->addSubWindow(plugin->window);
+
   plugin->hidden = true;
   plugin->connected = false;
 
@@ -124,7 +133,7 @@ void PluginManager::show(const QString& id){
   Plugin* plugin = this->plugins->value(id);
 
   if(plugin->hidden){
-    this->mdiArea->addSubWindow(plugin->peripheral.widget);
+    plugin->window->show();
     plugin->hidden = false;
   }
 
@@ -136,7 +145,7 @@ void PluginManager::hide(const QString& id){
 
   if(!plugin->hidden){
     //TODO create MdiSubWindow object so windows can be hidden/shown
-    this->mdiArea->removeSubWindow(plugin->peripheral.widget);
+    plugin->window->hide();
     plugin->hidden = true;
   }
 

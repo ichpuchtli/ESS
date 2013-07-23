@@ -54,6 +54,7 @@ class PluginManager {
       bool connected;
       bool hidden;
 
+      QMdiSubWindow* window;
       QPluginLoader* loader; // need to keep this for unloading
 
       QFileInfo file;
