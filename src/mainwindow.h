@@ -23,6 +23,8 @@
 #define MAINWINDOW_H
 
 #include <QtCore/QThread>
+#include <QtCore/QFile>
+
 #include <QtWidgets/QMainWindow>
 
 #include "ui_mainwindow.h"
@@ -76,7 +78,16 @@ class MainWindow : public QMainWindow {
      */
     void togglePlugin( bool show );
 
+    /**
+     * \brief protected timer event handler used to monitor log file
+     *
+     * \param e the timer event instance
+     */
+    void timerEvent(QTimerEvent * e);
+
   private:
+
+    void initLogMonitor(void);
 
     void initSettings(void);
     void initComponents(void);
@@ -90,6 +101,8 @@ class MainWindow : public QMainWindow {
     AVRProcessor* cpu;
     QThread* cpuThread;
     PluginManager* pluginManager;
+
+    QFile* log;
 };
 
 #endif // MAINWINDOW_H

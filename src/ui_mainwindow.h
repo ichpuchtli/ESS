@@ -1,26 +1,28 @@
 /********************************************************************************
-** Form generated from reading UI file 'mainwindowTi9508.ui'
+** Form generated from reading UI file 'mainwindowF15754.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.1.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWTI9508_H
-#define MAINWINDOWTI9508_H
+#ifndef MAINWINDOWF15754_H
+#define MAINWINDOWF15754_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMdiArea>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -40,8 +42,10 @@ public:
     QAction *actionReload_Firmware;
     QAction *actionStart;
     QWidget *centralwidget;
-    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout;
+    QSplitter *splitter;
     QMdiArea *mdiArea;
+    QTextEdit *logViewer;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuPlugins;
@@ -111,12 +115,28 @@ public:
         actionStart->setIcon(icon8);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
-        verticalLayout = new QVBoxLayout(centralwidget);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        mdiArea = new QMdiArea(centralwidget);
+        horizontalLayout = new QHBoxLayout(centralwidget);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        splitter = new QSplitter(centralwidget);
+        splitter->setObjectName(QStringLiteral("splitter"));
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(splitter->sizePolicy().hasHeightForWidth());
+        splitter->setSizePolicy(sizePolicy);
+        splitter->setOrientation(Qt::Vertical);
+        mdiArea = new QMdiArea(splitter);
         mdiArea->setObjectName(QStringLiteral("mdiArea"));
+        splitter->addWidget(mdiArea);
+        logViewer = new QTextEdit(splitter);
+        logViewer->setObjectName(QStringLiteral("logViewer"));
+        logViewer->setMinimumSize(QSize(0, 30));
+        logViewer->setUndoRedoEnabled(false);
+        logViewer->setReadOnly(false);
+        logViewer->setTextInteractionFlags(Qt::TextEditorInteraction);
+        splitter->addWidget(logViewer);
 
-        verticalLayout->addWidget(mdiArea);
+        horizontalLayout->addWidget(splitter);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -203,4 +223,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWTI9508_H
+#endif // MAINWINDOWF15754_H

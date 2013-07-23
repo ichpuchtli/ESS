@@ -21,6 +21,8 @@
 
 #include "mainwindow.h"
 
+#include <stdio.h>
+
 #include <QtCore/QThread>
 #include <QtCore/QDebug>
 #include <QtCore/QJsonObject>
@@ -31,6 +33,9 @@
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QTextEdit>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
@@ -42,6 +47,7 @@
 #include "RRAVRProcessor.h"
 #include "HybridAVRProcessor.h"
 
+
 MainWindow::MainWindow( QWidget* parent ) :
   QMainWindow( parent ),
   ui( new Ui::MainWindow )
@@ -49,15 +55,34 @@ MainWindow::MainWindow( QWidget* parent ) :
 
   ui->setupUi( this );
 
-  //TODO install message handler to redirect qDebug | QTextBrowser
+  this->initLogMonitor();
+
   this->initSettings();
 
   this->initComponents();
 
   this->connectActions();
+
 }
 
 MainWindow::~MainWindow(){}
+
+void MainWindow::timerEvent(QTimerEvent * e) {
+
+  QTextStream stream(this->log);
+
+  QString line = stream.readLine();
+
+  while(!line.isEmpty()){
+
+    ui->logViewer->append(line);
+
+    line = stream.readLine();
+
+    ui->logViewer->moveCursor(QTextCursor::End);
+  }
+
+}
 
 void MainWindow::initSettings(void){
 
@@ -210,5 +235,37 @@ void MainWindow::aboutESS(void){
                      QString("The Embedded System Simulator,  "
                              "<a href=\"http://www.github.com/ichpuchtli/ess\">"
                              "github.com/ichpuchtli/ess</a>"));
+
+}
+
+
+static void message_router(QtMsgType type, const QMessageLogContext& context, const QString& msg){
+
+  (void) type;
+  (void) context;
+
+  fprintf(stderr, "%s\n", msg.toLocal8Bit().constData());
+
+  QFile logfile("log.txt");
+
+  logfile.open(QIODevice::WriteOnly | QIODevice::Append);
+
+  QTextStream stream(&logfile);
+
+  stream << msg << endl;
+
+}
+
+void MainWindow::initLogMonitor(void){
+
+  this->log = new QFile("log.txt");
+
+  this->log->resize(0);
+
+  this->log->open(QIODevice::ReadOnly);
+
+  qInstallMessageHandler(message_router);
+
+  this->startTimer(1000);
 
 }
