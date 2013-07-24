@@ -1,9 +1,9 @@
 before_install:
-  - sudo add-apt-repository ppa:leppa/qt5-gles2 -y
+  - sudo add-apt-repository ppa:ubuntu-sdk-team/ppa -y
 
 install:
   - sudo apt-get update -y
-  - sudo apt-get install qtchooser qtbase5-dev elfutils libelf-dev freeglut3 freeglut3-dev gcc-avr binutils-avr avr-libc gdb-avr -y
+  - sudo apt-get install ubuntu-sdk elfutils libelf-dev freeglut3 freeglut3-dev gcc-avr binutils-avr avr-libc gdb-avr -y
 
 script:
   - git submodule init
