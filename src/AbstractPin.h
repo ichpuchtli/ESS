@@ -60,8 +60,10 @@ signals:
    * \brief the signal to be emitted if the voltage of the pin has changed
    *
    * \param voltage the new voltage level
+   * \param port the port the voltagechange occurred on
+   * \param pin the pin the voltagechange occurred on
    */
-  void voltageChange( int voltage );
+  void voltageChange( int voltage, char port, char pin );
 
 
   /**
@@ -70,8 +72,10 @@ signals:
    * greater than or equal to VCC / 2 is considered a digital 1.
    *
    * \param level the new digital level for the pin either 0 or 1
+   * \param port the port the levelchange occurred on
+   * \param pin the pin the levelchange occurred on
    */
-  void levelChange( int level );
+  void levelChange( int level, char port, char pin );
 
 public slots:
 

@@ -107,8 +107,8 @@ void GPIOPin::pinChangeEvent( int value )
   this->levelCache = value;
   this->voltageCache = value * 3300;
 
-  emit this->levelChange( this->levelCache );
-  emit this->voltageChange( this->voltageCache );
+  emit this->levelChange( this->levelCache, this->port, this->pin );
+  emit this->voltageChange( this->voltageCache, this->port, this->pin );
 }
 
 void GPIOPin::dirChangeEvent( int direction )
@@ -116,7 +116,7 @@ void GPIOPin::dirChangeEvent( int direction )
 
   this->ddrCache = direction;
 
-  emit this->directionChange( direction );
+  emit this->directionChange( direction, this->port, this->pin );
 
 }
 

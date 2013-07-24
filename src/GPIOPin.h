@@ -80,8 +80,10 @@ signals:
    * \brief the signal to be emitted if the direction changes
    *
    * \param level the new direction for the pin either 0 or 1
+   * \param port the port the directionChange occurred on
+   * \param pin the pin the directionChange occurred on
    */
-  void directionChange( int direction );
+  void directionChange( int direction, char port, char pin);
 
 public slots:
 
