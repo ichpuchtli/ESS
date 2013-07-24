@@ -1,6 +1,7 @@
 install:
+  - sudo add-apt-repository ppa:leppa/qt5-gles2
   - sudo apt-get update
-  - sudo apt-get install qtbase5-dev qt5-qmake libelf1 freeglut3 avr-libc
+  - sudo apt-get install qtbase-opensource-src libelf1 freeglut3 avr-libc
 
 script:
   - git submodule init
