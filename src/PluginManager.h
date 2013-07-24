@@ -156,10 +156,10 @@ class PluginManager {
 
   private:
 
-    QMap<QString, Plugin*>* plugins;
-
     AVRIOAdapter* io;
     QMdiArea* mdiArea;
+
+    QMap<QString, Plugin*>* plugins;
 
 };
 

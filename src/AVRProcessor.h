@@ -72,9 +72,9 @@ public:
    * running the simulation
    */
     AVRProcessor(const QString& mmcu, unsigned frequency) :
-    isRunning(false),
     mmcu(mmcu),
-    frequency(frequency)
+    frequency(frequency),
+    isRunning(false)
     {
       this->avr = avr_make_mcu_by_name(mmcu.toLatin1());
       avr_init(this->avr);

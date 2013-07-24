@@ -117,10 +117,11 @@ private:
   static void ddrChangeHook(struct avr_irq_t* irq, uint32_t value, void* param);
 
   avr_t* avr;
-  avr_irq_t* pin_irq;
-  avr_irq_t* ddr_irq;
 
   char port, pin;
+
+  avr_irq_t* pin_irq;
+  avr_irq_t* ddr_irq;
 
   int levelCache;
   int ddrCache;

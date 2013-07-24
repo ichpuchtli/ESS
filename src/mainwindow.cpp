@@ -73,6 +73,8 @@ MainWindow::~MainWindow(){}
 
 void MainWindow::timerEvent(QTimerEvent * e) {
 
+  (void) e;
+
   QTextStream stream(this->log);
 
   QString line = stream.readLine();

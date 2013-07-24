@@ -125,12 +125,11 @@ class AVRIOAdapter {
 
   private:
 
-    QHash<QString, GPIOPin*>* pinmap;
-
     QThread* thread;
 
     avr_t* avr;
 
+    QHash<QString, GPIOPin*>* pinmap;
 };
 
 #endif // AVRIOADAPTER_H
