@@ -3,7 +3,7 @@ before_install:
 
 install:
   - sudo apt-get update -y
-  - sudo apt-get install qtbase5-dev libelf1 freeglut3 avr-libc -y
+  - sudo apt-get install qtbase5-dev libelf1 freeglut3 gcc-avr binutils-avr avr-libc -y
 
 script:
   - git submodule init
