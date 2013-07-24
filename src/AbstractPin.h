@@ -65,7 +65,6 @@ signals:
    */
   void voltageChange( int voltage, char port, char pin );
 
-
   /**
    * \brief the signal to be emitted if the level of the pin has changed, a
    * voltage less than VCC / 2 is considered a digital 0 and any voltage
@@ -76,6 +75,24 @@ signals:
    * \param pin the pin the levelchange occurred on
    */
   void levelChange( int level, char port, char pin );
+
+  /**
+   * \brief the signal to be emitted level changes from low to high
+   *
+   * \param level the new digital level for the pin always 1
+   * \param port the port the levelchange occurred on
+   * \param pin the pin the levelchange occurred on
+   */
+  void risingEdge( int level, char port, char pin );
+
+  /**
+   * \brief the signal to be emitted level changes from high to low
+   *
+   * \param level the new digital level for the pin always 0
+   * \param port the port the levelchange occurred on
+   * \param pin the pin the levelchange occurred on
+   */
+  void fallingEdge( int level, char port, char pin );
 
 public slots:
 

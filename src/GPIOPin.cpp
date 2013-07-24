@@ -50,8 +50,6 @@ GPIOPin::~GPIOPin()
 void GPIOPin::init()
 {
 
-  //TODO polling based GPIOPins with avr_ioctl
-
   qDebug() << "GIOPin: Pin" << port << ( unsigned ) pin << "connected!";
 
   this->pin_irq = avr_io_getirq( avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
@@ -94,15 +92,13 @@ void GPIOPin::ddrChangeHook( struct avr_irq_t* irq, uint32_t value,
 void GPIOPin::pinChangeEvent( int value )
 {
 
-  /*
   if ( this->levelCache == 0 ) {
-    emit this->risingEdge();
+    emit this->risingEdge( value, this->port, this->pin );
   }
 
   if ( this->levelCache == 1 ) {
-    emit this->fallingEdge();
+    emit this->fallingEdge( value, this->port, this->pin );
   }
-  */
 
   this->levelCache = value;
   this->voltageCache = value * 3300;
