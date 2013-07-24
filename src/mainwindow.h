@@ -85,6 +85,11 @@ class MainWindow : public QMainWindow {
      */
     void timerEvent(QTimerEvent * e);
 
+    /**
+     * \brief presents the help dialog
+     */
+    void helpWindow(void);
+
   private:
 
     void initLogMonitor(void);

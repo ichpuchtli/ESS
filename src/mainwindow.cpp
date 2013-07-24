@@ -34,8 +34,11 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
+#include <QtWidgets/QTextBrowser>
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
+#include <QtCore/QUrl>
 
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
@@ -141,6 +144,7 @@ void MainWindow::connectActions(void){
   connect(ui->actionClose,SIGNAL(triggered()), qApp, SLOT(quit()));
 
   connect(ui->actionAbout_ESS, SIGNAL(triggered()), this, SLOT(aboutESS()));
+  connect(ui->actionESS_Help, SIGNAL(triggered()), this, SLOT(helpWindow()));
   connect(ui->actionStart,SIGNAL(triggered()), this, SLOT(startSimulation()));
   connect(ui->actionPause,SIGNAL(triggered()), this, SLOT(stopSimulation()));
   connect(ui->actionStop,SIGNAL(triggered()), this, SLOT(stopSimulation()));
@@ -238,6 +242,18 @@ void MainWindow::aboutESS(void){
 
 }
 
+
+void MainWindow::helpWindow(){
+
+  static QTextBrowser browser;
+
+  browser.setSource(QUrl("doc/html/index.html"));
+  browser.setSearchPaths(QStringList() << "doc/html/");
+
+  browser.resize(640,480);
+  browser.show();
+
+}
 
 static void message_router(QtMsgType type, const QMessageLogContext& context, const QString& msg){
 
