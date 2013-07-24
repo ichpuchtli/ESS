@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 
 #include "../../src/AbstractPeripheralLogic.h"
-#include "../../src/AbstractPinFactory.h"
+#include "../../src/AVRIOAdapter.h"
 
 class RectMatrixLogic : public AbstractPeripheralLogic {
 
@@ -18,8 +18,7 @@ public:
 
 public slots:
 
-  void connect(AbstractPinFactory* pins);
-  void connect(avr_t* avr);
+  void connect(AVRIOAdapter* io);
 
   void disconnect();
 

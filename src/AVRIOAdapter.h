@@ -1,6 +1,7 @@
 /**
- * \file PinFactory.h
- * \brief An class for managing the set of peripheral pins for an avr
+ * \file AVRIOAdapter.h
+ * \brief A class providing means for virtual peripherals to connect
+ * to the avr simulation engine
  * \author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
@@ -19,33 +20,53 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PINFACTORY_H
-#define PINFACTORY_H
+#ifndef AVRIOADAPTER_H
+#define AVRIOADAPTER_H
 
-#include <QHash>
-#include <QString>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QThread>
 
-#include "GPIOPin.h"
 #include "AbstractPin.h"
-#include "AbstractPinFactory.h"
+#include "GPIOPin.h"
+
+struct avr_t;
 
 /**
- * \brief An class for managing the set of peripheral pins for an avr
+ * \brief A class providing means for virtual peripherals to connect
+ * to the avr simulation engine
  */
-class PinFactory : public AbstractPinFactory
-{
+class AVRIOAdapter {
 
   public:
 
     /**
-     * \brief constructs a PinFactory instance, each new pin will assume
-     * \em pinAffinity as its parent QObject
+     * \brief constructs a AVRIOAdapter instance, all IO will assume the affinity
+     * of the \em thread provided
      *
-     * \param avr the simavr c structure to connect the pin to
-     * \param pinAffinity the pin affinity for all the pins
+     * \param avr the simavr c structure
+     * \param thread the thread of the avr cpu
      */
-    PinFactory(avr_t* avr, QObject* pinAffinity);
-    ~PinFactory();
+    AVRIOAdapter(avr_t* avr, QThread* thread);
+    ~AVRIOAdapter();
+
+    /**
+     * \brief get the internal simavr data structure
+     *
+     * \return a pointer to the internal avr_t struct
+     */
+    virtual avr_t* getAVR(void);
+
+    /**
+     * \brief returns the thread affinity of the IO objects provided by this 
+     * class, i.e. signals emitted from these pins are sent from the event
+     * loop \em thread.
+     *
+     * \see Thread Affinity
+     *
+     * \return a pointer to the thread
+     */
+    virtual QThread* getThread(void);
 
     /**
      * \brief get an instance of a GPIOPin identified by \em name
@@ -58,7 +79,7 @@ class PinFactory : public AbstractPinFactory
      *
      * \see GPIOPin::GPIOPin(const char*)
      */
-    GPIOPin& getGPIOPin(const char* name);
+    virtual GPIOPin& getGPIOPin(const char* name);
 
     /**
      * \brief get an instance of a GPIOPin identified by \em port and \em pin
@@ -72,44 +93,44 @@ class PinFactory : public AbstractPinFactory
      *
      * \see GPIOPin::GPIOPin(char,unsigned)
      */
-    GPIOPin& getGPIOPin(char port, unsigned pin);
+    virtual GPIOPin& getGPIOPin(char port, unsigned pin);
 
     /**
      * \brief get an instance of the GND pin
      *
      * \return a pointer to an object representing the GND pin
      */
-    AbstractPin& GND(void);
+    virtual AbstractPin& GND(void);
 
     /**
      * \brief get an instance of the VCC pin
      *
      * \return a pointer to an object representing the VCC pin
      */
-    AbstractPin& VCC(void);
+    virtual AbstractPin& VCC(void);
 
     /**
      * \brief get an instance of the AVCC pin
      *
      * \return a pointer to an object representing the AVCC pin
      */
-    AbstractPin& AVCC(void);
+    virtual AbstractPin& AVCC(void);
 
     /**
      * \brief get an instance of the RESET pin
      *
      * \return a pointer to an object representing the RESET pin
      */
-    AbstractPin& RESET(void);
+    virtual AbstractPin& RESET(void);
 
   private:
 
     QHash<QString, GPIOPin*>* pinmap;
 
-    QObject* parent;
+    QThread* thread;
 
     avr_t* avr;
 
 };
 
-#endif // PINFACTORY_H
+#endif // AVRIOADAPTER_H

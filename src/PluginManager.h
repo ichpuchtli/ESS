@@ -35,7 +35,7 @@
 #include <QtWidgets/QMdiSubWindow>
 
 #include "sim_avr.h"
-#include "PinFactory.h"
+#include "AVRIOAdapter.h"
 
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
@@ -67,20 +67,17 @@ class PluginManager {
 
   public:
 
-  /**
-   * \brief Creates a PluginManager instance, the verbosity of this constructor enables
-   * simple slot commands like show( const QString& ), connect( const QString& ) and
-   * load( const QString& ).
-   *
-   * \note the use of \em peripheral and \em plugin are used interchangeably here
-   * since plugins can only house peripherals at this point.
-   *
-   * \param affinity the thread "affinity" for the logic component of a peripheral
-   * \param mdiArea the mdiArea to house peripheral widgets
-   * \param avr the simavr core data structure of logic interactions
-   * \param pinFactory the pin factory for logic interactions
-   */
-    PluginManager(QThread* affinity, QMdiArea* mdiArea, avr_t* avr, PinFactory* pinFactory);
+    /**
+     * \brief Creates a PluginManager instance
+     *
+     * \note the use of \em peripheral and \em plugin are used interchangeably here
+     * since plugins can only house peripherals at this point.
+     *
+     * \param io a pointer the io adpapter interface
+     * \param mdiArea the mdiArea to house peripheral widgets
+     */
+    PluginManager(AVRIOAdapter* io, QMdiArea* mdiArea) :
+      io(io), mdiArea(mdiArea), plugins(new QMap<QString, Plugin*>()) {}
     ~PluginManager(){}
 
   public slots:
@@ -161,9 +158,7 @@ class PluginManager {
 
     QMap<QString, Plugin*>* plugins;
 
-    PinFactory* pinFactory;
-    avr_t* avr;
-    QThread* affinity;
+    AVRIOAdapter* io;
     QMdiArea* mdiArea;
 
 };

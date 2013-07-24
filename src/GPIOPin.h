@@ -22,10 +22,11 @@
 #ifndef GPIOPIN_H
 #define GPIOPIN_H
 
-#include "sim_avr.h"
-#include "sim_irq.h"
-
 #include "AbstractPin.h"
+#include <stdint.h>
+
+struct avr_t;
+struct avr_irq_t;
 
 /**
  * \brief an AbstractPin implementation for General Peripheral Input/Output pins

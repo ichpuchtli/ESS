@@ -1,6 +1,7 @@
 /**
- * \file PinFactory.cpp
- * \brief An class for managing the set of peripheral pins for an avr
+ * \file AVRIOAdapter.cpp
+ * \brief A class providing means for virtual peripherals to connect
+ * to the avr simulation engine
  * \author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
@@ -18,17 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include "PinFactory.h"
+#include "AVRIOAdapter.h"
 
+#include "GPIOPin.h"
 #include "StaticPin.h"
 
-PinFactory::PinFactory(avr_t* avr, QObject* pinAffinity) :
-  parent(pinAffinity), avr(avr)
+#include "sim_avr.h"
+
+AVRIOAdapter::AVRIOAdapter(avr_t* avr, QThread* thread) :
+  thread(thread), avr(avr), pinmap(new QHash<QString, GPIOPin*>())
 {
-  this->pinmap = new QHash<QString, GPIOPin*>();
 }
 
-PinFactory::~PinFactory(){
+AVRIOAdapter::~AVRIOAdapter(){
 
   QList<GPIOPin*> pins = this->pinmap->values();
 
@@ -42,7 +45,15 @@ PinFactory::~PinFactory(){
 
 }
 
-GPIOPin& PinFactory::getGPIOPin(char port, unsigned pin){
+avr_t* AVRIOAdapter::getAVR(void){
+  return this->avr;
+}
+
+QThread* AVRIOAdapter::getThread(void){
+  return this->thread;
+}
+
+GPIOPin& AVRIOAdapter::getGPIOPin(char port, unsigned pin){
 
   char name[4];
 
@@ -54,7 +65,7 @@ GPIOPin& PinFactory::getGPIOPin(char port, unsigned pin){
   return this->getGPIOPin(name);
 }
 
-GPIOPin& PinFactory::getGPIOPin(const char* name){
+GPIOPin& AVRIOAdapter::getGPIOPin(const char* name){
 
   QString key(name);
 
@@ -65,14 +76,14 @@ GPIOPin& PinFactory::getGPIOPin(const char* name){
   */
 
   if( !this->pinmap->contains(key) ){
-    this->pinmap->insert(key, new GPIOPin(this->avr, name, this->parent) );
+    this->pinmap->insert(key, new GPIOPin(this->getAVR(), name, this->getThread()) );
   }
 
   return *this->pinmap->value(key);
 
 }
 
-AbstractPin& PinFactory::VCC(void){
+AbstractPin& AVRIOAdapter::VCC(void){
 
   static StaticPin vcc(3300);
 
@@ -80,7 +91,7 @@ AbstractPin& PinFactory::VCC(void){
 
 }
 
-AbstractPin& PinFactory::GND(void){
+AbstractPin& AVRIOAdapter::GND(void){
 
   static StaticPin gnd(0);
 
@@ -88,14 +99,14 @@ AbstractPin& PinFactory::GND(void){
 
 }
 
-AbstractPin& PinFactory::AVCC(void){
+AbstractPin& AVRIOAdapter::AVCC(void){
 
   static StaticPin avcc(3300);
 
   return avcc;
 }
 
-AbstractPin& PinFactory::RESET(void){
+AbstractPin& AVRIOAdapter::RESET(void){
 
   static StaticPin reset(3300);
 

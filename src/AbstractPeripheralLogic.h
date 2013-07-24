@@ -24,19 +24,8 @@
 #include <QObject>
 #include <QString>
 
-#include "AbstractPinFactory.h"
+#include "AVRIOAdapter.h"
 #include "AbstractAVRProcessor.h"
-
-/**
- * \brief plugins can be compiled with or without simavr instead using AbstractPinFactory 
- * which is sufficient for simple cases. This abstraction was introduced to ease plugin
- * development on Microsoft Windows where simavr can be difficult to introduce.
- */
-#ifdef SIMAVR_PLUGIN
-#include "sim_avr.h"
-#else
-struct avr_t;
-#endif
 
 #define ABSTRACTPERIPHERALLOGIC_IDD "ESS.AbstractPeripheralLogic/1.0"
 
@@ -54,22 +43,12 @@ class AbstractPeripheralLogic : public QObject {
   public slots:
 
     /**
-     * \brief one of two opportunities to connect internal logic to signals
-     * provided by an AbstractPin via an AbstractPinFactory.
+     * \brief the opportunity to connect internal logic to signals
+     * offered by AVRIOAdapter and friends
      *
-     * \param pins an AnstractPinFactory instance providing access to any pin
-     * connected to the avr simulator.
+     * \param io an AVRIOAdapter instance
      */
-    virtual void connect(AbstractPinFactory* pins) = 0;
-
-    /**
-     * \brief one of two opportunities to connect internal logic to the IRQ
-     * system provided by \em simavr.
-     *
-     * \param avr the core data structure for manipulating simavr simulation
-     * instances
-     */
-    virtual void connect(avr_t* avr) = 0;
+    virtual void connect(AVRIOAdapter* io) = 0;
 
     /**
      * \brief used to disconnect the plugin logic from the avr simulation engine
@@ -85,8 +64,7 @@ class AbstractPeripheralLogic : public QObject {
   signals:
 
     /**
-     * \brief plugins can emit messages which will be captured in a plugin log,
-     * this system can be used to notify users of errors in the plugin
+     * \brief request the plugin manager to unload this plugin
      *
      * \param error the message to be sent
      */

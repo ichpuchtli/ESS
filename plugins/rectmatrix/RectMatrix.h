@@ -10,7 +10,7 @@
 class RectMatrix : public AbstractPeripheralWidget {
 
   public:
-    RectMatrix(int rectSize = 20, QWidget* parent = 0);
+    RectMatrix(int rectSize = 20);
     ~RectMatrix();
 
   public slots:

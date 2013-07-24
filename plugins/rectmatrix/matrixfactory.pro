@@ -14,7 +14,7 @@ HEADERS = RectMatrix.h \
     ../../src/AbstractPin.h \
     ../../src/AbstractPeripheralLogic.h \
     ../../src/AbstractPeripheralWidget.h \
-    ../../src/AbstractPinFactory.h \
+    ../../src/AVRIOAdapter.h \
     ../../src/AbstractAVRProcessor.h
 SOURCES = RectMatrix.cpp \
     matrixfactory.cpp \

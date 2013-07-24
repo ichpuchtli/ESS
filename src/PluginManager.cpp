@@ -23,15 +23,6 @@
 
 #include <QtCore/QDebug>
 
-PluginManager::PluginManager(QThread* affinity, QMdiArea* mdiArea, avr_t* avr, PinFactory* pinFactory):
-  plugins(new QMap<QString, Plugin*>()),
-  affinity(affinity),
-  mdiArea(mdiArea),
-  pinFactory(pinFactory),
-  avr(avr)
-{
-}
-
 void PluginManager::unload( const QString& id ){
 
   Plugin* plugin = this->plugins->value(id);
@@ -50,6 +41,7 @@ void PluginManager::unload( const QString& id ){
   delete plugin->window;
 
   plugin->loader->unload();
+
   delete plugin->loader;
 
   delete plugin;
@@ -159,10 +151,9 @@ void PluginManager::connect(const QString& id){
   //connect(logic,RESET,pinRESET,fallingEdge);
   if(!plugin->connected) {
 
-    plugin->peripheral.logic->moveToThread(this->affinity);
+    plugin->peripheral.logic->moveToThread(this->io->getThread());
 
-    plugin->peripheral.logic->connect(this->pinFactory);
-    plugin->peripheral.logic->connect(this->avr);
+    plugin->peripheral.logic->connect(this->io);
 
     plugin->connected = true;
   }

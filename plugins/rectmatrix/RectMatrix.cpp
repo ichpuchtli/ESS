@@ -19,9 +19,7 @@
  * @name           RectMatrix: A basic widget to simulate a 15x7 LED matrix
  * @param rectSize LED square dimension in pixels, this size depicts the entire size of the widget
  */
-RectMatrix::RectMatrix(int rectSize, QWidget* parent) :
-  AbstractPeripheralWidget(parent)
-{
+RectMatrix::RectMatrix(int rectSize) {
 
   assert(rectSize > 0);
 

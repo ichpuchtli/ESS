@@ -43,7 +43,8 @@
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
 #include "AbstractPeripheralWidget.h"
-#include "PinFactory.h"
+
+#include "AVRIOAdapter.h"
 
 #include "AVRProcessor.h"
 #include "RegulatedAVRProcessor.h"
@@ -111,13 +112,14 @@ void MainWindow::initComponents(void){
   QObject::connect(cpuThread, &QThread::started, cpu, &AVRProcessor::run);
   QObject::connect(cpu, &AVRProcessor::stopped, cpuThread, &QThread::quit);
 
-  PinFactory* pinFactory = new PinFactory(cpu->getAVR(), cpuThread);
+  //TODO connect SIGNAL(deleteLater) to all objects allocated in this method
+  AVRIOAdapter* io = new AVRIOAdapter(cpu->getAVR(), cpuThread);
 
   this->filename = QString("src/avr/main.axf");
 
   this->cpu->loadFirmware(this->filename);
 
-  this->pluginManager = new PluginManager(cpuThread, ui->mdiArea, cpu->getAVR(),pinFactory);
+  this->pluginManager = new PluginManager(io, ui->mdiArea);
 
   QDir pluginDirectory(QCoreApplication::applicationDirPath() + "/" + "plugins");
 

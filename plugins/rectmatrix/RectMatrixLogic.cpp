@@ -2,13 +2,11 @@
 
 #include "RectMatrix.h"
 
-void RectMatrixLogic::connect(AbstractPinFactory* pins){
+void RectMatrixLogic::connect(AVRIOAdapter* io){
 
-  QObject::connect(&pins->getGPIOPin('A',0), &AbstractPin::levelChange, this, &RectMatrixLogic::setCol);
+  QObject::connect(&io->getGPIOPin('A',0), &AbstractPin::levelChange, this, &RectMatrixLogic::setCol);
 
 }
-
-void RectMatrixLogic::connect(avr_t* avr){}
 
 void RectMatrixLogic::disconnect(){}
 

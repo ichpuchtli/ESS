@@ -20,6 +20,8 @@
  */
 #include "GPIOPin.h"
 
+#include "sim_avr.h"
+#include "sim_irq.h"
 #include "avr_ioport.h"
 
 #include <QDebug>
@@ -99,7 +101,6 @@ void GPIOPin::pinChangeEvent( int value ) {
 
   emit this->levelChange( this->levelCache );
   emit this->voltageChange( this->voltageCache );
-
 }
 
 void GPIOPin::dirChangeEvent( int direction ) {
