@@ -22,30 +22,31 @@
 
 #include <QtCore/QDebug>
 
-void AVRProcessor::loadFirmware(const QString& filename){
+void AVRProcessor::loadFirmware( const QString& filename )
+{
 
   this->stop();
 
-  // TODO must wait here for thread to exit before we 
+  // TODO must wait here for thread to exit before we
   // can modify avr structure
 
   this->filename = filename;
 
-  elf_read_firmware(filename.toLatin1(), &this->firmware);
+  elf_read_firmware( filename.toLatin1(), &this->firmware );
 
   this->firmware.frequency = this->frequency;
 
-  memcpy(this->firmware.mmcu, this->mmcu.toLatin1(), this->mmcu.size() );
+  memcpy( this->firmware.mmcu, this->mmcu.toLatin1(), this->mmcu.size() );
 
   qDebug() << "AVRProcessor:" << this->filename.toLatin1() << " freq "
-    << this->frequency << " mmcu " << this->mmcu.toLatin1();
+           << this->frequency << " mmcu " << this->mmcu.toLatin1();
 
-  avr_reset(this->avr);
+  avr_reset( this->avr );
 
-  avr_load_firmware(this->avr, &this->firmware);
+  avr_load_firmware( this->avr, &this->firmware );
 
-  fflush(stdout);
+  fflush( stdout );
 
-  emit this->loaded(this->avr);
+  emit this->loaded( this->avr );
 
 }

@@ -35,7 +35,7 @@ class GPIOPin : public AbstractPin
 {
 
   Q_OBJECT
-  Q_INTERFACES(AbstractPin)
+  Q_INTERFACES( AbstractPin )
 
 public:
   /**
@@ -48,7 +48,7 @@ public:
    *
    * \see PinFactory::getGPIOPin( const char* )
    */
-  GPIOPin(avr_t* avr, const char* identifier, QObject* parent = 0);
+  GPIOPin( avr_t* avr, const char* identifier, QObject* parent = 0 );
 
   /**
    * \brief constructs a GPIOPin instance identified by \em port and \em pin
@@ -59,12 +59,12 @@ public:
    *
    * \see PinFactory::getGPIOPin( char, unsigned )
    */
-  GPIOPin(avr_t* avr, char port, unsigned pin, QObject* parent = 0);
+  GPIOPin( avr_t* avr, char port, unsigned pin, QObject* parent = 0 );
 
   ~GPIOPin();
 
-  virtual int getLevel(void) const;
-  virtual int getVoltage(void) const;
+  virtual int getLevel( void ) const;
+  virtual int getVoltage( void ) const;
 
   /**
    * \brief get the direction of the pin
@@ -72,7 +72,7 @@ public:
    * \return the direction of the pin, a direction of 0 indicates this pin is
    * configured as an input, where a 1 indicates the pin is set as an output.
    */
-  virtual int getDirection(void) const;
+  virtual int getDirection( void ) const;
 
 signals:
 
@@ -81,12 +81,12 @@ signals:
    *
    * \param level the new direction for the pin either 0 or 1
    */
-  void directionChange(int direction);
+  void directionChange( int direction );
 
 public slots:
 
-  virtual void setLevel(int level);
-  virtual void setVoltage(int voltage);
+  virtual void setLevel( int level );
+  virtual void setVoltage( int voltage );
 
 protected:
 
@@ -111,10 +111,10 @@ protected:
 
 private:
 
-  void init(void);
+  void init( void );
 
-  static void pinChangeHook(struct avr_irq_t* irq, uint32_t value, void* param);
-  static void ddrChangeHook(struct avr_irq_t* irq, uint32_t value, void* param);
+  static void pinChangeHook( struct avr_irq_t* irq, uint32_t value, void* param );
+  static void ddrChangeHook( struct avr_irq_t* irq, uint32_t value, void* param );
 
   avr_t* avr;
 

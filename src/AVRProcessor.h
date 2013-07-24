@@ -33,10 +33,11 @@
 /**
  * \brief An abstract base class for running simavr based avr simulations
  */
-class AVRProcessor : public AbstractAVRProcessor {
+class AVRProcessor : public AbstractAVRProcessor
+{
 
   Q_OBJECT
-  Q_INTERFACES(AbstractAVRProcessor)
+  Q_INTERFACES( AbstractAVRProcessor )
 
 public:
 
@@ -71,24 +72,25 @@ public:
    * the simulation strategy and can be limited by the power of the computer
    * running the simulation
    */
-    AVRProcessor(const QString& mmcu, unsigned frequency) :
-    mmcu(mmcu),
-    frequency(frequency),
-    isRunning(false)
-    {
-      this->avr = avr_make_mcu_by_name(mmcu.toLatin1());
-      avr_init(this->avr);
-    }
+  AVRProcessor( const QString& mmcu, unsigned frequency ) :
+    mmcu( mmcu ),
+    frequency( frequency ),
+    isRunning( false ) {
+    this->avr = avr_make_mcu_by_name( mmcu.toLatin1() );
+    avr_init( this->avr );
+  }
 
   ~AVRProcessor() {
-      free(this->avr);
-   }
+    free( this->avr );
+  }
 
 public slots:
 
-  void stop() { this->isRunning = false; }
+  void stop() {
+    this->isRunning = false;
+  }
 
-  void loadFirmware(const QString &filename);
+  void loadFirmware( const QString &filename );
 
   /**
    * \brief returns true if the simavr core is still runnable typically used
@@ -110,10 +112,10 @@ public slots:
    * \return a bool representing a runnable state given the current simavr core
    * status
    */
-  inline bool avrRunnable( int status ){
+  inline bool avrRunnable( int status ) {
 
     return ( status != cpu_Crashed ) && ( status != cpu_Done ) &&
-        this->isRunning;
+           this->isRunning;
 
   }
 
@@ -122,7 +124,9 @@ public slots:
    *
    * \return a pointer to the internal simavr based avr_t structure
    */
-  avr_t* getAVR(void) { return this->avr; }
+  avr_t* getAVR( void ) {
+    return this->avr;
+  }
 
 signals:
 
@@ -132,7 +136,7 @@ signals:
    *
    * \param avr an initialized avr_t pointer for this simavr instance
    */
-  void loaded(avr_t* avr);
+  void loaded( avr_t* avr );
 
 
 protected:
@@ -153,7 +157,7 @@ protected:
   QString filename;
 
   /**
-   * \brief the name of the targeted avr device 
+   * \brief the name of the targeted avr device
    */
   QString mmcu;
 
@@ -169,6 +173,6 @@ protected:
 
 };
 
-Q_DECLARE_INTERFACE(AVRProcessor, "ESS.AVRProcessor")
+Q_DECLARE_INTERFACE( AVRProcessor, "ESS.AVRProcessor" )
 
 #endif // AVRPROCESSOR_H

@@ -45,121 +45,122 @@
 /**
  * \brief An class for managing external plugins
  */
-class PluginManager {
+class PluginManager
+{
 
   struct Plugin {
 
-      Peripheral peripheral;
+    Peripheral peripheral;
 
-      bool connected;
-      bool hidden;
+    bool connected;
+    bool hidden;
 
-      QMdiSubWindow* window;
-      QPluginLoader* loader; // need to keep this for unloading
+    QMdiSubWindow* window;
+    QPluginLoader* loader; // need to keep this for unloading
 
-      QFileInfo file;
+    QFileInfo file;
 
-      QString id;
-      QString description;
-      QString version;
+    QString id;
+    QString description;
+    QString version;
 
   };
 
-  public:
+public:
 
-    /**
-     * \brief Creates a PluginManager instance
-     *
-     * \note the use of \em peripheral and \em plugin are used interchangeably here
-     * since plugins can only house peripherals at this point.
-     *
-     * \param io a pointer the io adpapter interface
-     * \param mdiArea the mdiArea to house peripheral widgets
-     */
-    PluginManager(AVRIOAdapter* io, QMdiArea* mdiArea) :
-      io(io), mdiArea(mdiArea), plugins(new QMap<QString, Plugin*>()) {}
-    ~PluginManager(){}
+  /**
+   * \brief Creates a PluginManager instance
+   *
+   * \note the use of \em peripheral and \em plugin are used interchangeably here
+   * since plugins can only house peripherals at this point.
+   *
+   * \param io a pointer the io adpapter interface
+   * \param mdiArea the mdiArea to house peripheral widgets
+   */
+  PluginManager( AVRIOAdapter* io, QMdiArea* mdiArea ) :
+    io( io ), mdiArea( mdiArea ), plugins( new QMap<QString, Plugin*>() ) {}
+  ~PluginManager() {}
 
-  public slots:
+public slots:
 
-    /**
-     * \brief show a plugin in the MdiArea specified in the constructor
-     *
-     * \param id the unique identifier for the peripheral
-     */
-    void show(const QString& id);
+  /**
+   * \brief show a plugin in the MdiArea specified in the constructor
+   *
+   * \param id the unique identifier for the peripheral
+   */
+  void show( const QString& id );
 
-    /**
-     * \brief hide a plugin from the MdiArea
-     *
-     * \param id the unique identifier for the peripheral
-     */
-    void hide(const QString& id);
+  /**
+   * \brief hide a plugin from the MdiArea
+   *
+   * \param id the unique identifier for the peripheral
+   */
+  void hide( const QString& id );
 
-    /**
-     * \brief connects the logic component of a plugin to the logic signals
-     * emitted by the avr cpu, this method will also make sure the affinity
-     * of the logic component of the plugin is moved to the avr cpu thread.
-     *
-     * \see AbstractPeripheralLogic::connect( avr_t* )
-     * \see AbstractPeripheralLogic::connect( AbstractPinFactory* )
-     *
-     * \param id the unique identifier for the peripheral
-     */
-    void connect(const QString& id);
+  /**
+   * \brief connects the logic component of a plugin to the logic signals
+   * emitted by the avr cpu, this method will also make sure the affinity
+   * of the logic component of the plugin is moved to the avr cpu thread.
+   *
+   * \see AbstractPeripheralLogic::connect( avr_t* )
+   * \see AbstractPeripheralLogic::connect( AbstractPinFactory* )
+   *
+   * \param id the unique identifier for the peripheral
+   */
+  void connect( const QString& id );
 
-    /**
-     * \brief disconnects the logic component of a plugin from the logic
-     * signals emitted by the avr cpu.
-     *
-     * \see AbstractPeripheralLogic::disconnect()
-     *
-     * \param id the unique identifier for the peripheral
-     */
-    void disconnect(const QString& id);
+  /**
+   * \brief disconnects the logic component of a plugin from the logic
+   * signals emitted by the avr cpu.
+   *
+   * \see AbstractPeripheralLogic::disconnect()
+   *
+   * \param id the unique identifier for the peripheral
+   */
+  void disconnect( const QString& id );
 
-    /**
-     * \brief free's any data structures and unloads the shared library
-     * from the runtime environment.
-     *
-     * \param id the unique identifier for the peripheral
-     */
-    void unload( const QString& id );
+  /**
+   * \brief free's any data structures and unloads the shared library
+   * from the runtime environment.
+   *
+   * \param id the unique identifier for the peripheral
+   */
+  void unload( const QString& id );
 
-    /**
-     * \brief attempts to load a plugin
-     *
-     * \param pluginDirectory the directory containing the plugin
-     * \param filename the filename of the plugin relative to the plugin directory
-     */
-    void load(const QDir& pluginDirectory, const QString& filename);
+  /**
+   * \brief attempts to load a plugin
+   *
+   * \param pluginDirectory the directory containing the plugin
+   * \param filename the filename of the plugin relative to the plugin directory
+   */
+  void load( const QDir& pluginDirectory, const QString& filename );
 
-    /**
-     * \brief lists the names of the plugins available, the name of the plugin
-     * also serves as its unique identifier or \em id.
-     *
-     * \code{.cpp}
-     *
-     *  QList<QString> list = pluginmgr->listPlugins();
-     *
-     *  for ( int i = 0; i < list.count(); i++ ){
-     *
-     *    pluginmgr->load( list[i] );
-     *
-     *  }
-     *
-     * \endcode
-     *
-     * \return the list of names of all the available plugins
-     */
-    QList<QString> listPlugins(void);
+  /**
+   * \brief lists the names of the plugins available, the name of the plugin
+   * also serves as its unique identifier or \em id.
+   *
+   * \code{.cpp}
+   *
+   *  QList<QString> list = pluginmgr->listPlugins();
+   *
+   *  for ( int i = 0; i < list.count(); i++ ){
+   *
+   *    pluginmgr->load( list[i] );
+   *
+   *  }
+   *
+   * \endcode
+   *
+   * \return the list of names of all the available plugins
+   */
+  QList<QString> listPlugins( void );
 
-  private:
+private:
 
-    AVRIOAdapter* io;
-    QMdiArea* mdiArea;
+  AVRIOAdapter* io;
+  QMdiArea* mdiArea;
 
-    QMap<QString, Plugin*>* plugins;
+  QMap<QString, Plugin*>* plugins;
 
 };
 

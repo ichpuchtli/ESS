@@ -29,31 +29,32 @@
 /**
  * \brief an abstract base class for representing peripheral widgets
  */
-class AbstractPeripheralWidget : public QWidget {
+class AbstractPeripheralWidget : public QWidget
+{
 
   Q_OBJECT
 
-  public:
+public:
 
-    virtual ~AbstractPeripheralWidget() {}
+  virtual ~AbstractPeripheralWidget() {}
 
-  public slots:
+public slots:
 
-    /**
-     * \brief used to notify a plugin that a simulation is about to begin, this
-     * is an opportunities to reset structures and data before a new simulation.
-     */
-    virtual void RESET() = 0;
+  /**
+   * \brief used to notify a plugin that a simulation is about to begin, this
+   * is an opportunities to reset structures and data before a new simulation.
+   */
+  virtual void RESET() = 0;
 
-  signals:
+signals:
 
-    /**
-     * \brief plugins can emit messages which will be captured in a plugin log,
-     * this system can be used to notify users of errors in the plugin
-     *
-     * \param error the message to be sent
-     */
-    void error(QString error);
+  /**
+   * \brief plugins can emit messages which will be captured in a plugin log,
+   * this system can be used to notify users of errors in the plugin
+   *
+   * \param error the message to be sent
+   */
+  void error( QString error );
 };
 
 Q_DECLARE_INTERFACE( AbstractPeripheralWidget, ABSTRACTPERIPHERALWIDGET_IDD )

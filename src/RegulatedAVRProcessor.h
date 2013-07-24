@@ -27,18 +27,19 @@
 /**
  * \brief a processor strategy using loop delays to achieve accurate speeds
  */
-class RegulatedAVRProcessor : public AVRProcessor {
+class RegulatedAVRProcessor : public AVRProcessor
+{
 
-  Q_INTERFACES(AVRProcessor)
+  Q_INTERFACES( AVRProcessor )
 
-  public:
+public:
 
-    RegulatedAVRProcessor(const QString& mmcu, unsigned frequency) :
-      AVRProcessor(mmcu, frequency), loop_count(100) {}
+  RegulatedAVRProcessor( const QString& mmcu, unsigned frequency ) :
+    AVRProcessor( mmcu, frequency ), loop_count( 100 ) {}
 
-  public slots:
+public slots:
 
-    void run(void);
+  void run( void );
 
   /**
    * \brief simple loop delay (spin delay, spin counter, etc)
@@ -46,15 +47,15 @@ class RegulatedAVRProcessor : public AVRProcessor {
    * \param count the number of \em nop's to execute to create a significant
    * delay
    */
-  static inline void loop_delay(unsigned int count){
+  static inline void loop_delay( unsigned int count ) {
 
-    while(count--) asm("nop");
+    while ( count-- ) asm( "nop" );
 
   }
 
 
-  private:
-   int loop_count;
+private:
+  int loop_count;
 };
 
 #endif

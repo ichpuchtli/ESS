@@ -26,65 +26,73 @@
 
 #include <QDebug>
 
-GPIOPin::GPIOPin(avr_t* avr, const char* identifier, QObject* parent) :
-  AbstractPin(parent), avr(avr), port(identifier[1]), pin(identifier[2] - '0')
+GPIOPin::GPIOPin( avr_t* avr, const char* identifier, QObject* parent ) :
+  AbstractPin( parent ), avr( avr ), port( identifier[1] ),
+  pin( identifier[2] - '0' )
 {
   this->init();
 }
 
-GPIOPin::GPIOPin(avr_t* avr, char port, unsigned pin, QObject* parent) :
-  AbstractPin(parent), avr(avr), port(port), pin(pin)
+GPIOPin::GPIOPin( avr_t* avr, char port, unsigned pin, QObject* parent ) :
+  AbstractPin( parent ), avr( avr ), port( port ), pin( pin )
 {
   this->init();
 }
 
-GPIOPin::~GPIOPin(){
+GPIOPin::~GPIOPin()
+{
 
-  avr_irq_unregister_notify(this->pin_irq, GPIOPin::pinChangeHook, NULL);
-  avr_irq_unregister_notify(this->ddr_irq, GPIOPin::ddrChangeHook, NULL);
+  avr_irq_unregister_notify( this->pin_irq, GPIOPin::pinChangeHook, NULL );
+  avr_irq_unregister_notify( this->ddr_irq, GPIOPin::ddrChangeHook, NULL );
 
 }
 
-void GPIOPin::init(){
+void GPIOPin::init()
+{
 
   //TODO polling based GPIOPins with avr_ioctl
 
- qDebug() << "GIOPin: Pin" << port << (unsigned) pin << "connected!";
+  qDebug() << "GIOPin: Pin" << port << ( unsigned ) pin << "connected!";
 
-  this->pin_irq = avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ(this->port),
-                                this->pin);
+  this->pin_irq = avr_io_getirq( avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
+                                 this->pin );
 
-  this->ddr_irq = avr_io_getirq(avr, AVR_IOCTL_IOPORT_GETIRQ(this->port),
-                                IOPORT_IRQ_DIRECTION_ALL);
+  this->ddr_irq = avr_io_getirq( avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
+                                 IOPORT_IRQ_DIRECTION_ALL );
 
   this->levelCache = 0x0;
   this->ddrCache = 0x0;
 
-  avr_irq_register_notify(this->pin_irq, GPIOPin::pinChangeHook, this);
-  avr_irq_register_notify(this->ddr_irq, GPIOPin::ddrChangeHook, this);
+  avr_irq_register_notify( this->pin_irq, GPIOPin::pinChangeHook, this );
+  avr_irq_register_notify( this->ddr_irq, GPIOPin::ddrChangeHook, this );
 
 }
 
-void GPIOPin::pinChangeHook(struct avr_irq_t* irq, uint32_t value, void* param){
+void GPIOPin::pinChangeHook( struct avr_irq_t* irq, uint32_t value,
+                             void* param )
+{
 
-  (void) irq;
+  ( void ) irq;
 
-  GPIOPin* pin = (GPIOPin*) param;
+  GPIOPin* pin = ( GPIOPin* ) param;
 
   pin->pinChangeEvent( value );
 
 }
 
-void GPIOPin::ddrChangeHook(struct avr_irq_t* irq, uint32_t value, void* param){
+void GPIOPin::ddrChangeHook( struct avr_irq_t* irq, uint32_t value,
+                             void* param )
+{
 
-  (void) irq;
+  ( void ) irq;
 
-  GPIOPin* pin = (GPIOPin*) param;
+  GPIOPin* pin = ( GPIOPin* ) param;
 
   pin->dirChangeEvent( value );
 }
 
-void GPIOPin::pinChangeEvent( int value ) {
+void GPIOPin::pinChangeEvent( int value )
+{
 
   /*
   if ( this->levelCache == 0 ) {
@@ -97,13 +105,14 @@ void GPIOPin::pinChangeEvent( int value ) {
   */
 
   this->levelCache = value;
-  this->voltageCache = value*3300;
+  this->voltageCache = value * 3300;
 
   emit this->levelChange( this->levelCache );
   emit this->voltageChange( this->voltageCache );
 }
 
-void GPIOPin::dirChangeEvent( int direction ) {
+void GPIOPin::dirChangeEvent( int direction )
+{
 
   this->ddrCache = direction;
 
@@ -111,36 +120,41 @@ void GPIOPin::dirChangeEvent( int direction ) {
 
 }
 
-void GPIOPin::setVoltage( int voltage ) {
+void GPIOPin::setVoltage( int voltage )
+{
 
-  if( this->ddrCache == 0 ) {
+  if ( this->ddrCache == 0 ) {
 
     //TODO establish global GND/VCC Levels
-    avr_raise_irq(this->pin_irq, voltage);
+    avr_raise_irq( this->pin_irq, voltage );
 
   }
 
 }
 
-void GPIOPin::setLevel( int level ) {
+void GPIOPin::setLevel( int level )
+{
 
-  if( this->ddrCache == 0 ) {
+  if ( this->ddrCache == 0 ) {
 
     //TODO establish global GND/VCC Levels
-    avr_raise_irq( this->pin_irq, level * 3300);
+    avr_raise_irq( this->pin_irq, level * 3300 );
 
   }
 
 }
 
-int GPIOPin::getLevel( void ) const {
+int GPIOPin::getLevel( void ) const
+{
   return this->levelCache;
 }
 
-int GPIOPin::getVoltage( void ) const {
+int GPIOPin::getVoltage( void ) const
+{
   return this->voltageCache;
 }
 
-int GPIOPin::getDirection( void ) const {
+int GPIOPin::getDirection( void ) const
+{
   return this->ddrCache;
 }

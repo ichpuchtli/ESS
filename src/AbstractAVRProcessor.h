@@ -28,62 +28,63 @@
 /**
  * \brief An abstract base class for running simavr based avr simulations
  */
-class AbstractAVRProcessor : public QObject {
+class AbstractAVRProcessor : public QObject
+{
 
   Q_OBJECT
 
-  public:
+public:
 
-    virtual ~AbstractAVRProcessor() {}
+  virtual ~AbstractAVRProcessor() {}
 
-  signals:
+signals:
 
-    /**
-     * \brief this signal is emitted prior to entering a simulation loop,
-     * this would be the ideal time to initialize/reset components etc.
-     */
-    void RESET();
+  /**
+   * \brief this signal is emitted prior to entering a simulation loop,
+   * this would be the ideal time to initialize/reset components etc.
+   */
+  void RESET();
 
-    /**
-     * \brief this signal is emitted when a simulation loop has exited, this
-     * is usually caused by intervention via stop() or when execution errors
-     * occurs or when EOF is reached in the avr program.
-     * \see avrStateChange(int)
-     */
-    void stopped();
+  /**
+   * \brief this signal is emitted when a simulation loop has exited, this
+   * is usually caused by intervention via stop() or when execution errors
+   * occurs or when EOF is reached in the avr program.
+   * \see avrStateChange(int)
+   */
+  void stopped();
 
-    /**
-     * \brief this signal is emitted when the simulation core state changes,
-     * this is emitted before and after a simulation loop
-     *
-     * \param status the new status of the simavr core
-     */
-    void avrStateChange(int status);
+  /**
+   * \brief this signal is emitted when the simulation core state changes,
+   * this is emitted before and after a simulation loop
+   *
+   * \param status the new status of the simavr core
+   */
+  void avrStateChange( int status );
 
-  public slots:
+public slots:
 
-    /**
-     * \brief exit as soon as possible, emits stopped() when exiting
-     */
-    virtual void stop() = 0;
+  /**
+   * \brief exit as soon as possible, emits stopped() when exiting
+   */
+  virtual void stop() = 0;
 
-    /**
-     * \brief the only pure virtual method in the class, this method 
-     * houses the simulation procedure and is often connected to a
-     * QThread or QTimer event.
-     */
-    virtual void run() = 0;
+  /**
+   * \brief the only pure virtual method in the class, this method
+   * houses the simulation procedure and is often connected to a
+   * QThread or QTimer event.
+   */
+  virtual void run() = 0;
 
-    /**
-     *\brief load a new 8-bit avr executable compiled with avr-gcc or WinAVR
-     * given a \em filename to the compiled executable
-     *
-     * \param filename the path to the compiled avr executable
-     */
-    virtual void loadFirmware( const QString& filename ) = 0;
+  /**
+   *\brief load a new 8-bit avr executable compiled with avr-gcc or WinAVR
+   * given a \em filename to the compiled executable
+   *
+   * \param filename the path to the compiled avr executable
+   */
+  virtual void loadFirmware( const QString& filename ) = 0;
 
 };
 
-Q_DECLARE_INTERFACE(AbstractAVRProcessor, "ESS.AbstractAVRProcessor/1.0")
+Q_DECLARE_INTERFACE( AbstractAVRProcessor, "ESS.AbstractAVRProcessor/1.0" )
 
 #endif // ABSTRACTAVRPROCESSOR_H

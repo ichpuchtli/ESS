@@ -26,26 +26,27 @@
 
 #include <QtCore/QTimer>
 
- /**
-  * \brief A simulation strategy using bundled execution at frequent intervals
-  */
-class HybridAVRProcessor : public AVRProcessor {
+/**
+ * \brief A simulation strategy using bundled execution at frequent intervals
+ */
+class HybridAVRProcessor : public AVRProcessor
+{
 
-  Q_INTERFACES(AVRProcessor)
+  Q_INTERFACES( AVRProcessor )
 
-  public:
-    HybridAVRProcessor(const QString& mmcu, unsigned frequency) :
-      AVRProcessor(mmcu, frequency) {}
+public:
+  HybridAVRProcessor( const QString& mmcu, unsigned frequency ) :
+    AVRProcessor( mmcu, frequency ) {}
 
-  public slots:
+public slots:
 
-    void run(void);
+  void run( void );
 
-  private:
+private:
 
-    QTimer* timer;
+  QTimer* timer;
 
-    void update(void);
+  void update( void );
 };
 
 #endif

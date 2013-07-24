@@ -32,7 +32,8 @@
 
 #define UPDATE_SPEED 4 // 4 Hz
 
-void RegulatedAVRProcessor::run(){
+void RegulatedAVRProcessor::run()
+{
 
   struct timeval t1, t2;
 
@@ -44,60 +45,61 @@ void RegulatedAVRProcessor::run(){
 
   this->isRunning = true;
 
- qDebug() << "RegulatedAVRProcessor: running";
+  qDebug() << "RegulatedAVRProcessor: running";
 
   emit this->RESET();
 
-  avr_reset(this->avr);
+  avr_reset( this->avr );
 
   int status = cpu_Running;
 
-  emit this->avrStateChange(status);
+  emit this->avrStateChange( status );
 
-  gettimeofday(&t1, NULL);
+  gettimeofday( &t1, NULL );
 
-  while (AVRProcessor::avrRunnable(status)) {
+  while ( AVRProcessor::avrRunnable( status ) ) {
 
-    gettimeofday(&t2, NULL);
+    gettimeofday( &t2, NULL );
 
     last_cycle_count = avr->cycle;
 
-    status = avr_run(this->avr);
+    status = avr_run( this->avr );
 
-    cycles += (unsigned int) (this->avr->cycle - last_cycle_count);
+    cycles += ( unsigned int )( this->avr->cycle - last_cycle_count );
 
-    dt = (t2.tv_sec - t1.tv_sec)*1000000U + (t2.tv_usec - t1.tv_usec);
+    dt = ( t2.tv_sec - t1.tv_sec ) * 1000000U + ( t2.tv_usec - t1.tv_usec );
 
     /* One Second has passed, adjust loop speed */
-    if( dt >= 1000000U/UPDATE_SPEED ){
+    if ( dt >= 1000000U / UPDATE_SPEED ) {
 
       // correction factor to apply to loop delay
-      cfactor = cycles - this->frequency/UPDATE_SPEED;
+      cfactor = cycles - this->frequency / UPDATE_SPEED;
 
       // divide here to depreciate smaller errors
-      cfactor /= ((float)this->frequency/1024);
+      cfactor /= ( ( float )this->frequency / 1024 );
 
-      if(cfactor < 0 ){
-        loop_count -= log(abs(cfactor));
-      } else if (cfactor > 0 ) {
-        loop_count += log(cfactor);
+      if ( cfactor < 0 ) {
+        loop_count -= log( abs( cfactor ) );
+      } else if ( cfactor > 0 ) {
+        loop_count += log( cfactor );
       }
 
-      if(loop_count < 0) loop_count = 0;
+      if ( loop_count < 0 ) loop_count = 0;
 
-      qDebug() << "RegulatedAVRProcessor: Loop Count:" << loop_count << "Freq:" << UPDATE_SPEED*cycles << "MHz";
+      qDebug() << "RegulatedAVRProcessor: Loop Count:" << loop_count << "Freq:" <<
+               UPDATE_SPEED*cycles << "MHz";
 
       cycles = 0;
 
-      gettimeofday(&t1, NULL);
+      gettimeofday( &t1, NULL );
 
     }
 
-    RegulatedAVRProcessor::loop_delay((unsigned int) loop_count);
+    RegulatedAVRProcessor::loop_delay( ( unsigned int ) loop_count );
 
   }
 
-  emit this->avrStateChange(status);
+  emit this->avrStateChange( status );
 
   emit this->stopped();
 

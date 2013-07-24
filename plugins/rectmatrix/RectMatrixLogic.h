@@ -6,10 +6,11 @@
 #include "../../src/AbstractPeripheralLogic.h"
 #include "../../src/AVRIOAdapter.h"
 
-class RectMatrixLogic : public AbstractPeripheralLogic {
+class RectMatrixLogic : public AbstractPeripheralLogic
+{
 
   Q_OBJECT
-  Q_INTERFACES(AbstractPeripheralLogic)
+  Q_INTERFACES( AbstractPeripheralLogic )
 
 public:
 
@@ -18,7 +19,7 @@ public:
 
 public slots:
 
-  void connect(AVRIOAdapter* io);
+  void connect( AVRIOAdapter* io );
 
   void disconnect();
 
@@ -26,10 +27,10 @@ public slots:
 
 signals:
 
-  void error(QString error);
+  void error( QString error );
 
-  void setRow(int bitfield);
-  void setCol(int bitfield);
+  void setRow( int bitfield );
+  void setCol( int bitfield );
 
 private:
 

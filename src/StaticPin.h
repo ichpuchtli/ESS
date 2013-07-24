@@ -30,28 +30,36 @@
 class StaticPin : public AbstractPin
 {
 
-  Q_INTERFACES(AbstractPin)
+  Q_INTERFACES( AbstractPin )
 
 public:
-    /**
-     * \brief constructs a StaticPin instance with the given voltage
-     *
-     * \param volts the fixed voltage for the pin
-     */
-  StaticPin(int volts) : voltage(volts) { }
+  /**
+   * \brief constructs a StaticPin instance with the given voltage
+   *
+   * \param volts the fixed voltage for the pin
+   */
+  StaticPin( int volts ) : voltage( volts ) { }
 
-  int getLevel( void ) const { return (this->voltage) < 1650 ? 0 : 1; }
-  int getVoltage( void ) const { return this->voltage; }
+  int getLevel( void ) const {
+    return ( this->voltage ) < 1650 ? 0 : 1;
+  }
+  int getVoltage( void ) const {
+    return this->voltage;
+  }
 
   /**
    * \brief this method has no affect since this pin has a fixed voltage level
    */
-  void setLevel(int level) { (void) level; }
+  void setLevel( int level ) {
+    ( void ) level;
+  }
 
   /**
    * \brief this method has no affect since this pin has a fixed voltage level
    */
-  void setVoltage(int voltage) { (void) voltage; }
+  void setVoltage( int voltage ) {
+    ( void ) voltage;
+  }
 
 private:
   const int voltage;

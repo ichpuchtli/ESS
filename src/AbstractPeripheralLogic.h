@@ -32,43 +32,44 @@
 /**
  * \brief An abstract base class for representing peripheral logic interactions
  */
-class AbstractPeripheralLogic : public QObject {
+class AbstractPeripheralLogic : public QObject
+{
 
   Q_OBJECT
 
-  public:
+public:
 
-    virtual ~AbstractPeripheralLogic() {}
+  virtual ~AbstractPeripheralLogic() {}
 
-  public slots:
+public slots:
 
-    /**
-     * \brief the opportunity to connect internal logic to signals
-     * offered by AVRIOAdapter and friends
-     *
-     * \param io an AVRIOAdapter instance
-     */
-    virtual void connect(AVRIOAdapter* io) = 0;
+  /**
+   * \brief the opportunity to connect internal logic to signals
+   * offered by AVRIOAdapter and friends
+   *
+   * \param io an AVRIOAdapter instance
+   */
+  virtual void connect( AVRIOAdapter* io ) = 0;
 
-    /**
-     * \brief used to disconnect the plugin logic from the avr simulation engine
-     */
-    virtual void disconnect() = 0;
+  /**
+   * \brief used to disconnect the plugin logic from the avr simulation engine
+   */
+  virtual void disconnect() = 0;
 
-    /**
-     * \brief used to notify a plugin that a simulation is about to begin, this
-     * is an opportunities to reset structures and data before a new simulation.
-     */
-    virtual void RESET() = 0;
+  /**
+   * \brief used to notify a plugin that a simulation is about to begin, this
+   * is an opportunities to reset structures and data before a new simulation.
+   */
+  virtual void RESET() = 0;
 
-  signals:
+signals:
 
-    /**
-     * \brief request the plugin manager to unload this plugin
-     *
-     * \param error the message to be sent
-     */
-    void error(QString error);
+  /**
+   * \brief request the plugin manager to unload this plugin
+   *
+   * \param error the message to be sent
+   */
+  void error( QString error );
 };
 
 Q_DECLARE_INTERFACE( AbstractPeripheralLogic, ABSTRACTPERIPHERALLOGIC_IDD )

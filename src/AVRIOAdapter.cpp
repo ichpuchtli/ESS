@@ -26,17 +26,18 @@
 
 #include "sim_avr.h"
 
-AVRIOAdapter::AVRIOAdapter(avr_t* avr, QThread* thread) :
-  thread(thread), avr(avr), pinmap(new QHash<QString, GPIOPin*>())
+AVRIOAdapter::AVRIOAdapter( avr_t* avr, QThread* thread ) :
+  thread( thread ), avr( avr ), pinmap( new QHash<QString, GPIOPin*>() )
 {
 }
 
-AVRIOAdapter::~AVRIOAdapter(){
+AVRIOAdapter::~AVRIOAdapter()
+{
 
   QList<GPIOPin*> pins = this->pinmap->values();
 
-  for( int i = 0; i < pins.size(); i++){
-     delete pins[i];
+  for ( int i = 0; i < pins.size(); i++ ) {
+    delete pins[i];
   }
 
   this->pinmap->clear();
@@ -45,29 +46,33 @@ AVRIOAdapter::~AVRIOAdapter(){
 
 }
 
-avr_t* AVRIOAdapter::getAVR(void){
+avr_t* AVRIOAdapter::getAVR( void )
+{
   return this->avr;
 }
 
-QThread* AVRIOAdapter::getThread(void){
+QThread* AVRIOAdapter::getThread( void )
+{
   return this->thread;
 }
 
-GPIOPin& AVRIOAdapter::getGPIOPin(char port, unsigned pin){
+GPIOPin& AVRIOAdapter::getGPIOPin( char port, unsigned pin )
+{
 
   char name[4];
 
   name[0] = 'P';
   name[1] = port;
-  name[2] = (char) pin + '0';
+  name[2] = ( char ) pin + '0';
   name[3] = '\0';
 
-  return this->getGPIOPin(name);
+  return this->getGPIOPin( name );
 }
 
-GPIOPin& AVRIOAdapter::getGPIOPin(const char* name){
+GPIOPin& AVRIOAdapter::getGPIOPin( const char* name )
+{
 
-  QString key(name);
+  QString key( name );
 
   /*
   if( key.containts(QRegularExpresseion("P[A-G][0-7]")) )
@@ -75,40 +80,45 @@ GPIOPin& AVRIOAdapter::getGPIOPin(const char* name){
   }
   */
 
-  if( !this->pinmap->contains(key) ){
-    this->pinmap->insert(key, new GPIOPin(this->getAVR(), name, this->getThread()) );
+  if ( !this->pinmap->contains( key ) ) {
+    this->pinmap->insert( key, new GPIOPin( this->getAVR(), name,
+                                            this->getThread() ) );
   }
 
-  return *this->pinmap->value(key);
+  return *this->pinmap->value( key );
 
 }
 
-AbstractPin& AVRIOAdapter::VCC(void){
+AbstractPin& AVRIOAdapter::VCC( void )
+{
 
-  static StaticPin vcc(3300);
+  static StaticPin vcc( 3300 );
 
   return vcc;
 
 }
 
-AbstractPin& AVRIOAdapter::GND(void){
+AbstractPin& AVRIOAdapter::GND( void )
+{
 
-  static StaticPin gnd(0);
+  static StaticPin gnd( 0 );
 
   return gnd;
 
 }
 
-AbstractPin& AVRIOAdapter::AVCC(void){
+AbstractPin& AVRIOAdapter::AVCC( void )
+{
 
-  static StaticPin avcc(3300);
+  static StaticPin avcc( 3300 );
 
   return avcc;
 }
 
-AbstractPin& AVRIOAdapter::RESET(void){
+AbstractPin& AVRIOAdapter::RESET( void )
+{
 
-  static StaticPin reset(3300);
+  static StaticPin reset( 3300 );
 
   return reset;
 

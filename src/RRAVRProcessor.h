@@ -27,17 +27,18 @@
 /**
  * \brief a simple Round Robin simulation strategy
  */
-class RRAVRProcessor : public AVRProcessor {
+class RRAVRProcessor : public AVRProcessor
+{
 
-  Q_INTERFACES(AVRProcessor)
+  Q_INTERFACES( AVRProcessor )
 
-  public:
-    RRAVRProcessor(const QString& mmcu, unsigned frequency) :
-      AVRProcessor(mmcu, frequency) {}
+public:
+  RRAVRProcessor( const QString& mmcu, unsigned frequency ) :
+    AVRProcessor( mmcu, frequency ) {}
 
-  public slots:
+public slots:
 
-    void run(void);
+  void run( void );
 };
 
 #endif

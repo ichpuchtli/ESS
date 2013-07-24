@@ -1,6 +1,6 @@
 /**
  * \file AbstractPeripheralFactory.h
- * \brief a abstract factory pattern used to instantiate the peripheral components 
+ * \brief a abstract factory pattern used to instantiate the peripheral components
  * \author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
@@ -34,39 +34,40 @@
  * \brief Peripheral structure combines logic and widget components for conveniences
  */
 struct Peripheral {
-    AbstractPeripheralLogic* logic;
-    AbstractPeripheralWidget* widget;
+  AbstractPeripheralLogic* logic;
+  AbstractPeripheralWidget* widget;
 };
 
 /**
  * \brief a abstract factory pattern used to instantiate the peripheral components
  */
-class AbstractPeripheralFactory : public QObject {
+class AbstractPeripheralFactory : public QObject
+{
 
-  public:
+public:
 
-    virtual ~AbstractPeripheralFactory() {}
+  virtual ~AbstractPeripheralFactory() {}
 
-    /**
-     * \brief creates a Peripheral structure containing pointers to the 
-     * plugin components. Connecting the logic and widget components should
-     * be done with a Qt::QueuedConnection since the logic component will
-     * will be moved to the cpu thread.
-     * 
-     * \see Plugin Development
-     * \return Peripheral structure by value
-     */
-    virtual Peripheral getPeripheral(void) = 0;
+  /**
+   * \brief creates a Peripheral structure containing pointers to the
+   * plugin components. Connecting the logic and widget components should
+   * be done with a Qt::QueuedConnection since the logic component will
+   * will be moved to the cpu thread.
+   *
+   * \see Plugin Development
+   * \return Peripheral structure by value
+   */
+  virtual Peripheral getPeripheral( void ) = 0;
 
-    /**
-     * \return a string containing a brief unformatted description of the plugin
-     */
-    virtual QString getDescription(void) = 0;
+  /**
+   * \return a string containing a brief unformatted description of the plugin
+   */
+  virtual QString getDescription( void ) = 0;
 
-    /**
-     * \return a string containing unformatted version information
-     */
-    virtual QString getVersion(void) = 0;
+  /**
+   * \return a string containing unformatted version information
+   */
+  virtual QString getVersion( void ) = 0;
 
 };
 

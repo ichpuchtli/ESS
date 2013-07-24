@@ -5,24 +5,29 @@
 
 #include "../../src/AbstractPeripheralFactory.h"
 
-class MatrixFactory : public AbstractPeripheralFactory {
+class MatrixFactory : public AbstractPeripheralFactory
+{
 
   Q_OBJECT
 
-  Q_PLUGIN_METADATA(IID "15x7 LED Matrix")
+  Q_PLUGIN_METADATA( IID "15x7 LED Matrix" )
 
   Q_INTERFACES( AbstractPeripheralFactory )
 
-  public:
+public:
 
-    MatrixFactory() {}
-    ~MatrixFactory() {}
+  MatrixFactory() {}
+  ~MatrixFactory() {}
 
-    Peripheral getPeripheral(void);
+  Peripheral getPeripheral( void );
 
-    QString getDescription(void) {return QString( "15x7 LED Matrix" );}
+  QString getDescription( void ) {
+    return QString( "15x7 LED Matrix" );
+  }
 
-    QString getVersion(void) { return QString("1.0");}
+  QString getVersion( void ) {
+    return QString( "1.0" );
+  }
 
 };
 

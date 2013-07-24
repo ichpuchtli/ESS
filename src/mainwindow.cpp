@@ -69,124 +69,139 @@ MainWindow::MainWindow( QWidget* parent ) :
 
 }
 
-MainWindow::~MainWindow(){}
+MainWindow::~MainWindow() {}
 
-void MainWindow::timerEvent(QTimerEvent * e) {
+void MainWindow::timerEvent( QTimerEvent * e )
+{
 
-  (void) e;
+  ( void ) e;
 
-  QTextStream stream(this->log);
+  QTextStream stream( this->log );
 
   QString line = stream.readLine();
 
-  while(!line.isEmpty()){
+  while ( !line.isEmpty() ) {
 
-    ui->logViewer->append(line);
+    ui->logViewer->append( line );
 
     line = stream.readLine();
 
-    ui->logViewer->moveCursor(QTextCursor::End);
+    ui->logViewer->moveCursor( QTextCursor::End );
   }
 
 }
 
-void MainWindow::initSettings(void){
+void MainWindow::initSettings( void )
+{
 
   //TODO init QSettings
-  this->resize(640,480);
+  this->resize( 640, 480 );
 
-  QCoreApplication::setApplicationName("ESS");
-  QCoreApplication::setApplicationVersion("1.0");
+  QCoreApplication::setApplicationName( "ESS" );
+  QCoreApplication::setApplicationVersion( "1.0" );
 
   //QCoreApplication::setOrganizationDomain("ESS");
   //QCoreApplication::setOrganizationName("ESS");
 
 }
 
-void MainWindow::initComponents(void){
+void MainWindow::initComponents( void )
+{
 
-  this->cpu = new RegulatedAVRProcessor(QString("atmega64"), 8000000);
+  this->cpu = new RegulatedAVRProcessor( QString( "atmega64" ), 8000000 );
 
   this->cpuThread = new QThread;
 
-  this->cpu->moveToThread(cpuThread);
+  this->cpu->moveToThread( cpuThread );
 
-  QObject::connect(cpuThread, &QThread::started, cpu, &AVRProcessor::run);
-  QObject::connect(cpu, &AVRProcessor::stopped, cpuThread, &QThread::quit);
+  QObject::connect( cpuThread, &QThread::started, cpu, &AVRProcessor::run );
+  QObject::connect( cpu, &AVRProcessor::stopped, cpuThread, &QThread::quit );
 
   //TODO connect SIGNAL(deleteLater) to all objects allocated in this method
-  AVRIOAdapter* io = new AVRIOAdapter(cpu->getAVR(), cpuThread);
+  AVRIOAdapter* io = new AVRIOAdapter( cpu->getAVR(), cpuThread );
 
-  this->filename = QString("src/avr/main.axf");
+  this->filename = QString( "src/avr/main.axf" );
 
-  this->cpu->loadFirmware(this->filename);
+  this->cpu->loadFirmware( this->filename );
 
-  this->pluginManager = new PluginManager(io, ui->mdiArea);
+  this->pluginManager = new PluginManager( io, ui->mdiArea );
 
-  QDir pluginDirectory(QCoreApplication::applicationDirPath() + "/" + "plugins");
+  QDir pluginDirectory( QCoreApplication::applicationDirPath() + "/" +
+                        "plugins" );
 
-  foreach(const QString& filename, pluginDirectory.entryList(QDir::NoDotAndDotDot | QDir::Files)){
-    this->pluginManager->load(pluginDirectory, filename);
+  foreach( const QString & filename,
+           pluginDirectory.entryList( QDir::NoDotAndDotDot | QDir::Files ) ) {
+    this->pluginManager->load( pluginDirectory, filename );
   }
 
   //TODO Dockable widget for showing/hiding peripheral widgets
-  foreach(const QString plugin, this->pluginManager->listPlugins()){
-    QAction* action = new QAction(this);
-    action->setText(plugin);
-    action->setCheckable(true);
-    action->setChecked(false);
-    ui->menuPlugins->addAction(action);
-    connect(action,SIGNAL(triggered(bool)), this, SLOT(togglePlugin(bool)));
+  foreach( const QString plugin, this->pluginManager->listPlugins() ) {
+    QAction* action = new QAction( this );
+    action->setText( plugin );
+    action->setCheckable( true );
+    action->setChecked( false );
+    ui->menuPlugins->addAction( action );
+    connect( action, SIGNAL( triggered( bool ) ), this,
+             SLOT( togglePlugin( bool ) ) );
   }
 
 
 }
 
-void MainWindow::connectActions(void){
+void MainWindow::connectActions( void )
+{
 
-  connect(ui->actionAbout_Qt,SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-  connect(ui->actionClose,SIGNAL(triggered()), qApp, SLOT(quit()));
+  connect( ui->actionAbout_Qt, SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) );
+  connect( ui->actionClose, SIGNAL( triggered() ), qApp, SLOT( quit() ) );
 
-  connect(ui->actionAbout_ESS, SIGNAL(triggered()), this, SLOT(aboutESS()));
-  connect(ui->actionESS_Help, SIGNAL(triggered()), this, SLOT(helpWindow()));
-  connect(ui->actionStart,SIGNAL(triggered()), this, SLOT(startSimulation()));
-  connect(ui->actionPause,SIGNAL(triggered()), this, SLOT(stopSimulation()));
-  connect(ui->actionStop,SIGNAL(triggered()), this, SLOT(stopSimulation()));
+  connect( ui->actionAbout_ESS, SIGNAL( triggered() ), this, SLOT( aboutESS() ) );
+  connect( ui->actionESS_Help, SIGNAL( triggered() ), this,
+           SLOT( helpWindow() ) );
+  connect( ui->actionStart, SIGNAL( triggered() ), this,
+           SLOT( startSimulation() ) );
+  connect( ui->actionPause, SIGNAL( triggered() ), this,
+           SLOT( stopSimulation() ) );
+  connect( ui->actionStop, SIGNAL( triggered() ), this,
+           SLOT( stopSimulation() ) );
 
-  connect(ui->actionLoad_Firmware,SIGNAL(triggered()), this, SLOT(loadFirmware()));
-  connect(ui->actionReload_Firmware,SIGNAL(triggered()), this, SLOT(reloadFirmware()));
+  connect( ui->actionLoad_Firmware, SIGNAL( triggered() ), this,
+           SLOT( loadFirmware() ) );
+  connect( ui->actionReload_Firmware, SIGNAL( triggered() ), this,
+           SLOT( reloadFirmware() ) );
 
-  QComboBox* comboBox = new QComboBox(this);
+  QComboBox* comboBox = new QComboBox( this );
 
-  comboBox->addItem(QString("atmega64"));
-  comboBox->addItem(QString("atmega128"));
+  comboBox->addItem( QString( "atmega64" ) );
+  comboBox->addItem( QString( "atmega128" ) );
 
-  ui->toolBar->addWidget(comboBox);
+  ui->toolBar->addWidget( comboBox );
 
-  QSpinBox* spinBox = new QSpinBox(this);
+  QSpinBox* spinBox = new QSpinBox( this );
 
-  spinBox->setMaximum(10000000);
-  spinBox->setMinimum(0);
+  spinBox->setMaximum( 10000000 );
+  spinBox->setMinimum( 0 );
 
-  spinBox->setValue(8000000);
-  spinBox->setSuffix(QString(" Hz"));
+  spinBox->setValue( 8000000 );
+  spinBox->setSuffix( QString( " Hz" ) );
 
-  ui->toolBar->addWidget(spinBox);
+  ui->toolBar->addWidget( spinBox );
 
 }
 
-void MainWindow::startSimulation(void){
+void MainWindow::startSimulation( void )
+{
 
-  if(this->filename.isEmpty()){
+  if ( this->filename.isEmpty() ) {
     return;
   }
 
   this->cpuThread->start();
 }
 
-void MainWindow::stopSimulation() {
+void MainWindow::stopSimulation()
+{
 
-  if(this->filename.isEmpty()){
+  if ( this->filename.isEmpty() ) {
     return;
   }
 
@@ -198,94 +213,102 @@ void MainWindow::stopSimulation() {
 
 }
 
-void MainWindow::loadFirmware(void){
+void MainWindow::loadFirmware( void )
+{
 
   this->stopSimulation();
 
-  this->filename = QFileDialog::getOpenFileName(this, tr("Load Firmware") );
+  this->filename = QFileDialog::getOpenFileName( this, tr( "Load Firmware" ) );
 
-  if( !this->filename.isEmpty() ){
-    this->cpu->loadFirmware(this->filename);
+  if ( !this->filename.isEmpty() ) {
+    this->cpu->loadFirmware( this->filename );
   }
 
 }
 
-void MainWindow::reloadFirmware(void){
+void MainWindow::reloadFirmware( void )
+{
 
-  if(this->filename.isEmpty()){
+  if ( this->filename.isEmpty() ) {
     return;
   }
 
   this->stopSimulation();
 
-  this->cpu->loadFirmware(this->filename);
+  this->cpu->loadFirmware( this->filename );
 
   this->cpuThread->start();
 
 }
 
-void MainWindow::togglePlugin( bool show ){
+void MainWindow::togglePlugin( bool show )
+{
 
-  QAction* sender = (QAction*) this->sender();
+  QAction* sender = ( QAction* ) this->sender();
 
-  if(show){
-    this->pluginManager->show(sender->text());
-    this->pluginManager->connect(sender->text());
-  }else{
-    this->pluginManager->hide(sender->text());
-    this->pluginManager->disconnect(sender->text());
+  if ( show ) {
+    this->pluginManager->show( sender->text() );
+    this->pluginManager->connect( sender->text() );
+  } else {
+    this->pluginManager->hide( sender->text() );
+    this->pluginManager->disconnect( sender->text() );
   }
 }
 
-void MainWindow::aboutESS(void){
+void MainWindow::aboutESS( void )
+{
 
-  QMessageBox::about(this, QString("About ESS"),
-                     QString("The Embedded System Simulator,  "
-                             "<a href=\"http://www.github.com/ichpuchtli/ess\">"
-                             "github.com/ichpuchtli/ess</a>"));
+  QMessageBox::about( this, QString( "About ESS" ),
+                      QString( "The Embedded System Simulator,  "
+                               "<a href=\"http://www.github.com/ichpuchtli/ess\">"
+                               "github.com/ichpuchtli/ess</a>" ) );
 
 }
 
 
-void MainWindow::helpWindow(){
+void MainWindow::helpWindow()
+{
 
   static QTextBrowser browser;
 
-  browser.setSource(QUrl("doc/html/index.html"));
-  browser.setSearchPaths(QStringList() << "doc/html/");
+  browser.setSource( QUrl( "doc/html/index.html" ) );
+  browser.setSearchPaths( QStringList() << "doc/html/" );
 
-  browser.resize(640,480);
+  browser.resize( 640, 480 );
   browser.show();
 
 }
 
-static void message_router(QtMsgType type, const QMessageLogContext& context, const QString& msg){
+static void message_router( QtMsgType type, const QMessageLogContext& context,
+                            const QString& msg )
+{
 
-  (void) type;
-  (void) context;
+  ( void ) type;
+  ( void ) context;
 
-  fprintf(stderr, "%s\n", msg.toLocal8Bit().constData());
+  fprintf( stderr, "%s\n", msg.toLocal8Bit().constData() );
 
-  QFile logfile("log.txt");
+  QFile logfile( "log.txt" );
 
-  logfile.open(QIODevice::WriteOnly | QIODevice::Append);
+  logfile.open( QIODevice::WriteOnly | QIODevice::Append );
 
-  QTextStream stream(&logfile);
+  QTextStream stream( &logfile );
 
   stream << msg << endl;
 
 }
 
-void MainWindow::initLogMonitor(void){
+void MainWindow::initLogMonitor( void )
+{
 
-  this->log = new QFile("log.txt");
+  this->log = new QFile( "log.txt" );
 
-  this->log->resize(0);
+  this->log->resize( 0 );
 
-  this->log->open(QIODevice::ReadOnly);
+  this->log->open( QIODevice::ReadOnly );
 
-  qInstallMessageHandler(message_router);
+  qInstallMessageHandler( message_router );
 
-  this->startTimer(1000);
+  this->startTimer( 1000 );
 
 }

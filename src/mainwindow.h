@@ -35,79 +35,80 @@
 /**
  * \brief the main class controlling simulations and the main window
  */
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
 
   Q_OBJECT
 
-  public:
-    MainWindow( QWidget* parent = 0 );
-    ~MainWindow();
+public:
+  MainWindow( QWidget* parent = 0 );
+  ~MainWindow();
 
 
-  public slots:
+public slots:
 
-    /**
-     * \brief a simple slot to load firmware using a file dialog
-     */
-    void loadFirmware(void);
+  /**
+   * \brief a simple slot to load firmware using a file dialog
+   */
+  void loadFirmware( void );
 
   /**
    * \brief stops execution before reloading firmware and restarting execution
    */
-    void reloadFirmware(void);
+  void reloadFirmware( void );
 
-    /**
-     * \brief starts execution of the simulation engine
-     */
-    void startSimulation(void);
+  /**
+   * \brief starts execution of the simulation engine
+   */
+  void startSimulation( void );
 
-    /**
-     * \brief stops execution of the simulation engine
-     */
-    void stopSimulation(void);
+  /**
+   * \brief stops execution of the simulation engine
+   */
+  void stopSimulation( void );
 
-    /**
-     * \brief presents a dialog about the \em {Embedded System Simulator}
-     */
-    void aboutESS(void);
+  /**
+   * \brief presents a dialog about the \em {Embedded System Simulator}
+   */
+  void aboutESS( void );
 
-    /**
-     * \brief toggle a plugin from an QAction event
-     *
-     * \param show a boolean indicating whether the plugin should be shown
-     */
-    void togglePlugin( bool show );
+  /**
+   * \brief toggle a plugin from an QAction event
+   *
+   * \param show a boolean indicating whether the plugin should be shown
+   */
+  void togglePlugin( bool show );
 
-    /**
-     * \brief protected timer event handler used to monitor log file
-     *
-     * \param e the timer event instance
-     */
-    void timerEvent(QTimerEvent * e);
+  /**
+   * \brief protected timer event handler used to monitor log file
+   *
+   * \param e the timer event instance
+   */
+  void timerEvent( QTimerEvent * e );
 
-    /**
-     * \brief presents the help dialog
-     */
-    void helpWindow(void);
+  /**
+   * \brief presents the help dialog
+   */
+  void helpWindow( void );
 
-  private:
+private:
 
-    void initLogMonitor(void);
+  void initLogMonitor( void );
 
-    void initSettings(void);
-    void initComponents(void);
+  void initSettings( void );
+  void initComponents( void );
 
-    void connectActions();
+  void connectActions();
 
-    Ui::MainWindow *ui;
+  Ui::MainWindow *ui;
 
-    QString filename;
+  QString filename;
 
-    AVRProcessor* cpu;
-    QThread* cpuThread;
-    PluginManager* pluginManager;
+  AVRProcessor* cpu;
+  QThread* cpuThread;
+  PluginManager* pluginManager;
 
-    QFile* log;
+  QFile* log;
 };
 
 #endif // MAINWINDOW_H

@@ -34,7 +34,7 @@ class AbstractPin : public QObject
 
 public:
 
-  AbstractPin(QObject* parent = 0) : QObject(parent) {}
+  AbstractPin( QObject* parent = 0 ) : QObject( parent ) {}
   virtual ~AbstractPin() {}
 
 //virtual char* getName(void) const = 0;
@@ -44,7 +44,7 @@ public:
    *
    * \return the digital level of the pin either 0 or 1
    */
-  virtual int getLevel(void) const = 0;
+  virtual int getLevel( void ) const = 0;
 
 
   /**
@@ -52,7 +52,7 @@ public:
    *
    * \return the voltage level of the pin between 0 ( GND ) and 3300 ( VCC )
    */
-  virtual int getVoltage(void) const = 0;
+  virtual int getVoltage( void ) const = 0;
 
 signals:
 
@@ -61,7 +61,7 @@ signals:
    *
    * \param voltage the new voltage level
    */
-  void voltageChange(int voltage);
+  void voltageChange( int voltage );
 
 
   /**
@@ -71,11 +71,11 @@ signals:
    *
    * \param level the new digital level for the pin either 0 or 1
    */
-  void levelChange(int level);
+  void levelChange( int level );
 
 public slots:
 
-  
+
   /**
    * \brief set the digital level of the pin to \em level
    *
@@ -85,14 +85,14 @@ public slots:
    * action results in a level change. Setting the level to 1 will set the voltage
    * to 3300 ( VCC ) and setting the level to 0 will set the voltage to 0 ( GND )
    */
-  virtual void setLevel(int level) = 0;
+  virtual void setLevel( int level ) = 0;
 
   /**
    * \brief set the voltage level of the pin to \em voltage
    *
    * \param voltage the new voltage level for the pin between 0 ( GND ) or 3300 ( VCC )
    *
-   * \note voltageChange(int) will be emitted here if 
+   * \note voltageChange(int) will be emitted here if
    *
    * \code{.cpp}
    * voltage != old_voltage
@@ -104,10 +104,10 @@ public slots:
    * \see voltageChange(int)
    * \see levelChange(int)
    */
-  virtual void setVoltage(int voltage) = 0;
+  virtual void setVoltage( int voltage ) = 0;
 
 };
 
-Q_DECLARE_INTERFACE(AbstractPin, "ESS.AbstractPin/1.0")
+Q_DECLARE_INTERFACE( AbstractPin, "ESS.AbstractPin/1.0" )
 
 #endif // ABSTRACTPIN_H
