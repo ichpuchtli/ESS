@@ -1,5 +1,5 @@
 install:
-  - sudo add-apt-repository ppa:leppa/qt5-gles2
+  - yes | sudo add-apt-repository ppa:leppa/qt5-gles2
   - sudo apt-get update
   - sudo apt-get install qtbase-opensource-src libelf1 freeglut3 avr-libc
 
