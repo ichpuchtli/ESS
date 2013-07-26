@@ -120,10 +120,6 @@ void MainWindow::initComponents( void )
   //TODO connect SIGNAL(deleteLater) to all objects allocated in this method
   AVRIOAdapter* io = new AVRIOAdapter( cpu->getAVR(), cpuThread );
 
-  this->filename = QString( "src/avr/main.axf" );
-
-  this->cpu->loadFirmware( this->filename );
-
   this->pluginManager = new PluginManager( io, ui->mdiArea );
 
   QDir pluginDirectory( QCoreApplication::applicationDirPath() + "/" +
