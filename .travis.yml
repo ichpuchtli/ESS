@@ -3,7 +3,7 @@ before_install:
 
 install:
   - sudo apt-get update -y
-  - sudo apt-get install ubuntu-sdk elfutils libelf-dev freeglut3 freeglut3-dev gcc-avr binutils-avr avr-libc gdb-avr -y
+  - sudo apt-get install ubuntu-sdk elfutils libelf-dev freeglut3 freeglut3-dev gcc-avr binutils-avr avr-libc gdb-avr cmake -y
 
 script:
   - git submodule update --init --recursive
