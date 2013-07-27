@@ -1,12 +1,12 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.7)
 
-project(matrixfactory)
+set(target matrixfactory) 
 
-set(TARGET matrixfactory)
+set(sources matrixfactory.cpp RectMatrix.cpp RectMatrixLogic.cpp) 
 
-set(SOURCES matrixfactory.cpp RectMatrix.cpp RectMatrixLogic.cpp) 
+set(headers matrixfactory.h RectMatrix.h RectMatrixLogic.h)
 
-set(HEADERS matrixfactory.h RectMatrix.h RectMatrixLogic.h)
+set(CMAKE_AUTOMOC ON)
 
 include_directories(../../src)
 
@@ -14,8 +14,8 @@ add_definitions(-DQT_PLUGIN)
 
 find_package(Qt5Widgets)
 
-set(CMAKE_AUTOMOC ON)
+add_definitions(${Qt5Widgets_DEFINITIONS})
 
-add_library(${PROJECT_NAME} SHARED ${HEADERS} ${SOURCES})
+add_library(${target} SHARED ${headers} ${sources})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+qt5_use_modules(${target} Widgets)

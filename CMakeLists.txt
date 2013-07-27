@@ -1,16 +1,16 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.9)
 
 project(EmbeddedSystemSimulator)
 
-set(TARGET ess)
+set(target ess)
 
-set(LIBS elf libsimavr.a)
+set(libs libsimavr.a elf)
 
-set(RESOURCE_FILE resources.qrc)
+set(resource_file resources.qrc)
 
-set(INCLUDES "include/simavr/simavr/sim")
+set(includes "include/simavr/simavr/sim")
 
-set ( SOURCES 
+set ( sources 
   src/ess.cpp
   src/mainwindow.cpp
   src/PluginManager.cpp
@@ -22,7 +22,7 @@ set ( SOURCES
   src/RRAVRProcessor.cpp
 )
 
-set ( HEADERS 
+set ( headers 
   src/AbstractAVRProcessor.h
   src/AbstractPeripheralLogic.h
   src/AbstractPeripheralWidget.h
@@ -32,16 +32,28 @@ set ( HEADERS
   src/mainwindow.h
 )
 
+set(CMAKE_AUTOMOC ON)
+
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
 
-set( PLUGINS
+set( plugins
   rectmatrix
-  
+
   )
 
-foreach(plugin ${PLUGINS})
+foreach(plugin ${plugins})
   add_subdirectory(plugins/${plugin})
 endforeach()
+
+add_custom_target(
+  simavr_install
+  sudo make install -C ${CMAKE_SOURCE_DIR}/include/simavr
+)
+
+add_custom_target(
+  simavr_build
+  make -C ${CMAKE_SOURCE_DIR}/include/simavr
+)
 
 include(CPack)
 
@@ -51,12 +63,18 @@ set(CPACK_PACKAGE_VERSION "1.0")
 
 find_package(Qt5Widgets)
 
-set(CMAKE_AUTOMOC ON)
+include_directories(${includes})
 
-include_directories(${INCLUDES})
+add_definitions(${Qt5Widgets_DEFINITIONS}) 
 
-qt5_add_resources ( RESOURCES ${RESOURCE_FILE})
+qt5_add_resources ( resources ${resource_file})
 
-add_executable(${TARGET} ${SOURCES} ${HEADERS} ${RESOURCES})
+add_executable(${target} ${sources} ${headers} ${resources})
 
-target_link_libraries(${TARGET} Qt5::Widgets ${LIBS})
+target_link_libraries(${target} ${libs})
+
+add_dependencies(${target} simavr_install)
+
+add_dependencies(simavr_install simavr_build)
+
+qt5_use_modules(${target} Widgets)

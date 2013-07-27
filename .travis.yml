@@ -6,8 +6,8 @@ install:
   - sudo apt-get install ubuntu-sdk elfutils libelf-dev freeglut3 freeglut3-dev gcc-avr binutils-avr avr-libc gdb-avr -y
 
 script:
-  - git submodule init
-  - git submodule update
-  - make -C include/simavr
-  - qmake ess.pro
+  - git submodule update --init --recursive
+  - mkdir build
+  - cd build
+  - cmake ..
   - make
