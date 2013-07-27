@@ -33,16 +33,16 @@ RectMatrix::RectMatrix( int rectSize )
 
   this->ledColour = new QColor( 255, 0, 0, 255 );
 
-  background = new QPixmap( LM_NUM_ROWS * ( this->rectSize ) + 2 * padding - 1,
-                            LM_NUM_COLS * ( this->rectSize ) + 2 * padding );
+  background = new QPixmap( LM_NUM_ROWS * ( this->rectSize  + padding ),
+                            LM_NUM_COLS * ( this->rectSize + 2 * padding ) );
 
   background->fill( Qt::white );
 
-  buffer = new QPixmap( LM_NUM_ROWS * ( this->rectSize ) + 2 * padding - 1,
-                        LM_NUM_COLS * ( this->rectSize ) + 2 * padding );
+  buffer = new QPixmap( LM_NUM_ROWS * ( this->rectSize + padding ),
+                        LM_NUM_COLS * ( this->rectSize + 2 * padding ) );
 
-  this->resize( LM_NUM_ROWS * ( this->rectSize ) + 2 * padding - 1,
-                LM_NUM_COLS * ( this->rectSize ) + 2 * padding );
+  this->resize( LM_NUM_ROWS * ( this->rectSize + padding )  ,
+                LM_NUM_COLS * ( this->rectSize + 2 * padding ) );
 
 
   QPainter painter( this->background );

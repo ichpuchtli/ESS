@@ -102,19 +102,23 @@ void PluginManager::load( const QDir& pluginDirectory, const QString& filename )
 
   delete factory; // Done with factory
 
-  plugin->window = new QMdiSubWindow( this->mdiArea );
-  plugin->window->setWidget( plugin->peripheral.widget );
-  plugin->window->hide();
-  this->mdiArea->addSubWindow( plugin->window );
+  QString id = loader->metaData().value( "IID" ).toString();
 
   plugin->hidden = true;
   plugin->connected = false;
 
-  QString id = loader->metaData().value( "IID" ).toString();
-
   plugin->id = id;
   plugin->file = file;
   plugin->loader = loader;
+
+  plugin->window = new QMdiSubWindow( this->mdiArea );
+  plugin->window->hide();
+  plugin->window->setWidget( plugin->peripheral.widget );
+  plugin->window->resize( plugin->window->widget()->size() );
+  plugin->window->setWindowTitle( plugin->id );
+
+  this->mdiArea->addSubWindow( plugin->window,
+                               Qt::CustomizeWindowHint | Qt::WindowTitleHint );
 
   this->plugins->insert( id, plugin );
 
@@ -140,7 +144,6 @@ void PluginManager::hide( const QString& id )
   Plugin* plugin = this->plugins->value( id );
 
   if ( !plugin->hidden ) {
-    //TODO create MdiSubWindow object so windows can be hidden/shown
     plugin->window->hide();
     plugin->hidden = true;
   }

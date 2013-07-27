@@ -49,7 +49,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Another graphical front end to simavr")
 set(CPACK_PACKAGE_NAME "simavr-qt")
 set(CPACK_PACKAGE_VERSION "1.0")
 
-find_packag(Qt5Widgets)
+find_package(Qt5Widgets)
 
 set(CMAKE_AUTOMOC ON)
 
