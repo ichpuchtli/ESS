@@ -286,7 +286,7 @@ static void message_router( QtMsgType type, const QMessageLogContext& context,
 
   QFile logfile( "log.txt" );
 
-  logfile.open( QIODevice::WriteOnly | QIODevice::Append );
+  logfile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
 
   QTextStream stream( &logfile );
 
@@ -301,7 +301,7 @@ void MainWindow::initLogMonitor( void )
 
   this->log->resize( 0 );
 
-  this->log->open( QIODevice::ReadOnly );
+  this->log->open( QIODevice::ReadOnly | QIODevice::Text);
 
   qInstallMessageHandler( message_router );
 
