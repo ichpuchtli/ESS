@@ -114,7 +114,6 @@ void PluginManager::load( const QDir& pluginDirectory, const QString& filename )
   plugin->window = new QMdiSubWindow( this->mdiArea );
   plugin->window->hide();
   plugin->window->setWidget( plugin->peripheral.widget );
-  plugin->window->resize( plugin->window->widget()->size() );
   plugin->window->setWindowTitle( plugin->id );
 
   this->mdiArea->addSubWindow( plugin->window,
