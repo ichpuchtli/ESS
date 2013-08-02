@@ -105,7 +105,6 @@ private:
   bool on;
 
   bool lowFrequency;
-  bool flash;
 
   double dutyCycle;
   double frequency;

@@ -29,7 +29,7 @@ void LEDLogic::update( int level, long long time )
 {
 
   if ( lowFrequency ) {
-    ( flash = !flash ) ? emit LEDOff( num ) : emit LEDOn( num );
+    ( level ) ? emit LEDOn( num ) : emit LEDOff( num );
   }
 
   history[ index ].level = level;
