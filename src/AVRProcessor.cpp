@@ -22,17 +22,46 @@
 
 #include <QtCore/QDebug>
 
+#include "sim_hex.h"
+
 void AVRProcessor::loadFirmware( const QString& filename )
 {
 
   this->stop();
 
-  // TODO must wait here for thread to exit before we
-  // can modify avr structure
+  bzero( &this->firmware, sizeof( elf_firmware_t ) );
+
+  if ( filename.endsWith( ".hex" ) ) {
+
+    ihex_chunk_p chunk = NULL;
+
+    int count = read_ihex_chunks( filename.toLatin1(), &chunk );
+
+    if ( count <= 0 ) {
+      qDebug() << "Firmware: Unable to load hex file:" << filename;
+      return;
+    }
+
+    for ( int index = 0; index < count; index++ ) {
+      if ( chunk[index].baseaddr < ( 1 * 1024 * 1024 ) ) {
+        this->firmware.flash = chunk[index].data;
+        this->firmware.flashsize = chunk[index].size;
+        this->firmware.flashbase = chunk[index].baseaddr;
+      }
+    }
+
+  } else if ( filename.endsWith( ".axf" ) ) {
+
+    elf_read_firmware( filename.toLatin1(), &this->firmware );
+
+  } else {
+
+    qDebug() << "Firmware: Unrecognized file extension:" << filename;
+    return;
+
+  }
 
   this->filename = filename;
-
-  elf_read_firmware( filename.toLatin1(), &this->firmware );
 
   this->firmware.frequency = this->frequency;
 
