@@ -40,10 +40,6 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
 
-#include "AbstractPeripheralFactory.h"
-#include "AbstractPeripheralLogic.h"
-#include "AbstractPeripheralWidget.h"
-
 #include "AVRIOAdapter.h"
 
 #include "AVRProcessor.h"
@@ -286,7 +282,7 @@ static void message_router( QtMsgType type, const QMessageLogContext& context,
 
   QFile logfile( "log.txt" );
 
-  logfile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+  logfile.open( QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text );
 
   QTextStream stream( &logfile );
 
@@ -301,7 +297,7 @@ void MainWindow::initLogMonitor( void )
 
   this->log->resize( 0 );
 
-  this->log->open( QIODevice::ReadOnly | QIODevice::Text);
+  this->log->open( QIODevice::ReadOnly | QIODevice::Text );
 
   qInstallMessageHandler( message_router );
 

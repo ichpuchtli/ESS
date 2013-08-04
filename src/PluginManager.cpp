@@ -154,13 +154,13 @@ void PluginManager::connect( const QString& id )
 
   Plugin* plugin = this->plugins->value( id );
 
-  //TODO connect RESET and error signals
-  //connect(logic,RESET,pinRESET,fallingEdge);
   if ( !plugin->connected ) {
 
     plugin->peripheral.logic->moveToThread( this->io->getThread() );
 
-    plugin->peripheral.logic->connect( this->io );
+    plugin->peripheral.logic->attach( this->io );
+
+    plugin->peripheral.logic->blockSignals( false );
 
     plugin->connected = true;
   }
@@ -174,7 +174,11 @@ void PluginManager::disconnect( const QString &id )
   Plugin* plugin = this->plugins->value( id );
 
   if ( plugin->connected ) {
-    plugin->peripheral.logic->disconnect();
+
+    plugin->peripheral.logic->detach();
+
+    plugin->peripheral.logic->blockSignals( true );
+
     plugin->connected = false;
   }
 

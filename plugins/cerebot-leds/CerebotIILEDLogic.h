@@ -21,8 +21,6 @@
 #ifndef CEREBOTIILEDLOGIC_H
 #define CEREBOTIILEDLOGIC_H
 
-#include <QtCore/QObject>
-
 #include "../../src/AbstractPeripheralLogic.h"
 #include "../../src/AVRIOAdapter.h"
 
@@ -42,11 +40,20 @@ public:
   CerebotIILEDLogic();
   ~CerebotIILEDLogic();
 
+  void connectNet( QString net, QString pin ) {
+    ( void ) net;
+    ( void ) pin;
+  }
+
+  QStringList getNets( void ) {
+    return QStringList() << "";
+  }
+
 public slots:
 
-  void connect( AVRIOAdapter* io );
+  void attach( AVRIOAdapter* io );
 
-  void disconnect();
+  void detach();
 
   void RESET();
 

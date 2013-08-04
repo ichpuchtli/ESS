@@ -23,6 +23,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 #include "AVRIOAdapter.h"
 #include "AbstractAVRProcessor.h"
@@ -41,26 +42,50 @@ public:
 
   virtual ~AbstractPeripheralLogic() {}
 
+  /**
+   * \brief select which nets connect to which pins, the available pins
+   * can be determined by getNets( void ). Pin names should conform to
+   * AVRIOAdpater::getGPIOPin( char* ) pin descriptions.
+   *
+   * \param net a string description of a peripheral end point
+   * \param pin the pin you want to connect to the net to
+   *
+   * \see getNets( void )
+   */
+  virtual void connectNet( QString net, QString pin ) = 0;
+
+  /**
+   * \brief returns a list of nets ( terminals, end points ) that the
+   * peripheral needs to function. These nets can then be used to
+   * select which pins connect to which nets. For instance a SPI based
+   * peripheral may have the nets MISO, MOSI, CLK and SS
+   *
+   * \see selectNet( QString, QString )
+   *
+   * \return a string list of available nets
+   */
+  virtual QStringList getNets( void ) = 0;
+
 public slots:
 
   /**
-   * \brief the opportunity to connect internal logic to signals
-   * offered by AVRIOAdapter and friends
+   * \brief used to attach/detach the peripheral from the avr .
    *
    * \param io an AVRIOAdapter instance
    */
-  virtual void connect( AVRIOAdapter* io ) = 0;
+  virtual void attach( AVRIOAdapter* io ) = 0;
 
   /**
-   * \brief used to disconnect the plugin logic from the avr simulation engine
+   * \brief used to detach the peripheral from the avr.
    */
-  virtual void disconnect() = 0;
+  virtual void detach() = 0;
 
   /**
    * \brief used to notify a plugin that a simulation is about to begin, this
-   * is an opportunities to reset structures and data before a new simulation.
+   * is an ideal time to reset structures and data before a new simulation.
    */
   virtual void RESET() = 0;
+
 
 signals:
 

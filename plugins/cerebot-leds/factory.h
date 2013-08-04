@@ -22,6 +22,7 @@
 #define CEREBOTIILED_FACTORY_H
 
 #include <QtCore/QtPlugin>
+#include <QtWidgets/QWidget>
 
 #include "../../src/AbstractPeripheralFactory.h"
 

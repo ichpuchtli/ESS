@@ -39,8 +39,6 @@
 
 #include "AbstractPeripheralFactory.h"
 #include "AbstractPeripheralLogic.h"
-#include "AbstractPeripheralWidget.h"
-
 
 /**
  * \brief An class for managing external plugins

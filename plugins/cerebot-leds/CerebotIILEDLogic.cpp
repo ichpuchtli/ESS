@@ -43,7 +43,7 @@ CerebotIILEDLogic::~CerebotIILEDLogic()
   }
 }
 
-void CerebotIILEDLogic::connect( AVRIOAdapter* io )
+void CerebotIILEDLogic::attach( AVRIOAdapter* io )
 {
 
   for ( int i = LED1; i <= LED4; i++ ) {
@@ -62,7 +62,7 @@ void CerebotIILEDLogic::connect( AVRIOAdapter* io )
   this->io = io;
 }
 
-void CerebotIILEDLogic::disconnect()
+void CerebotIILEDLogic::detach()
 {
 
   for ( int i = LED1; i <= LED4; i++ ) {

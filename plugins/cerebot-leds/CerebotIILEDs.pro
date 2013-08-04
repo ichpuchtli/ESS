@@ -12,7 +12,6 @@ HEADERS += \
     ../../src/AbstractPeripheralFactory.h \
     ../../src/AbstractPin.h \
     ../../src/AbstractPeripheralLogic.h \
-    ../../src/AbstractPeripheralWidget.h \
     ../../src/AVRIOAdapter.h \
     ../../src/AbstractAVRProcessor.h
 

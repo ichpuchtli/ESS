@@ -21,8 +21,6 @@
 #ifndef CEREBOTIILEDWIDGET_H
 #define CEREBOTIILEDWIDGET_H
 
-#include <QtCore/QObject>
-
 #include <QtWidgets/QWidget>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
@@ -30,16 +28,13 @@
 
 #include <QResizeEvent>
 
-#include "../../src/AbstractPeripheralWidget.h"
-
 /**
  * \brief The widget implementation for the cerebotII onboard led's
 */
-class CerebotIILEDWidget : public AbstractPeripheralWidget
+class CerebotIILEDWidget : public QWidget
 {
 
   Q_OBJECT
-  Q_INTERFACES( AbstractPeripheralWidget )
 
 public:
   CerebotIILEDWidget( int width = 25, int height = 100 );
@@ -52,8 +47,6 @@ public slots:
   void turnOnLED( int num );
 
   void turnOffLED( int num );
-
-  void RESET() {}
 
 private:
 

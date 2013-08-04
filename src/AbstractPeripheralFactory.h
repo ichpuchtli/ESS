@@ -26,7 +26,6 @@
 #include <QString>
 
 #include "AbstractPeripheralLogic.h"
-#include "AbstractPeripheralWidget.h"
 
 #define ABSTRACTPERIPHERALFACTORY_IDD "ESS.AbstractPeripheralFactory/1.0"
 
@@ -35,7 +34,7 @@
  */
 struct Peripheral {
   AbstractPeripheralLogic* logic;
-  AbstractPeripheralWidget* widget;
+  QWidget* widget;
 };
 
 /**

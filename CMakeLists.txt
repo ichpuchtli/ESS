@@ -25,7 +25,6 @@ set ( sources
 set ( headers 
   src/AbstractAVRProcessor.h
   src/AbstractPeripheralLogic.h
-  src/AbstractPeripheralWidget.h
   src/AbstractPin.h
   src/AVRProcessor.h
   src/GPIOPin.h
