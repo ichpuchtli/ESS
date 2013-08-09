@@ -162,6 +162,9 @@ void PluginManager::connect( const QString& id )
 
     plugin->peripheral.logic->blockSignals( false );
 
+    QObject::connect( &this->io->RESET(), SIGNAL( risingEdge() ),
+                      plugin->peripheral.logic, SLOT( RESET() ), Qt::DirectConnection );
+
     plugin->connected = true;
   }
 
@@ -178,6 +181,9 @@ void PluginManager::disconnect( const QString &id )
     plugin->peripheral.logic->detach();
 
     plugin->peripheral.logic->blockSignals( true );
+
+    QObject::disconnect( &this->io->RESET(), SIGNAL( risingEdge() ),
+                         plugin->peripheral.logic, SLOT( RESET() ) );
 
     plugin->connected = false;
   }

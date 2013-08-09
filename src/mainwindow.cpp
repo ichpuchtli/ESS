@@ -104,7 +104,7 @@ void MainWindow::initSettings( void )
 void MainWindow::initComponents( void )
 {
 
-  this->cpu = new RegulatedAVRProcessor( QString( "atmega64" ), 8000000 );
+  this->cpu = new HybridAVRProcessor( QString( "atmega64" ), 8000000 );
 
   this->cpuThread = new QThread;
 
@@ -117,6 +117,9 @@ void MainWindow::initComponents( void )
   AVRIOAdapter* io = new AVRIOAdapter( cpu->getAVR(), cpuThread );
 
   this->pluginManager = new PluginManager( io, ui->mdiArea );
+
+  connect( this->cpu, SIGNAL( RESET() ), &io->RESET(), SIGNAL( risingEdge() ),
+           Qt::DirectConnection );
 
   QDir pluginDirectory( QCoreApplication::applicationDirPath() + "/" +
                         "plugins" );
