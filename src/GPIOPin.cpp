@@ -93,11 +93,11 @@ void GPIOPin::pinChangeEvent( int value )
 {
 
   if ( this->levelCache == 0 ) {
-    emit this->risingEdge( value, this->port, this->pin );
+    emit this->risingEdge();
   }
 
   if ( this->levelCache == 1 ) {
-    emit this->fallingEdge( value, this->port, this->pin );
+    emit this->fallingEdge();
   }
 
   this->levelCache = value;
