@@ -119,6 +119,20 @@ public slots:
    */
   virtual void setVoltage( int voltage ) = 0;
 
+  /**
+   * \brief set the digital level of the pin low
+   */
+  virtual void pullDown() {
+    this->setLevel( 0 );
+  }
+
+  /**
+   * \brief set the digital level of the pin high
+   */
+  virtual void pullUp() {
+    this->setLevel( 1 );
+  }
+
 };
 
 Q_DECLARE_INTERFACE( AbstractPin, "ESS.AbstractPin/1.0" )
