@@ -110,10 +110,15 @@ void GPIOPin::pinChangeEvent( int value )
 void GPIOPin::dirChangeEvent( int direction )
 {
 
-  this->ddrCache = direction;
+  // direction here is equal to the actuall data direction register
+  int value = ( direction & ( 1 << this->pin ) ) >> this->pin;
 
-  emit this->directionChange( direction, this->port, this->pin );
+  if ( value ^ this->ddrCache ) {
 
+    this->ddrCache = value;
+
+    emit this->directionChange( this->ddrCache, this->port, this->pin );
+  }
 }
 
 void GPIOPin::setVoltage( int voltage )
