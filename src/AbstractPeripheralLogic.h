@@ -43,18 +43,6 @@ public:
   virtual ~AbstractPeripheralLogic() {}
 
   /**
-   * \brief select which nets connect to which pins, the available pins
-   * can be determined by getNets( void ). Pin names should conform to
-   * AVRIOAdpater::getGPIOPin( char* ) pin descriptions.
-   *
-   * \param net a string description of a peripheral end point
-   * \param pin the pin you want to connect to the net to
-   *
-   * \see getNets( void )
-   */
-  virtual void connectNet( QString net, QString pin ) = 0;
-
-  /**
    * \brief returns a list of nets ( terminals, end points ) that the
    * peripheral needs to function. These nets can then be used to
    * select which pins connect to which nets. For instance a SPI based
@@ -67,6 +55,18 @@ public:
   virtual QStringList getNets( void ) = 0;
 
 public slots:
+
+  /**
+   * \brief select which nets connect to which pins, the available pins
+   * can be determined by getNets( void ). Pin names should conform to
+   * AVRIOAdpater::getGPIOPin( char* ) pin descriptions.
+   *
+   * \param net a string description of a peripheral end point
+   * \param pin the pin you want to connect to the net to
+   *
+   * \see getNets( void )
+   */
+  virtual void connectNet( QString net, QString pin ) = 0;
 
   /**
    * \brief used to attach/detach the peripheral from the avr .

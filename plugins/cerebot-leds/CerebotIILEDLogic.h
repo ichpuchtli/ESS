@@ -40,16 +40,16 @@ public:
   CerebotIILEDLogic();
   ~CerebotIILEDLogic();
 
-  void connectNet( QString net, QString pin ) {
-    ( void ) net;
-    ( void ) pin;
-  }
-
   QStringList getNets( void ) {
     return QStringList() << "";
   }
 
 public slots:
+
+  void connectNet( QString net, QString pin ) {
+    ( void ) net;
+    ( void ) pin;
+  }
 
   void attach( AVRIOAdapter* io );
 
