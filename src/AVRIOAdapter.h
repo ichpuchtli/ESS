@@ -130,6 +130,8 @@ private:
 
   avr_t* avr;
 
+  avr_irq_t* irq;
+
   QHash<QString, GPIOPin*>* pinmap;
 };
 

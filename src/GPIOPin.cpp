@@ -26,44 +26,44 @@
 
 #include <QDebug>
 
-GPIOPin::GPIOPin( avr_t* avr, const char* identifier, QObject* parent ) :
-  AbstractPin( parent ), avr( avr ), port( identifier[1] ),
+GPIOPin::GPIOPin( avr_t* avr, avr_irq_t* write_irq, const char* identifier,
+                  QObject* parent ) :
+  AbstractPin( parent ), avr( avr ), write_irq( write_irq ),
+  port( identifier[1] ),
   pin( identifier[2] - '0' )
 {
   this->init();
 }
 
-GPIOPin::GPIOPin( avr_t* avr, char port, unsigned pin, QObject* parent ) :
-  AbstractPin( parent ), avr( avr ), port( port ), pin( pin )
+GPIOPin::GPIOPin( avr_t* avr, avr_irq_t* write_irq, char port, unsigned pin,
+                  QObject* parent ) :
+  AbstractPin( parent ), avr( avr ), write_irq( write_irq ), port( port ),
+  pin( pin )
 {
   this->init();
 }
 
 GPIOPin::~GPIOPin()
 {
-
-  avr_irq_unregister_notify( this->pin_irq, GPIOPin::pinChangeHook, NULL );
+  avr_irq_unregister_notify( this->out_irq, GPIOPin::pinChangeHook, NULL );
   avr_irq_unregister_notify( this->ddr_irq, GPIOPin::ddrChangeHook, NULL );
-
 }
 
 void GPIOPin::init()
 {
+  qDebug() << "GPIOPin: Pin" << port << ( unsigned ) pin << "connected!";
 
-  qDebug() << "GIOPin: Pin" << port << ( unsigned ) pin << "connected!";
-
-  this->pin_irq = avr_io_getirq( avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
+  this->out_irq = avr_io_getirq( this->avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
                                  this->pin );
 
-  this->ddr_irq = avr_io_getirq( avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
+  this->ddr_irq = avr_io_getirq( this->avr, AVR_IOCTL_IOPORT_GETIRQ( this->port ),
                                  IOPORT_IRQ_DIRECTION_ALL );
 
   this->levelCache = 0x0;
   this->ddrCache = 0x0;
 
-  avr_irq_register_notify( this->pin_irq, GPIOPin::pinChangeHook, this );
+  avr_irq_register_notify( this->out_irq, GPIOPin::pinChangeHook, this );
   avr_irq_register_notify( this->ddr_irq, GPIOPin::ddrChangeHook, this );
-
 }
 
 void GPIOPin::pinChangeHook( struct avr_irq_t* irq, uint32_t value,
@@ -118,26 +118,16 @@ void GPIOPin::dirChangeEvent( int direction )
 
 void GPIOPin::setVoltage( int voltage )
 {
-
   if ( this->ddrCache == 0 ) {
-
-    //TODO establish global GND/VCC Levels
-    avr_raise_irq( this->pin_irq, voltage );
-
+    avr_raise_irq( this->write_irq , ( voltage > 1650 ) ? 1 : 0 );
   }
-
 }
 
 void GPIOPin::setLevel( int level )
 {
-
   if ( this->ddrCache == 0 ) {
-
-    //TODO establish global GND/VCC Levels
-    avr_raise_irq( this->pin_irq, level * 3300 );
-
+    avr_raise_irq( this->write_irq, level );
   }
-
 }
 
 int GPIOPin::getLevel( void ) const

@@ -42,24 +42,26 @@ public:
    * \brief constructs a GPIOPin instance identified by the port and pin
    * inside the identifier
    *
-   * \param avr the avr_t instance for the avr processor
+   * \param write_irq the avr_irq_t instance for outbound IRQ's
    * \param identifier the unique identifier for the pin, the structure is
    * P[A-G][0-7] all uppercase. For example PORT D Pin 1 would be \em "PD1"
    *
    * \see PinFactory::getGPIOPin( const char* )
    */
-  GPIOPin( avr_t* avr, const char* identifier, QObject* parent = 0 );
+  GPIOPin( avr_t* avr, avr_irq_t* write_irq, const char* identifier,
+           QObject* parent = 0 );
 
   /**
    * \brief constructs a GPIOPin instance identified by \em port and \em pin
    *
-   * \param avr the avr_t instance for the avr processor
+   * \param write_irq the avr_irq_t instance for outbound IRQ's
    * \param port the uppercase letter representing the desired port from [A-G]
    * \param pin the desired pin number along the port from [0-7]
    *
    * \see PinFactory::getGPIOPin( char, unsigned )
    */
-  GPIOPin( avr_t* avr, char port, unsigned pin, QObject* parent = 0 );
+  GPIOPin( avr_t* avr, avr_irq_t* write_irq, char port, unsigned pin,
+           QObject* parent = 0 );
 
   ~GPIOPin();
 
@@ -83,7 +85,7 @@ signals:
    * \param port the port the directionChange occurred on
    * \param pin the pin the directionChange occurred on
    */
-  void directionChange( int direction, char port, char pin);
+  void directionChange( int direction, char port, char pin );
 
 public slots:
 
@@ -118,12 +120,14 @@ private:
   static void pinChangeHook( struct avr_irq_t* irq, uint32_t value, void* param );
   static void ddrChangeHook( struct avr_irq_t* irq, uint32_t value, void* param );
 
+
   avr_t* avr;
 
-  char port, pin;
-
-  avr_irq_t* pin_irq;
+  avr_irq_t* write_irq;
+  avr_irq_t* out_irq;
   avr_irq_t* ddr_irq;
+
+  char port, pin;
 
   int levelCache;
   int ddrCache;
