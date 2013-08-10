@@ -24,7 +24,7 @@
 #include "../../src/AbstractPeripheralLogic.h"
 #include "../../src/AVRIOAdapter.h"
 
-#include "../utils/LEDLogic.h"
+#include "../utils/PolledLEDLogic.h"
 
 /**
  * \brief The logic implementation for the cerebotII onboard led's
@@ -57,8 +57,6 @@ public slots:
 
   void RESET();
 
-  void router( int voltage, char port, char pin );
-
 signals:
 
   void error( QString error );
@@ -68,7 +66,7 @@ signals:
   void turnOffLED( int num );
 
 private:
-  LEDLogic* leds[4];
+  PolledLEDLogic* leds[4];
   AVRIOAdapter* io;
 };
 

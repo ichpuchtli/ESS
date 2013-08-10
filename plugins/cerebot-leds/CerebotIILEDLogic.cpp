@@ -20,8 +20,6 @@
  */
 #include "CerebotIILEDLogic.h"
 
-#include <sys/time.h>
-
 #define LED_PORT ('E')
 
 #define LED1 4
@@ -31,68 +29,49 @@
 
 CerebotIILEDLogic::CerebotIILEDLogic()
 {
-  for ( int i = 0; i < 4; i++ ) {
-    leds[i] = new LEDLogic( i );
-  }
 }
 
 CerebotIILEDLogic::~CerebotIILEDLogic()
 {
-  for ( int i = 0; i < 4; i++ ) {
-    delete leds[i];
-  }
 }
 
 void CerebotIILEDLogic::attach( AVRIOAdapter* io )
 {
 
-  for ( int i = LED1; i <= LED4; i++ ) {
+  for ( int i = 0; i < 4; i++ ) {
 
-    // Connect our signal router to appropriate IO pin signals
-    QObject::connect( &io->getGPIOPin( LED_PORT, i ), &AbstractPin::levelChange,
-                      this, &CerebotIILEDLogic::router );
+    leds[i] = new PolledLEDLogic( i, &io->getGPIOPin( LED_PORT, i + LED1 ) );
 
-    // Echo internal LEDLogic signals to allow logic -> widget connections
-    QObject::connect( leds[i - LED1], &LEDLogic::LEDOn, this,
-                      &CerebotIILEDLogic::turnOnLED );
-    QObject::connect( leds[i - LED1], &LEDLogic::LEDOff, this,
-                      &CerebotIILEDLogic::turnOffLED );
+    connect( leds[i], SIGNAL( LEDOff( int ) ), this, SIGNAL( turnOffLED( int ) ) );
+    connect( leds[i], SIGNAL( LEDOn( int ) ), this, SIGNAL( turnOnLED( int ) ) );
+
   }
-
-  this->io = io;
 }
 
 void CerebotIILEDLogic::detach()
 {
 
-  for ( int i = LED1; i <= LED4; i++ ) {
+  for ( int i = 0; i < 4; i++ ) {
 
-    // Disconnect the router from gpio pins
-    QObject::disconnect( &this->io->getGPIOPin( LED_PORT, i ), 0, this, 0 );
+    leds[i]->stopPolling();
 
-    // Disconnect the LEDLogic signals from this Logic signals
-    QObject::disconnect( this->leds[i - LED1], 0, this, 0 );
+    disconnect( leds[ i ] );
+
+    delete leds[i];
 
   }
 
 }
 
-void CerebotIILEDLogic::RESET() {}
-
-void CerebotIILEDLogic::router( int voltage, char port, char pin )
+void CerebotIILEDLogic::RESET()
 {
 
-  ( void ) port;
+  for ( int i = 0; i < 4; i++ ) {
 
-  long long now;
+    leds[i]->stopPolling();
 
-  struct timeval t;
+    leds[i]->startPolling();
 
-  // TODO use avr cycles for time base
-  gettimeofday( &t, NULL );
-
-  now = t.tv_sec * 1000000U + t.tv_usec;
-
-  this->leds[ pin - LED1 ]->update( voltage, now );
+  }
 
 }

@@ -6,7 +6,7 @@ TEMPLATE = lib
 TARGET   = $$qtLibraryTarget(CerebotIILEDs)
 DESTDIR = ..
 
-HEADERS += factory.h CerebotIILEDWidget.h CerebotIILEDLogic.h ../utils/LEDLogic.h
+HEADERS += factory.h CerebotIILEDWidget.h CerebotIILEDLogic.h ../utils/PolledLEDLogic.h
 
 HEADERS += \
     ../../src/AbstractPeripheralFactory.h \
@@ -15,7 +15,8 @@ HEADERS += \
     ../../src/AVRIOAdapter.h \
     ../../src/AbstractAVRProcessor.h
 
-SOURCES = CerebotIILEDWidget.cpp CerebotIILEDLogic.cpp ../utils/LEDLogic.cpp
+SOURCES = CerebotIILEDWidget.cpp CerebotIILEDLogic.cpp ../utils/PolledLEDLogic.cpp
+
 
 CONFIG  += plugin qt5
 QT      += widgets
