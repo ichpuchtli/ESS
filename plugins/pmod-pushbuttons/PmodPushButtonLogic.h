@@ -53,10 +53,6 @@ public slots:
 
   void RESET();
 
-  void btnReleased();
-
-  void btnPressed();
-
 signals:
 
   void error( QString error );
