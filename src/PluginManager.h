@@ -1,6 +1,6 @@
 /**
  * \file PluginManager.h
- * \brief An class for managing external plugins
+ * \brief A class for managing external plugins
  * \author Sam Macpherson
  *
  * Copyright 2013  Sam Macpherson <sam.mack91@gmail.com>
