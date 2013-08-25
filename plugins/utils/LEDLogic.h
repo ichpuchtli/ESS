@@ -39,7 +39,7 @@ public:
    * \param num a number which uniquely identifies the LED, this number will be emitted with
    * LEDOn( int ) and LEDOff( int )
    */
-  LEDLogic( int num ) : num( num ), on( false ), lowFrequency( false ),
+  LEDLogic( int num ) : num( num ), on( false ), lowFrequency( true ),
     dutyCycle( 0.0f ), frequency( 0.0f ), index( 0 ) { }
 
   ~LEDLogic() {}
@@ -111,6 +111,7 @@ private:
 
   int index;
   PinState history[3];
+
 };
 
 #endif // LEDLOGIC_H
