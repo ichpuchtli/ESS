@@ -67,7 +67,7 @@ set(CPACK_PACKAGE_VERSION "1.0")
 
 find_package(Qt5Widgets)
 
-qt5_wrap_ui ( src/mainwindow.ui )
+qt5_wrap_ui ( UI_FILE src/mainwindow.ui )
 
 include_directories(${includes})
 
@@ -75,7 +75,7 @@ add_definitions(${Qt5Widgets_DEFINITIONS})
 
 qt5_add_resources ( resources ${resource_file})
 
-add_executable(${target} ${sources} ${headers} ${resources})
+add_executable(${target} ${sources} ${headers} ${UI_FILE} ${resources})
 
 target_link_libraries(${target} ${libs})
 
