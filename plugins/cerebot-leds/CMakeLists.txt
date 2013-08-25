@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8.9)
 
 set(target cerebotleds) 
 
-set(sources CerebotIILEDWidget.cpp CerebotIILEDLogic.cpp ../utils/LEDLogic.cpp)
+set(sources CerebotIILEDWidget.cpp CerebotIILEDLogic.cpp ../utils/PolledLEDLogic.cpp)
 
-set(headers factory.h CerebotIILEDWidget.h CerebotIILEDLogic.h ../utils/LEDLogic.h)
+set(headers factory.h CerebotIILEDWidget.h CerebotIILEDLogic.h ../utils/PolledLEDLogic.h)
 
 set(CMAKE_AUTOMOC ON)
 

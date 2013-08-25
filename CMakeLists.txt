@@ -20,6 +20,7 @@ set ( sources
   src/HybridAVRProcessor.cpp
   src/RegulatedAVRProcessor.cpp
   src/RRAVRProcessor.cpp
+  src/netmanager.cpp
 )
 
 set ( headers 
@@ -29,6 +30,7 @@ set ( headers
   src/AVRProcessor.h
   src/GPIOPin.h
   src/mainwindow.h
+  src/netmanager.h
 )
 
 set(CMAKE_AUTOMOC ON)
@@ -62,6 +64,8 @@ set(CPACK_PACKAGE_NAME "simavr-qt")
 set(CPACK_PACKAGE_VERSION "1.0")
 
 find_package(Qt5Widgets)
+
+qt5_wrap_ui ( src src/mainwindow.ui )
 
 include_directories(${includes})
 
