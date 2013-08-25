@@ -34,7 +34,8 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTextEdit>
-#include <QtWidgets/QTextBrowser>
+
+#include <QDesktopServices>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
@@ -263,15 +264,7 @@ void MainWindow::aboutESS( void )
 
 void MainWindow::helpWindow()
 {
-
-  static QTextBrowser browser;
-
-  browser.setSource( QUrl( "doc/html/index.html" ) );
-  browser.setSearchPaths( QStringList() << "doc/html/" );
-
-  browser.resize( 640, 480 );
-  browser.show();
-
+  QDesktopServices::openUrl( QUrl( "http://www.github.com/ichpuchtli/ess" ) );
 }
 
 static void message_router( QtMsgType type, const QMessageLogContext& context,
