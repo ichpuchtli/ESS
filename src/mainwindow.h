@@ -32,6 +32,8 @@
 #include "PluginManager.h"
 #include "AVRProcessor.h"
 
+#include "netmanager.h"
+
 /**
  * \brief the main class controlling simulations and the main window
  */
@@ -73,13 +75,6 @@ public slots:
   void aboutESS( void );
 
   /**
-   * \brief toggle a plugin from an QAction event
-   *
-   * \param show a boolean indicating whether the plugin should be shown
-   */
-  void togglePlugin( bool show );
-
-  /**
    * \brief protected timer event handler used to monitor log file
    *
    * \param e the timer event instance
@@ -90,6 +85,16 @@ public slots:
    * \brief presents the help dialog
    */
   void helpWindow( void );
+
+  /**
+   * \brief toggles the net managaer window
+   */
+  void showNetList( bool show );
+
+  /**
+   * \brief toggles the debug console window
+   */
+  void showConsole( bool show );
 
 private:
 

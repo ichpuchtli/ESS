@@ -130,17 +130,22 @@ void MainWindow::initComponents( void )
     this->pluginManager->load( pluginDirectory, filename );
   }
 
-  //TODO Dockable widget for showing/hiding peripheral widgets
   foreach( const QString plugin, this->pluginManager->listPlugins() ) {
-    QAction* action = new QAction( this );
-    action->setText( plugin );
-    action->setCheckable( true );
-    action->setChecked( false );
-    ui->menuPlugins->addAction( action );
-    connect( action, SIGNAL( triggered( bool ) ), this,
-             SLOT( togglePlugin( bool ) ) );
+    ui->netManager->addPlugin( plugin, pluginManager->listPluginNets( plugin ) );
   }
 
+  connect( ui->netManager, &NetManager::netChanged, pluginManager,
+           &PluginManager::connectPluginNets );
+
+  connect( ui->netManager, &NetManager::pluginDisabled, pluginManager,
+           &PluginManager::disconnect );
+  connect( ui->netManager, &NetManager::pluginDisabled, pluginManager,
+           &PluginManager::hide );
+
+  connect( ui->netManager, &NetManager::pluginEnabled, pluginManager,
+           &PluginManager::connect );
+  connect( ui->netManager, &NetManager::pluginEnabled, pluginManager,
+           &PluginManager::show );
 
 }
 
@@ -165,22 +170,11 @@ void MainWindow::connectActions( void )
   connect( ui->actionReload_Firmware, SIGNAL( triggered() ), this,
            SLOT( reloadFirmware() ) );
 
-  QComboBox* comboBox = new QComboBox( this );
+  connect( ui->actionNetManager, SIGNAL( triggered( bool ) ) , this,
+           SLOT( showNetList( bool ) ) );
 
-  comboBox->addItem( QString( "atmega64" ) );
-  comboBox->addItem( QString( "atmega128" ) );
-
-  ui->toolBar->addWidget( comboBox );
-
-  QSpinBox* spinBox = new QSpinBox( this );
-
-  spinBox->setMaximum( 10000000 );
-  spinBox->setMinimum( 0 );
-
-  spinBox->setValue( 8000000 );
-  spinBox->setSuffix( QString( " Hz" ) );
-
-  ui->toolBar->addWidget( spinBox );
+  connect( ui->actionConsole, SIGNAL( triggered( bool ) ) , this,
+           SLOT( showConsole( bool ) ) );
 
 }
 
@@ -237,20 +231,6 @@ void MainWindow::reloadFirmware( void )
 
 }
 
-void MainWindow::togglePlugin( bool show )
-{
-
-  QAction* sender = ( QAction* ) this->sender();
-
-  if ( show ) {
-    this->pluginManager->show( sender->text() );
-    this->pluginManager->connect( sender->text() );
-  } else {
-    this->pluginManager->hide( sender->text() );
-    this->pluginManager->disconnect( sender->text() );
-  }
-}
-
 void MainWindow::aboutESS( void )
 {
 
@@ -299,4 +279,14 @@ void MainWindow::initLogMonitor( void )
 
   this->startTimer( 1000 );
 
+}
+
+void MainWindow::showNetList( bool show )
+{
+  show ? ui->netManager->show() : ui->netManager->hide();
+}
+
+void MainWindow::showConsole( bool show )
+{
+  show ? ui->logViewer->show() : ui->logViewer->hide();
 }
