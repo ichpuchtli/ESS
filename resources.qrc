@@ -1,16 +1,20 @@
 <RCC>
-    <qresource prefix="/media">
-        <file>icons/application-exit.png</file>
-        <file>icons/document-open-folder.png</file>
-        <file>icons/document-save.png</file>
-        <file>icons/help-about.png</file>
-        <file>icons/help-contents.png</file>
-        <file>icons/list-add.png</file>
-        <file>icons/media-playback-pause.png</file>
-        <file>icons/media-playback-start.png</file>
-        <file>icons/media-playback-stop.png</file>
-        <file>icons/media-skip-backward.png</file>
-        <file>icons/process-stop.png</file>
-        <file>icons/view-refresh.png</file>
-    </qresource>
+  <qresource prefix="/media">
+    <file>icons/view-grid.png</file>
+    <file>icons/merge.png</file>
+    <file>icons/utilities-terminal.png</file>
+    <file>icons/code-class.png</file>
+    <file>icons/application-exit.png</file>
+    <file>icons/document-open-folder.png</file>
+    <file>icons/document-save.png</file>
+    <file>icons/help-about.png</file>
+    <file>icons/help-contents.png</file>
+    <file>icons/list-add.png</file>
+    <file>icons/media-playback-pause.png</file>
+    <file>icons/media-playback-start.png</file>
+    <file>icons/media-playback-stop.png</file>
+    <file>icons/media-skip-backward.png</file>
+    <file>icons/process-stop.png</file>
+    <file>icons/view-refresh.png</file>
+  </qresource>
 </RCC>
