@@ -29,55 +29,45 @@ PmodPushButtonLogic::PmodPushButtonLogic( QPushButton* btn0, QPushButton* btn1,
 
 QStringList PmodPushButtonLogic::getNets()
 {
-  return this->netList;
+  return netList;
 }
 
 PmodPushButtonLogic::~PmodPushButtonLogic()
 {
+  detach();
 }
 
 void PmodPushButtonLogic::attach( AVRIOAdapter* io )
 {
-
   this->io = io;
-
-  this->connectNet( "BTN0", "PD4" );
-  this->connectNet( "BTN1", "PD5" );
-  this->connectNet( "BTN2", "PD6" );
-  this->connectNet( "BTN3", "PD7" );
-
 }
 
 void PmodPushButtonLogic::connectNet( QString net, QString pin )
 {
 
-  int i = this->netList.indexOf( QRegularExpression( net ) );
+  int i = netList.indexOf( QRegularExpression( net ) );
 
-  AbstractPin* aPin = &this->io->getGPIOPin( pin.toLatin1() );
+  AbstractPin* aPin = &io->getGPIOPin( pin.toLatin1() );
 
-  QObject::disconnect( this->button[i] );
+  disconnect( this->button[i], 0, 0, 0 );
 
-  QObject::connect( this->button[i], SIGNAL( pressed() ), aPin,
-                    SLOT( pullDown() ) );
-  QObject::connect( this->button[i], SIGNAL( released() ), aPin,
-                    SLOT( pullUp() ) );
+  connect( this->button[i], SIGNAL( pressed() ), aPin, SLOT( pullUp() ) );
 
-  QMetaObject::invokeMethod( this->button[i], "released", Qt::DirectConnection );
+  connect( this->button[i], SIGNAL( released() ), aPin, SLOT( pullDown() ) );
+
+  QMetaObject::invokeMethod( button[i], "released", Qt::DirectConnection );
 }
 
 void PmodPushButtonLogic::detach()
 {
-  for ( int i = 0; i < this->netList.count(); i++ ) {
-    QObject::disconnect( this->button[i] );
+  for ( int i = 0; i < netList.count(); i++ ) {
+    disconnect( button[i] );
   }
 }
 
 void PmodPushButtonLogic::RESET()
 {
-
-  QMetaObject::invokeMethod( this->button[0], "released", Qt::DirectConnection );
-  QMetaObject::invokeMethod( this->button[1], "released", Qt::DirectConnection );
-  QMetaObject::invokeMethod( this->button[2], "released", Qt::DirectConnection );
-  QMetaObject::invokeMethod( this->button[3], "released", Qt::DirectConnection );
-
+  for ( int i = 0; i < netList.count(); i++ ) {
+    QMetaObject::invokeMethod( button[i], "released", Qt::DirectConnection );
+  }
 }
