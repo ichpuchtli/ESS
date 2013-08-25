@@ -43,9 +43,10 @@
 /**
  * \brief An class for managing external plugins
  */
-class PluginManager
+class PluginManager : public QObject
 {
 
+   Q_OBJECT
   struct Plugin {
 
     Peripheral peripheral;
@@ -152,6 +153,26 @@ public slots:
    * \return the list of names of all the available plugins
    */
   QList<QString> listPlugins( void );
+
+  /**
+   * \brief list the nets available for plugin \em pluginId
+   *
+   * \param pluginId the name/id of the plugin
+   *
+   * \return a list of net names
+   */
+  QStringList listPluginNets(QString pluginId);
+
+  /**
+   * \brief connect a net to a pin on the given plugin \em pluginId
+   *
+   * \param pluginId the name/id of the plugin
+   * \param net the name of the net
+   * \param pin the name of the pin
+   *
+   * \see GPIOPin::GPIOPin( avr_t, avr_irq_t, const char*, QObject* )
+   */
+  void connectPluginNets(QString pluginId, QString net, QString pin);
 
 private:
 

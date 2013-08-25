@@ -194,3 +194,19 @@ QList<QString> PluginManager::listPlugins( void )
 {
   return this->plugins->keys();
 }
+
+QStringList PluginManager::listPluginNets(QString pluginId){
+
+  Plugin* plugin = this->plugins->value( pluginId );
+
+  return plugin->peripheral.logic->getNets();
+
+}
+
+void PluginManager::connectPluginNets(QString pluginId, QString net, QString pin){
+
+  Plugin* plugin = this->plugins->value( pluginId );
+
+  plugin->peripheral.logic->connectNet(net, pin);
+
+}
