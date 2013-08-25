@@ -317,7 +317,7 @@
   <customwidget>
    <class>NetManager</class>
    <extends>QTreeWidget</extends>
-   <header>netmgr.h</header>
+   <header>netmanager.h</header>
   </customwidget>
  </customwidgets>
  <resources>
