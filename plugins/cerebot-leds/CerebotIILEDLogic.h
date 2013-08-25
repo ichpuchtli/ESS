@@ -41,7 +41,7 @@ public:
   ~CerebotIILEDLogic();
 
   QStringList getNets( void ) {
-    return QStringList() << "";
+    return QStringList();
   }
 
 public slots:
