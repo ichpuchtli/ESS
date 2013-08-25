@@ -53,9 +53,9 @@ void CerebotIILEDLogic::detach()
 
   for ( int i = 0; i < 4; i++ ) {
 
-    leds[i]->stopPolling();
+    QMetaObject::invokeMethod(  leds[ i ], "stopPolling", Qt::QueuedConnection );
 
-    disconnect( leds[ i ] );
+    disconnect( leds[ i ], 0, 0, 0);
 
     delete leds[i];
 
@@ -68,9 +68,9 @@ void CerebotIILEDLogic::RESET()
 
   for ( int i = 0; i < 4; i++ ) {
 
-    leds[i]->stopPolling();
+    QMetaObject::invokeMethod(  leds[ i ], "stopPolling", Qt::QueuedConnection );
 
-    leds[i]->startPolling();
+    QMetaObject::invokeMethod(  leds[ i ], "startPolling", Qt::QueuedConnection );
 
   }
 
