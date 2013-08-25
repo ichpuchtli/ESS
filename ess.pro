@@ -14,6 +14,9 @@ LIBS += -lelf
 
 win32: LIBS += -lws2_32
 
+FORMS = src/mainwindow.ui
+UI_DIR = src
+
 HEADERS += src/*.h
 SOURCES += src/*.cpp
 
