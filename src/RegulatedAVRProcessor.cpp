@@ -47,6 +47,8 @@ void RegulatedAVRProcessor::run()
 
   qDebug() << "RegulatedAVRProcessor: running";
 
+  int i = 0;
+
   emit this->RESET();
 
   avr_reset( this->avr );
@@ -93,6 +95,11 @@ void RegulatedAVRProcessor::run()
 
       gettimeofday( &t1, NULL );
 
+
+    }
+
+    if ( ( i++ & 31 ) == 0 ) {
+      QCoreApplication::processEvents();
     }
 
     RegulatedAVRProcessor::loop_delay( ( unsigned int ) loop_count );
