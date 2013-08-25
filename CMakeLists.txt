@@ -8,7 +8,9 @@ set(libs libsimavr.a elf)
 
 set(resource_file resources.qrc)
 
-set(includes "include/simavr/simavr/sim")
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(includes "src" "include/simavr/simavr/sim")
 
 set ( sources 
   src/ess.cpp
@@ -65,7 +67,7 @@ set(CPACK_PACKAGE_VERSION "1.0")
 
 find_package(Qt5Widgets)
 
-qt5_wrap_ui ( src src/mainwindow.ui )
+qt5_wrap_ui ( src/mainwindow.ui )
 
 include_directories(${includes})
 
