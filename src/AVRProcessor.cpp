@@ -29,7 +29,7 @@ void AVRProcessor::loadFirmware( const QString& filename )
 
   this->stop();
 
-  bzero( &this->firmware, sizeof( elf_firmware_t ) );
+  memset( &this->firmware, '\0', sizeof( elf_firmware_t ) );
 
   if ( filename.endsWith( ".hex" ) ) {
 
