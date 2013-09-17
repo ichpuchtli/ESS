@@ -43,6 +43,7 @@ set( plugins
   cerebot-leds
   pmod-pushbuttons
   scope
+  pmod-sseg
 
   )
 
