@@ -44,6 +44,7 @@ set( plugins
   pmod-pushbuttons
   scope
   pmod-sseg
+  ledmatrix
 
   )
 
