@@ -68,9 +68,9 @@ signals:
 
 private:
 
-  int colCache[7] = {0};
-  AbstractPin* pins[18] = {0};
   QTimer* timer;
+  int colCache[7];
+  AbstractPin* pins[18];
 
   AVRIOAdapter* io;
   QStringList nets;

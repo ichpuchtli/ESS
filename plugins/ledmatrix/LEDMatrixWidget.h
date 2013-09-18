@@ -47,21 +47,22 @@ public slots:
   void updateMatrix( int row, int cols );
 
 private:
+
+  int width, height;
+
+  int colCache[7];
+
   QPixmap* buffer;
   QPixmap* background;
 
   void updateBackground( void );
   void updateBuffer();
 
-  int colCache[7] = {~0, ~0, ~0, ~0, ~0, ~0, ~0};
-
 protected:
 
   virtual void resizeEvent( QResizeEvent *event );
 
   void paintEvent( QPaintEvent *event );
-
-  int width, height;
 
 };
 

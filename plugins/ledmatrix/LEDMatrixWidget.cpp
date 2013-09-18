@@ -27,8 +27,7 @@ LEDMatrixWidget::~LEDMatrixWidget()
 }
 
 LEDMatrixWidget::LEDMatrixWidget( int width, int height )
-  : width( width ), height( height )
-{
+  : width( width ), height( height ), colCache {~0, ~0, ~0, ~0, ~0, ~0, ~0} {
   background = new QPixmap( this->width, this->height );
   updateBackground();
 
