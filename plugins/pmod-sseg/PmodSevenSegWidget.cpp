@@ -29,7 +29,7 @@ PmodSevenSegWidget::~PmodSevenSegWidget()
 }
 
 PmodSevenSegWidget::PmodSevenSegWidget( int width, int height ) :
-  width( width ), height( height )
+  width( width ), height( height ), segment0( 0 ), segment1( 0 )
 {
   background = new QPixmap( width, height );
   updateBackground();

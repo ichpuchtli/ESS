@@ -76,13 +76,13 @@ private:
   QTimer* timer;
   QStringList nets;
 
-  AbstractPin* pins[8] = {0};
+  AbstractPin* pins[8];
   AVRIOAdapter* io;
 
-  uint8_t history1[5] = {0};
-  uint8_t history2[5] = {0};
-  int index1 = 0;
-  int index2 = 0;
+  uint8_t history1[5];
+  uint8_t history2[5];
+  int index1;
+  int index2;
 };
 
 #endif // PMODSEVENSEGLOGIC_H

@@ -62,8 +62,8 @@ private:
 
   int width, height;
 
-  int segment0 = 0;
-  int segment1 = 0;
+  int segment0;
+  int segment1;
 
 };
 

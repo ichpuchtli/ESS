@@ -44,7 +44,8 @@ static uint8_t getMode( uint8_t list[], int length, int max )
   return mode;
 }
 
-PmodSevenSegLogic::PmodSevenSegLogic() : timer( new QTimer( this ) )
+PmodSevenSegLogic::PmodSevenSegLogic() : timer( new QTimer( this ) ),
+  pins {0}, history1 {0}, history2 {0}, index1( 0 ), index2( 0 )
 {
   nets << "A" << "B" << "C" << "D" << "E" << "F" << "G" << "CAT";
 
