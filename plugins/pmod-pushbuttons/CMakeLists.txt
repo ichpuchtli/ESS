@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.9)
 
-set(target PmodPushButtons) 
+set(target pmodpushbuttons) 
 
-set(sources PmodPushButtonLogic.cpp)
+set(sources PmodPushButtonLogic.cpp PmodPushButtonWidget.cpp)
 
-set(headers factory.h PmodPushButtonLogic.h)
+set(headers factory.h PmodPushButtonLogic.h PmodPushButtonWidget.h)
 
 set(CMAKE_AUTOMOC ON)
 

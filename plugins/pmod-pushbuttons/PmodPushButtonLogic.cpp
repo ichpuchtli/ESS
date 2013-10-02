@@ -24,7 +24,7 @@
 PmodPushButtonLogic::PmodPushButtonLogic( QPushButton* btn0, QPushButton* btn1,
     QPushButton* btn2, QPushButton* btn3 ) :
   button {btn0, btn1, btn2, btn3} {
-  this->netList << "BTN0" << "BTN1" << "BTN2" << "BTN3";
+  this->netList << "BTN1" << "BTN2" << "BTN3" << "BTN4";
 }
 
 QStringList PmodPushButtonLogic::getNets()
@@ -55,7 +55,7 @@ void PmodPushButtonLogic::connectNet( QString net, QString pin )
 
   connect( this->button[i], SIGNAL( released() ), aPin, SLOT( pullDown() ) );
 
-  QMetaObject::invokeMethod( button[i], "released", Qt::DirectConnection );
+  button[i]->released();
 }
 
 void PmodPushButtonLogic::detach()
@@ -68,6 +68,6 @@ void PmodPushButtonLogic::detach()
 void PmodPushButtonLogic::RESET()
 {
   for ( int i = 0; i < netList.count(); i++ ) {
-    QMetaObject::invokeMethod( button[i], "released", Qt::DirectConnection );
+    button[i]->released();
   }
 }

@@ -22,13 +22,11 @@
 #define PMODPUSHBUTTON_FACTORY_H
 
 #include <QtCore/QtPlugin>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QPushButton>
 
 #include "../../src/AbstractPeripheralFactory.h"
 
 #include "PmodPushButtonLogic.h"
+#include "PmodPushButtonWidget.h"
 
 class Factory : public AbstractPeripheralFactory
 {
@@ -46,22 +44,12 @@ public:
 
   Peripheral getPeripheral( void ) {
 
-    QWidget* widget = new QWidget();
+    PmodPushButtonWidget* widget = new PmodPushButtonWidget();
 
-    QPushButton* btn0 = new QPushButton( QString( '0' ), widget );
-    QPushButton* btn1 = new QPushButton( QString( '1' ), widget );
-    QPushButton* btn2 = new QPushButton( QString( '2' ), widget );
-    QPushButton* btn3 = new QPushButton( QString( '3' ), widget );
-
-    PmodPushButtonLogic* logic = new PmodPushButtonLogic( btn0, btn1, btn2, btn3 );
-
-    QGridLayout* grid = new QGridLayout( widget );
-
-    grid->addWidget( btn0, 0, 0 );
-    grid->addWidget( btn1, 0, 1 );
-    grid->addWidget( btn2, 1, 0 );
-    grid->addWidget( btn3, 1, 1 );
-
+    PmodPushButtonLogic* logic = new PmodPushButtonLogic( widget->btn0,
+        widget->btn1,
+        widget->btn2,
+        widget->btn3 );
     return { logic, widget };
 
   }

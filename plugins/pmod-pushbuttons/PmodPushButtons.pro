@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET   = $$qtLibraryTarget(PmodPushButtons)
+TARGET   = $$qtLibraryTarget(pmodpushbuttons)
 DESTDIR = ..
 
 HEADERS += \
@@ -13,9 +13,9 @@ HEADERS += \
     ../../src/AVRIOAdapter.h \
     ../../src/AbstractAVRProcessor.h \
 
-HEADERS += factory.h PmodPushButtonLogic.h
+HEADERS += factory.h PmodPushButtonLogic.h PmodPushButtonWidget.h
 
-SOURCES = PmodPushButtonLogic.cpp
+SOURCES = PmodPushButtonLogic.cpp PmodPushButtonWidget.cpp
 
 QMAKE_CXXFLAGS += -std=c++0x
 
