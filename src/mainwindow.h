@@ -96,11 +96,20 @@ public slots:
    */
   void showConsole( bool show );
 
+  /**
+   * \brief load scene from previous use of application
+   */
+  void loadSettings( void );
+
+  /**
+   * \brief load scene from previous use of application
+   */
+  void saveSettings( void );
+
 private:
 
   void initLogMonitor( void );
 
-  void initSettings( void );
   void initComponents( void );
 
   void connectActions();

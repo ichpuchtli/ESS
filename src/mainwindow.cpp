@@ -41,6 +41,8 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
 
+#include <QtCore/QSettings>
+
 #include "AVRIOAdapter.h"
 
 #include "AVRProcessor.h"
@@ -54,19 +56,27 @@ MainWindow::MainWindow( QWidget* parent ) :
   ui( new Ui::MainWindow )
 {
 
+  QCoreApplication::setApplicationName( "simavr-qt" );
+  QCoreApplication::setApplicationVersion( "1.0" );
+
+  QCoreApplication::setOrganizationDomain( "ichpuchtli.com" );
+  QCoreApplication::setOrganizationName( "ichpuchtli" );
+
   ui->setupUi( this );
 
   this->initLogMonitor();
-
-  this->initSettings();
 
   this->initComponents();
 
   this->connectActions();
 
+  this->loadSettings();
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow()
+{
+  saveSettings();
+}
 
 void MainWindow::timerEvent( QTimerEvent * e )
 {
@@ -88,27 +98,12 @@ void MainWindow::timerEvent( QTimerEvent * e )
 
 }
 
-void MainWindow::initSettings( void )
-{
-
-  //TODO init QSettings
-  this->resize( 640, 480 );
-
-  QCoreApplication::setApplicationName( "ESS" );
-  QCoreApplication::setApplicationVersion( "1.0" );
-
-  //QCoreApplication::setOrganizationDomain("ESS");
-  //QCoreApplication::setOrganizationName("ESS");
-
-}
-
 void MainWindow::initComponents( void )
 {
 
   this->cpu = new HybridAVRProcessor( QString( "atmega64" ), 8000000 );
 
   this->cpuThread = new QThread;
-
   this->cpu->moveToThread( cpuThread );
 
   QObject::connect( cpuThread, &QThread::started, cpu, &AVRProcessor::run );
@@ -134,6 +129,7 @@ void MainWindow::initComponents( void )
     ui->netManager->addPlugin( plugin, pluginManager->listPluginNets( plugin ) );
   }
 
+
   connect( ui->netManager, &NetManager::netChanged, pluginManager,
            &PluginManager::connectPluginNets );
 
@@ -147,12 +143,14 @@ void MainWindow::initComponents( void )
   connect( ui->netManager, &NetManager::pluginEnabled, pluginManager,
            &PluginManager::show );
 
+
 }
 
 void MainWindow::connectActions( void )
 {
 
   connect( ui->actionAbout_Qt, SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) );
+
   connect( ui->actionClose, SIGNAL( triggered() ), qApp, SLOT( quit() ) );
 
   connect( ui->actionAbout_ESS, SIGNAL( triggered() ), this, SLOT( aboutESS() ) );
@@ -213,6 +211,8 @@ void MainWindow::loadFirmware( void )
   if ( !this->filename.isEmpty() ) {
     this->cpu->loadFirmware( this->filename );
   }
+
+  saveSettings();
 
 }
 
@@ -284,9 +284,53 @@ void MainWindow::initLogMonitor( void )
 void MainWindow::showNetList( bool show )
 {
   show ? ui->netManager->show() : ui->netManager->hide();
+
+  QSettings settings;
+  settings.setValue( "window/netlist", show );
 }
 
 void MainWindow::showConsole( bool show )
 {
   show ? ui->logViewer->show() : ui->logViewer->hide();
+
+  QSettings settings;
+  settings.setValue( "window/console", show );
+}
+
+void MainWindow::loadSettings()
+{
+  QSettings settings;
+
+  resize( settings.value( "window/size", QSize( 640, 480 ) ).toSize() );
+  move( settings.value( "window/pos", QPoint( 50, 50 ) ).toPoint() );
+
+  this->filename = settings.value( "project/filename", QString() ).toString();
+
+  if ( !this->filename.isEmpty() ) {
+    this->cpu->loadFirmware( this->filename );
+  }
+
+  if ( settings.value( "window/console" , true ) == false){
+    ui->logViewer->hide();
+    ui->actionConsole->setChecked(false);
+  }
+
+  if ( settings.value( "window/netlist" , true ) == false){
+    ui->netManager->hide();
+    ui->actionNetManager->setChecked(false);
+  }
+
+  ui->netManager->loadSettings();
+
+  ui->statusbar->showMessage("Settings Loaded", 2000);
+}
+
+void MainWindow::saveSettings()
+{
+  QSettings settings;
+
+  settings.setValue( "window/size", size() );
+  settings.setValue( "window/pos", pos() );
+
+  settings.setValue( "project/filename", this->filename );
 }
