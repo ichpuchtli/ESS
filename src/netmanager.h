@@ -47,6 +47,11 @@ public slots:
    */
   void addPlugin( const QString& id, const QStringList& nets );
 
+  /**
+   * @brief load configuration
+   */
+  void loadSettings( void );
+
 signals:
 
   /**
@@ -73,12 +78,18 @@ signals:
    */
   void pluginDisabled( QString id );
 
+protected:
+  virtual void keyPressEvent( QKeyEvent *event );
+
 private:
 
   void enablePlugin( const QString& id );
   void disablePlugin( const QString& id );
 
-  void itemChangeEvent( QTreeWidgetItem* item , int index );
+  void itemChangeEvent( QTreeWidgetItem* item , int column );
+  void itemEditEvent( QTreeWidgetItem* item , int column );
+
+  QTreeWidgetItem* findChild( QTreeWidgetItem* parent, QString net );
 
   QMap<QString, QTreeWidgetItem*>* itemMap;
 

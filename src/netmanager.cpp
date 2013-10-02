@@ -20,12 +20,19 @@
  */
 
 #include "netmanager.h"
+#include <QtGui/QResizeEvent>
+#include <QtCore/QSettings>
+#include <QtCore/QStringList>
 
 NetManager::NetManager( QWidget* parent ) : QTreeWidget( parent ),
   itemMap( new QMap<QString, QTreeWidgetItem*>() )
 {
 
   connect( this, &QTreeWidget::itemChanged, this, &NetManager::itemChangeEvent );
+  connect( this, &QTreeWidget::itemDoubleClicked, this,
+           &NetManager::itemEditEvent );
+
+  this->setEditTriggers( QAbstractItemView::NoEditTriggers );
 
 }
 
@@ -41,6 +48,32 @@ NetManager::~NetManager()
     }
 
     delete item;
+
+  }
+
+}
+
+void NetManager::keyPressEvent( QKeyEvent *event )
+{
+
+  if ( event->key() == Qt::Key_Return ) {
+
+    event->accept();
+
+    if ( currentItem() ) {
+
+      QTreeWidgetItem* nextItem = itemBelow( currentItem() );
+
+      if ( nextItem && ( nextItem->childCount() == 0 ) ) {
+        setCurrentItem( nextItem, 1 );
+        editItem( nextItem, 1 );
+      }
+
+    }
+
+  } else {
+
+    QTreeWidget::keyPressEvent( event );
 
   }
 
@@ -92,12 +125,26 @@ void NetManager::disablePlugin( const QString &id )
 
 }
 
-void NetManager::itemChangeEvent( QTreeWidgetItem* item, int index )
+void NetManager::itemEditEvent( QTreeWidgetItem* item, int column )
 {
 
-  ( void ) index;
+  if ( column == 1 ) {
+    editItem( item, column );
+  }
+
+}
+
+void NetManager::itemChangeEvent( QTreeWidgetItem* item, int column )
+{
+
+  QSettings settings;
 
   if ( item->parent() ) {
+
+    // Ignore changes to the Net Column
+    if ( column == 0 ) {
+      return;
+    }
 
     QString net = item->text( 0 );
     QString pin = item->text( 1 );
@@ -108,6 +155,9 @@ void NetManager::itemChangeEvent( QTreeWidgetItem* item, int index )
       emit this->netChanged( pluginId, net, pin );
     }
 
+    settings.beginGroup( pluginId );
+    settings.setValue( net, pin );
+    settings.endGroup();
 
   } else {
 
@@ -120,6 +170,80 @@ void NetManager::itemChangeEvent( QTreeWidgetItem* item, int index )
     item->setExpanded( checked );
 
     checked ? this->pluginEnabled( pid ) : this->pluginDisabled( pid );
+
+    settings.beginGroup( "plugins" );
+    settings.setValue( pid, checked );
+    settings.endGroup();
+
+  }
+
+}
+
+QTreeWidgetItem* NetManager::findChild( QTreeWidgetItem* parent, QString net )
+{
+
+  QTreeWidgetItem* childItem = NULL;
+
+  for ( int i = 0; i < parent->childCount(); i++ ) {
+
+    QTreeWidgetItem* tmp = parent->child( i );
+
+    if ( tmp && tmp->text( 0 ) == net ) {
+      childItem = tmp;
+      break;
+    }
+
+  }
+
+  return childItem;
+
+}
+
+void NetManager::loadSettings()
+{
+
+  QSettings settings;
+
+  settings.beginGroup( "plugins" );
+
+  QList<QString> holder = settings.allKeys();
+
+  settings.endGroup();
+
+  foreach( const QString id, holder ) {
+
+    QTreeWidgetItem* item = this->itemMap->value( id );
+
+    settings.beginGroup( "plugins" );
+
+    if ( settings.value( id, false ).toBool() ) {
+
+      settings.endGroup();
+
+      item->setCheckState( 0, Qt::Checked );
+
+      this->enablePlugin( id );
+      this->pluginEnabled( id );
+
+      settings.beginGroup( id );
+
+      foreach( const QString net, settings.allKeys() ) {
+
+        QString pin = settings.value( net ).toString();
+
+        QTreeWidgetItem* child = findChild( item, net );
+
+        if ( child ) {
+          child->setText( 1, pin );
+        }
+
+        emit this->netChanged( id, net, pin );
+
+      }
+
+    }
+
+    settings.endGroup();
 
   }
 
