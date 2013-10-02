@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET   = $$qtLibraryTarget(CerebotIILEDs)
+TARGET   = $$qtLibraryTarget(cerebotleds)
 DESTDIR = ..
 
 HEADERS += factory.h CerebotIILEDWidget.h CerebotIILEDLogic.h ../utils/PolledLEDLogic.h
@@ -17,6 +17,7 @@ HEADERS += \
 
 SOURCES = CerebotIILEDWidget.cpp CerebotIILEDLogic.cpp ../utils/PolledLEDLogic.cpp
 
+QMAKE_CXXFLAGS += -std=c++0x
 
 CONFIG  += plugin qt5
 QT      += widgets
