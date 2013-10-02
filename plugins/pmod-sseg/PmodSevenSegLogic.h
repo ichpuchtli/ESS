@@ -68,10 +68,6 @@ private slots:
 
   void poll();
 
-  void startPolling();
-
-  void stopPolling();
-
 private:
   QTimer* timer;
   QStringList nets;
