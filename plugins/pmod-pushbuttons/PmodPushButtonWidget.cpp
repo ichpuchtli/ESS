@@ -2,7 +2,6 @@
 
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QPushButton>
-#include <QDebug>
 
 PmodPushButtonWidget::PmodPushButtonWidget()
 {
@@ -17,6 +16,8 @@ PmodPushButtonWidget::PmodPushButtonWidget()
   grid->addWidget( this->btn1, 0, 1 );
   grid->addWidget( this->btn2, 1, 0 );
   grid->addWidget( this->btn3, 1, 1 );
+
+  setFocusPolicy(Qt::ClickFocus);
 }
 
 void PmodPushButtonWidget::keyPressEvent( QKeyEvent* event )
@@ -39,7 +40,11 @@ void PmodPushButtonWidget::keyPressEvent( QKeyEvent* event )
     btn3->pressed();
     btn3->setDown( true );
     break;
+   default:
+    QWidget::keyPressEvent( event );
+
   }
+
 }
 
 void PmodPushButtonWidget::keyReleaseEvent( QKeyEvent* event )
@@ -62,5 +67,9 @@ void PmodPushButtonWidget::keyReleaseEvent( QKeyEvent* event )
     btn3->released();
     btn3->setDown( false );
     break;
+  default:
+    QWidget::keyReleaseEvent( event );
+
   }
+
 }
