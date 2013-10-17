@@ -90,6 +90,10 @@ public slots:
     this->isRunning = false;
   }
 
+  void start() {
+    this->isRunning = true;
+  }
+
   void loadFirmware( const QString &filename );
 
   /**
@@ -114,8 +118,7 @@ public slots:
    */
   inline bool avrRunnable( int status ) {
 
-    return ( status != cpu_Crashed ) && ( status != cpu_Done ) &&
-           this->isRunning;
+    return ( status != cpu_Crashed ) && ( status != cpu_Done );
 
   }
 
@@ -127,6 +130,16 @@ public slots:
   avr_t* getAVR( void ) {
     return this->avr;
   }
+
+  /**
+   * \brief returns the specified frequency
+   */
+  virtual int getFrequency(void){ return frequency; }
+
+  /**
+   * \brief returns the MMCU specified
+   */
+  QString getMMCU(void){ return mmcu; }
 
 signals:
 

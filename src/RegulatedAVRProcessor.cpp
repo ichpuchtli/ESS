@@ -23,7 +23,6 @@
 #include <QtWidgets/QApplication>
 
 #include <QtCore/QThread>
-#include <QtCore/QDebug>
 
 #include <sys/time.h>
 #include "math.h"
@@ -43,15 +42,11 @@ void RegulatedAVRProcessor::run()
 
   int cfactor = 0;
 
-  this->isRunning = true;
-
-  qDebug() << "RegulatedAVRProcessor: running";
-
   int i = 0;
 
   emit this->RESET();
 
-  avr_reset( this->avr );
+  avr_reset(this->avr);
 
   int status = cpu_Running;
 
@@ -59,7 +54,7 @@ void RegulatedAVRProcessor::run()
 
   gettimeofday( &t1, NULL );
 
-  while ( AVRProcessor::avrRunnable( status ) ) {
+  while ( isRunning && avrRunnable( status ) ) {
 
     gettimeofday( &t2, NULL );
 
@@ -88,8 +83,7 @@ void RegulatedAVRProcessor::run()
 
       if ( loop_count < 0 ) loop_count = 0;
 
-      qDebug() << "RegulatedAVRProcessor: Loop Count:" << loop_count << "Freq:" <<
-               UPDATE_SPEED*cycles << "MHz";
+      real_frequency = UPDATE_SPEED * cycles;
 
       cycles = 0;
 
@@ -98,11 +92,11 @@ void RegulatedAVRProcessor::run()
 
     }
 
-    if ( ( i++ & 31 ) == 0 ) {
+    if ( ( i++ & 15 ) == 0 ) {
       QCoreApplication::processEvents();
+    } else {
+      RegulatedAVRProcessor::loop_delay( ( unsigned int ) loop_count );
     }
-
-    RegulatedAVRProcessor::loop_delay( ( unsigned int ) loop_count );
 
   }
 
@@ -110,5 +104,4 @@ void RegulatedAVRProcessor::run()
 
   emit this->stopped();
 
-  qDebug() << "RegulatedAVRProcessor: stopped";
 }

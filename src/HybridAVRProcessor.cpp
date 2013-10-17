@@ -26,7 +26,7 @@
  * \def UPDATE_FREQUENCY
  * the frequency to process a batch of avr operations in milliseconds
  */
-#define UPDATE_FREQUENCY 20
+#define UPDATE_FREQUENCY 10
 
 void HybridAVRProcessor::run()
 {
@@ -36,8 +36,6 @@ void HybridAVRProcessor::run()
   QObject::connect( this->timer, &QTimer::timeout, this,
                     &HybridAVRProcessor::update );
 
-  this->isRunning = true;
-
   emit this->RESET();
 
   avr_reset( this->avr );
@@ -45,8 +43,6 @@ void HybridAVRProcessor::run()
   emit this->avrStateChange( cpu_Running );
 
   timer->start( UPDATE_FREQUENCY );
-
-  qDebug() << "HybridAVRProcessor: running";
 }
 
 /**
@@ -60,14 +56,15 @@ void HybridAVRProcessor::update( void )
   unsigned long new_cycles = this->avr->cycle + this->frequency /
                              ( 1000 / UPDATE_FREQUENCY );
 
-  while ( AVRProcessor::avrRunnable( status )
+  while ( isRunning && avrRunnable( status )
           && ( this->avr->cycle < new_cycles ) ) {
 
     status = avr_run( this->avr );
 
   }
 
-  if ( !AVRProcessor::avrRunnable( status ) ) {
+
+  if ( !avrRunnable( status ) ) {
 
     emit this->avrStateChange( status );
 
@@ -77,7 +74,6 @@ void HybridAVRProcessor::update( void )
 
     emit this->stopped();
 
-    qDebug() << "HybridAVRProcessor: stopped";
   }
 
 }

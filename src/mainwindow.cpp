@@ -96,12 +96,16 @@ void MainWindow::timerEvent( QTimerEvent * e )
     ui->logViewer->moveCursor( QTextCursor::End );
   }
 
+  if(this->cpuThread->isRunning()){
+    statusBar()->showMessage(QString("Running: %1").arg(this->cpu->getFrequency()));
+  }
+
 }
 
 void MainWindow::initComponents( void )
 {
 
-  this->cpu = new HybridAVRProcessor( QString( "atmega64" ), 8000000 );
+  this->cpu = new RegulatedAVRProcessor( QString( "atmega64" ), 8000000 );
 
   this->cpuThread = new QThread;
   this->cpu->moveToThread( cpuThread );
@@ -158,8 +162,10 @@ void MainWindow::connectActions( void )
            SLOT( helpWindow() ) );
   connect( ui->actionStart, SIGNAL( triggered() ), this,
            SLOT( startSimulation() ) );
+
   connect( ui->actionPause, SIGNAL( triggered() ), this,
-           SLOT( stopSimulation() ) );
+           SLOT( pauseSimulation() ) );
+
   connect( ui->actionStop, SIGNAL( triggered() ), this,
            SLOT( stopSimulation() ) );
 
@@ -183,7 +189,14 @@ void MainWindow::startSimulation( void )
     return;
   }
 
-  this->cpuThread->start();
+  this->cpu->start();
+
+  if(!this->cpuThread->isRunning()){
+    this->cpuThread->start();
+  }
+
+  statusBar()->showMessage(QString("Running: %1").arg(this->cpu->getFrequency()));
+
 }
 
 void MainWindow::stopSimulation()
@@ -199,6 +212,21 @@ void MainWindow::stopSimulation()
 
   this->cpuThread->wait();
 
+  this->cpu->getAVR()->reset(this->cpu->getAVR());
+
+  statusBar()->showMessage("Stopped");
+}
+
+void MainWindow::pauseSimulation(){
+
+  if ( this->filename.isEmpty() ) {
+    return;
+  }
+
+  this->cpu->stop();
+
+  statusBar()->showMessage("Paused");
+
 }
 
 void MainWindow::loadFirmware( void )
@@ -206,10 +234,11 @@ void MainWindow::loadFirmware( void )
 
   this->stopSimulation();
 
-  this->filename = QFileDialog::getOpenFileName( this, tr( "Load Firmware" ) );
+  QString file = QFileDialog::getOpenFileName( this, tr( "Load Firmware" ) );
 
-  if ( !this->filename.isEmpty() ) {
-    this->cpu->loadFirmware( this->filename );
+  if ( !file.isEmpty() ) {
+    this->filename = file;
+    this->cpu->loadFirmware( file );
   }
 
   saveSettings();
@@ -227,7 +256,7 @@ void MainWindow::reloadFirmware( void )
 
   this->cpu->loadFirmware( this->filename );
 
-  this->cpuThread->start();
+  this->startSimulation();
 
 }
 
@@ -321,8 +350,6 @@ void MainWindow::loadSettings()
   }
 
   ui->netManager->loadSettings();
-
-  ui->statusbar->showMessage("Settings Loaded", 2000);
 }
 
 void MainWindow::saveSettings()

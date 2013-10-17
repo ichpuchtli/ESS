@@ -65,6 +65,11 @@ public slots:
   void startSimulation( void );
 
   /**
+   * \brief starts execution of the simulation engine
+   */
+  void pauseSimulation( void );
+
+  /**
    * \brief stops execution of the simulation engine
    */
   void stopSimulation( void );

@@ -53,9 +53,12 @@ public slots:
 
   }
 
+  int getFrequency(){ return real_frequency; }
+
 
 private:
   int loop_count;
+  int real_frequency;
 };
 
 #endif

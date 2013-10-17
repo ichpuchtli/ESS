@@ -64,13 +64,18 @@ signals:
 public slots:
 
   /**
-   * \brief exit as soon as possible, emits stopped() when exiting
+   * \brief exit a simulation as soon as possible, emits stopped() when exiting
    */
   virtual void stop() = 0;
 
   /**
-   * \brief the only pure virtual method in the class, this method
-   * houses the simulation procedure and is often connected to a
+   * \brief prepares a simulation
+   * \note this should be called before the cpu thread is started
+   */
+  virtual void start() = 0;
+
+  /**
+   * \brief this method houses the simulation procedure and is often connected to a
    * QThread or QTimer event.
    */
   virtual void run() = 0;
@@ -82,6 +87,7 @@ public slots:
    * \param filename the path to the compiled avr executable
    */
   virtual void loadFirmware( const QString& filename ) = 0;
+
 
 };
 
