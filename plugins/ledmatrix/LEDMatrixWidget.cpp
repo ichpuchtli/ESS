@@ -19,6 +19,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "LEDMatrixWidget.h"
+#include <QTransform>
 
 LEDMatrixWidget::~LEDMatrixWidget()
 {
@@ -27,19 +28,26 @@ LEDMatrixWidget::~LEDMatrixWidget()
 }
 
 LEDMatrixWidget::LEDMatrixWidget( int width, int height )
-  : width( width ), height( height ), colCache {~0, ~0, ~0, ~0, ~0, ~0, ~0} {
+  : rotated(false), width( width ), height( height ), colCache {~0, ~0, ~0, ~0, ~0, ~0, ~0} {
   background = new QPixmap( this->width, this->height );
   updateBackground();
 
   buffer = new QPixmap( this->width, this->height );
   updateBuffer();
+
+  setFocusPolicy(Qt::ClickFocus);
 }
 
 void LEDMatrixWidget::resizeEvent( QResizeEvent *event )
 {
 
-  width = event->size().width();
-  height = event->size().height();
+  if(rotated){
+    height = event->size().width();
+    width = event->size().height();
+  }else{
+    width = event->size().width();
+    height = event->size().height();
+  }
 
   delete background;
   background = new QPixmap( width, height );
@@ -136,7 +144,34 @@ void LEDMatrixWidget::paintEvent( QPaintEvent *event )
   ( void ) event;
 
   QPainter painter( this );
-  painter.drawPixmap( QPoint( 0, 0 ), *buffer );
+
+  QTransform rotation;
+
+  rotation = rotation.rotate(rotated ? 270 : 0);
+
+  QPixmap rotated = QPixmap(buffer->transformed(rotation));
+
+  painter.drawPixmap( QPoint( 0, 0 ), rotated );
+
   painter.end();
+
+}
+
+void LEDMatrixWidget::keyPressEvent( QKeyEvent* event )
+{
+
+  if( event->key() == Qt::Key_R){
+
+    rotated = !rotated;
+
+    resize(height, width);
+
+    updateGeometry();
+
+    resize(width, height);
+
+  }else{
+    QWidget::keyPressEvent( event );
+  }
 
 }

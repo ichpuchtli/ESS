@@ -48,6 +48,8 @@ public slots:
 
 private:
 
+  bool rotated;
+
   int width, height;
 
   int colCache[7];
@@ -60,6 +62,7 @@ private:
 
 protected:
 
+  virtual void keyPressEvent( QKeyEvent *event );
   virtual void resizeEvent( QResizeEvent *event );
 
   void paintEvent( QPaintEvent *event );
