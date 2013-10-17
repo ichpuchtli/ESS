@@ -28,8 +28,6 @@ void RRAVRProcessor::run()
 
   emit RESET();
 
-  avr_reset( avr );
-
   int status = cpu_Running;
 
   emit avrStateChange( status );
