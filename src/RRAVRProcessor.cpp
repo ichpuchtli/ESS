@@ -21,32 +21,32 @@
 #include "RRAVRProcessor.h"
 #include <QtCore/QThread>
 
-#include <QtCore/QDebug>
+#include <QtWidgets/QApplication>
 
 void RRAVRProcessor::run()
 {
 
-  emit this->RESET();
+  emit RESET();
 
-  avr_reset( this->avr );
+  avr_reset( avr );
 
   int status = cpu_Running;
 
-  emit this->avrStateChange( status );
+  emit avrStateChange( status );
 
-  this->isRunning = true;
+  int i = 0;
 
-  qDebug() << "RRAVRProcessor: running";
+  while ( isRunning && avrRunnable( status ) ) {
 
-  while ( AVRProcessor::avrRunnable( status ) ) {
+    if ( ( i++ & 63 ) == 0 ) {
+      QCoreApplication::processEvents();
+    }
 
-    status = avr_run( this->avr );
+    status = avr_run( avr );
   }
 
-  qDebug() << "RRAVRProcessor: stopped";
+  emit avrStateChange( status );
 
-  emit this->avrStateChange( status );
-
-  emit this->stopped();
+  emit stopped();
 
 }
