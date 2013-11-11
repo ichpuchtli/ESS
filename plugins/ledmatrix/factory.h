@@ -52,10 +52,7 @@ public:
     connect( logic, SIGNAL( stateChange( int, int ) ), widget,
              SLOT( updateMatrix( int, int ) ) );
 
-    Peripheral periph = { logic, widget };
-
-    return periph;
-
+    return Peripheral( logic, widget );
   }
 
   QString getDescription( void ) {

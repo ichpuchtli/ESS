@@ -24,12 +24,15 @@
 
 #define POLL_PERIOD 0
 
-LEDMatrixLogic::LEDMatrixLogic() : timer( new QTimer( this ) ), colCache {0},
-pins {0} {
+LEDMatrixLogic::LEDMatrixLogic() : timer( new QTimer( this ) )
+{
+
+  memset( ( void* ) colCache, '\0', 7 * sizeof( int ) );
+  memset( ( void* ) pins, '\0', 18 * sizeof( void* ) );
 
   nets << "row0" << "row1" << "row2" << "col0" << "col1" << "col2"
-  << "col3" << "col4" << "col5" << "col6" << "col7" << "col8"
-  << "col9" << "col10" << "col11" << "col12" << "col13" << "col14";
+       << "col3" << "col4" << "col5" << "col6" << "col7" << "col8"
+       << "col9" << "col10" << "col11" << "col12" << "col13" << "col14";
 
   connect( timer, SIGNAL( timeout() ), this, SLOT( poll() ) );
 }

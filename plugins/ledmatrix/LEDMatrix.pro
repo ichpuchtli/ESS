@@ -17,7 +17,5 @@ HEADERS += \
 
 SOURCES = LEDMatrixWidget.cpp LEDMatrixLogic.cpp
 
-QMAKE_CXXFLAGS += -std=c++0x
-
 CONFIG  += plugin qt5
 QT      += widgets

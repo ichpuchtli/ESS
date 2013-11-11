@@ -28,23 +28,27 @@ LEDMatrixWidget::~LEDMatrixWidget()
 }
 
 LEDMatrixWidget::LEDMatrixWidget( int width, int height )
-  : rotated(false), width( width ), height( height ), colCache {~0, ~0, ~0, ~0, ~0, ~0, ~0} {
+  : rotated( false ), width( width ), height( height )
+{
+
+  memset( ( void* ) colCache, ~0, 7 * sizeof( int ) );
+
   background = new QPixmap( this->width, this->height );
   updateBackground();
 
   buffer = new QPixmap( this->width, this->height );
   updateBuffer();
 
-  setFocusPolicy(Qt::ClickFocus);
+  setFocusPolicy( Qt::ClickFocus );
 }
 
 void LEDMatrixWidget::resizeEvent( QResizeEvent *event )
 {
 
-  if(rotated){
+  if ( rotated ) {
     height = event->size().width();
     width = event->size().height();
-  }else{
+  } else {
     width = event->size().width();
     height = event->size().height();
   }
@@ -147,9 +151,9 @@ void LEDMatrixWidget::paintEvent( QPaintEvent *event )
 
   QTransform rotation;
 
-  rotation = rotation.rotate(rotated ? 270 : 0);
+  rotation = rotation.rotate( rotated ? 270 : 0 );
 
-  QPixmap rotated = QPixmap(buffer->transformed(rotation));
+  QPixmap rotated = QPixmap( buffer->transformed( rotation ) );
 
   painter.drawPixmap( QPoint( 0, 0 ), rotated );
 
@@ -160,17 +164,17 @@ void LEDMatrixWidget::paintEvent( QPaintEvent *event )
 void LEDMatrixWidget::keyPressEvent( QKeyEvent* event )
 {
 
-  if( event->key() == Qt::Key_R){
+  if ( event->key() == Qt::Key_R ) {
 
     rotated = !rotated;
 
-    resize(height, width);
+    resize( height, width );
 
     updateGeometry();
 
-    resize(width, height);
+    resize( width, height );
 
-  }else{
+  } else {
     QWidget::keyPressEvent( event );
   }
 
