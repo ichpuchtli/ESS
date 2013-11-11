@@ -49,15 +49,12 @@ public:
 
     CerebotIILEDWidget* widget = new CerebotIILEDWidget();
 
-    Peripheral periph = { logic, widget };
-
     connect( logic, &CerebotIILEDLogic::turnOnLED, widget,
              &CerebotIILEDWidget::turnOnLED );
     connect( logic, &CerebotIILEDLogic::turnOffLED, widget,
              &CerebotIILEDWidget::turnOffLED );
 
-    return periph;
-
+    return Peripheral( logic, widget );
   }
 
   QString getDescription( void ) {
