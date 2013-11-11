@@ -52,10 +52,7 @@ public:
     QObject::connect( logic, SIGNAL( newData( int, long long ) ),
                       widget, SLOT( update( int, long long ) ) );
 
-    Peripheral periph = { logic, widget };
-
-    return periph;
-
+    return Peripheral(logic, widget);
   }
 
   QString getDescription( void ) {
