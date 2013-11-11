@@ -35,6 +35,10 @@
 struct Peripheral {
   AbstractPeripheralLogic* logic;
   QWidget* widget;
+
+  Peripheral( AbstractPeripheralLogic* logic, QWidget* widget ) : logic( logic ),
+    widget( widget ) {}
+  Peripheral() : logic( 0 ), widget( 0 ) {}
 };
 
 /**
