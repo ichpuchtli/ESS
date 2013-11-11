@@ -52,10 +52,7 @@ public:
     connect( logic, SIGNAL( segmentChange( int ) ), widget,
              SLOT( updateSegments( int ) ) );
 
-    Peripheral periph = { logic, widget };
-
-    return periph;
-
+    return Peripheral( logic, widget );
   }
 
   QString getDescription( void ) {

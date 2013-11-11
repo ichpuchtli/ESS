@@ -45,8 +45,13 @@ static uint8_t getMode( uint8_t list[], int length, int max )
 }
 
 PmodSevenSegLogic::PmodSevenSegLogic() : timer( new QTimer( this ) ),
-  pins {0}, history1 {0}, history2 {0}, index1( 0 ), index2( 0 )
+  index1( 0 ), index2( 0 )
 {
+
+  memset( ( void* ) pins, 0, 8 * sizeof( void* ) );
+  memset( ( void* ) history1, '\0', 5 * sizeof( uint8_t ) );
+  memset( ( void* ) history2, '\0', 5 * sizeof( uint8_t ) );
+
   nets << "A" << "B" << "C" << "D" << "E" << "F" << "G" << "CAT";
 
   connect( timer, SIGNAL( timeout() ), this, SLOT( poll() ) );
