@@ -22,9 +22,16 @@
 #include <QRegularExpression>
 
 PmodPushButtonLogic::PmodPushButtonLogic( QPushButton* btn0, QPushButton* btn1,
-    QPushButton* btn2, QPushButton* btn3 ) :
-  button {btn0, btn1, btn2, btn3} {
+    QPushButton* btn2, QPushButton* btn3 )
+{
+
+  button[0] = btn0;
+  button[1] = btn1;
+  button[2] = btn2;
+  button[3] = btn3;
+
   this->netList << "BTN1" << "BTN2" << "BTN3" << "BTN4";
+
 }
 
 QStringList PmodPushButtonLogic::getNets()
@@ -49,11 +56,11 @@ void PmodPushButtonLogic::connectNet( QString net, QString pin )
 
   AbstractPin* aPin = &io->getGPIOPin( pin.toLatin1() );
 
-  disconnect( this->button[i], 0, 0, 0 );
+  disconnect( button[i], 0, 0, 0 );
 
-  connect( this->button[i], SIGNAL( pressed() ), aPin, SLOT( pullUp() ) );
+  connect( button[i], SIGNAL( pressed() ), aPin, SLOT( pullUp() ) );
 
-  connect( this->button[i], SIGNAL( released() ), aPin, SLOT( pullDown() ) );
+  connect( button[i], SIGNAL( released() ), aPin, SLOT( pullDown() ) );
 
   button[i]->released();
 }

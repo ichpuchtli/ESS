@@ -50,8 +50,8 @@ public:
         widget->btn1,
         widget->btn2,
         widget->btn3 );
-    return { logic, widget };
 
+    return Peripheral( logic, widget );
   }
 
   QString getDescription( void ) {
